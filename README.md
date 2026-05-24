@@ -9,6 +9,7 @@ This repository contains:
 | `web/` | Public marketing site (static HTML / CSS, no framework, no Tailwind). |
 | `backend/` | FastAPI inference & ingestion service (`/ingest`, `/calibrate`, `/inspect`, `/events`). |
 | `firmware/` | Reference scanning firmware for the Tactile Mesh row/column multiplexer (Arduino / STM32 stub). |
+| `hardware/pcb/` | Custom Scanner PCB sources (README, markdown schematic; Gerbers/BOM/CPL land in a follow-up). |
 | `docs/` | Architecture, installation guide, and operational runbook. |
 | `PROJECT_BRIEF.md` | Full product, market, and technology brief. |
 | `BOM.md` | Bill of materials with vendors and target unit cost. |

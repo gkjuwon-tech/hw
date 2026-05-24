@@ -1,0 +1,113 @@
+# Conet Tactile — Scanner PCB v1
+
+Custom 4-layer PCB that fans out a Tactile Mesh's 16 row + 16 column conductive-thread terminations into two CD74HC4067 analog multiplexers, samples one cell at a time through an ADS1115 16-bit ADC, and streams 16×16 = 256-byte frames over USB-C at 200 Hz using an ESP32-S3-WROOM-1 module.
+
+This directory is the manufacturing source-of-truth for the first prototype board. The downstream assembler (JLCPCB SMT full-turnkey) consumes the three files marked ⭐ below; the rest is documentation for humans.
+
+| File | Purpose | Status |
+|------|---------|--------|
+| `README.md` | This file. Board overview, pinout, known issues. | ✅ this PR |
+| `schematic.md` | Markdown rendering of the schematic netlist (human-readable). | ✅ this PR |
+| `gerbers.zip` ⭐ | Manufacturing artwork (top/bottom copper, mask, silk, drill, outline). | ⏳ EDA work, separate PR |
+| `bom.csv` ⭐ | Bill of materials for JLCPCB's SMT line (LCSC part numbers). | ⏳ EDA work, separate PR |
+| `cpl.csv` ⭐ | Component placement list (refdes → X/Y/rotation). | ⏳ EDA work, separate PR |
+
+> See [`../../../HARDWARE_BUILD_GUIDE.md`](../../../HARDWARE_BUILD_GUIDE.md) for the step-by-step JLCPCB ordering workflow that consumes these three files.
+
+---
+
+## Mechanical
+
+- **Outline**: 60 × 40 mm rectangle, rounded 2 mm corners.
+- **Mounting**: 4× M2.5 holes at corners, 4 mm from edge.
+- **Stackup**: 4 layers, 1.6 mm total, FR-4, ENIG finish.
+- **USB-C edge cutout**: short edge centered, vertical receptacle, board-edge mounted.
+- **Mesh interface**: two 16-pin 1.0 mm-pitch FFC ZIF connectors on the long edge (J1 = ROW, J2 = COL).
+
+## Headline parts
+
+| Refdes | Part | Package | LCSC | Notes |
+|--------|------|---------|------|-------|
+| U1 | ESP32-S3-WROOM-1-N8R8 | SMD module | C2913201 | 8 MB flash + 8 MB PSRAM, native USB, Wi-Fi/BT5. |
+| U2 | CD74HC4067SM96 (row MUX) | SOIC-24 | C5183 | 16:1 analog mux, drives mesh row buses. |
+| U3 | CD74HC4067SM96 (col MUX) | SOIC-24 | C5183 | Identical to U2, drives mesh column buses. |
+| U4 | ADS1115IDGSR | MSOP-10 | C37593 | 16-bit ΔΣ ADC, I²C, PGA up to ±0.256 V. |
+| U5 | TLV1117LV33DCYR | SOT-223 | C155591 | 3.3 V LDO from USB-C 5 V rail. |
+| J3 | TYPE-C-31-M-12 | USB-C receptacle | C165948 | 5 V/3 A input + native USB to ESP32-S3. |
+| J1 | FH12-16S-1SH | 16-pin FFC ZIF | C72669 | ROW connector, 1.0 mm pitch, top contacts. |
+| J2 | FH12-16S-1SH | 16-pin FFC ZIF | C72669 | COL connector. |
+| D1 | USBLC6-2SC6Y | SOT-23-6 | C7519 | USB-C ESD protection. |
+| SW1, SW2 | TS-1187A | 4-pin tactile | C318884 | BOOT, RESET. |
+| D2 | green 0603 | LED | C72043 | 3.3 V rail status. |
+| D3 | red 0603 | LED | C2287 | Activity (driven by GPIO 48). |
+| R*, C* | 0402 SMD passives | — | various | Decoupling, pull-ups, voltage dividers. |
+
+## Pinout — ESP32-S3 GPIO → board net
+
+The pin numbers below **match the existing firmware** in [`firmware/tactile_scanner_esp32/tactile_scanner_esp32.ino`](../../../firmware/tactile_scanner_esp32/tactile_scanner_esp32.ino) exactly. Re-flashing the firmware as-is onto this PCB just works — no source edits needed.
+
+| ESP32-S3 GPIO | Net | Function |
+|--------------:|-----|----------|
+| GPIO 4 | ROW_S0 | Row MUX (U2) select bit 0 |
+| GPIO 5 | ROW_S1 | Row MUX (U2) select bit 1 |
+| GPIO 6 | ROW_S2 | Row MUX (U2) select bit 2 |
+| GPIO 7 | ROW_S3 | Row MUX (U2) select bit 3 |
+| GPIO 15 | COL_S0 | Col MUX (U3) select bit 0 |
+| GPIO 16 | COL_S1 | Col MUX (U3) select bit 1 |
+| GPIO 17 | COL_S2 | Col MUX (U3) select bit 2 |
+| GPIO 18 | COL_S3 | Col MUX (U3) select bit 3 |
+| GPIO 1 (ADC1_CH0) | ADC_IN | Row MUX SIG, sampled to ESP32 ADC (12-bit, default path) |
+| GPIO 8 | I2C_SDA | ADS1115 (U4) SDA — optional 16-bit sampling path |
+| GPIO 9 | I2C_SCL | ADS1115 (U4) SCL — optional 16-bit sampling path |
+| GPIO 19 / GPIO 20 | USB D-/D+ | USB-C native |
+| GPIO 48 | LED_ACT | Red activity LED |
+| GPIO 0 | BOOT | SW1 pull-down for download mode |
+| EN | RESET | SW2 |
+
+> Two ADC paths exist on the board:
+> - **Path A — ESP32 internal 12-bit ADC** (GPIO 1). Default; matches the reference firmware. ~50 dB ENOB. Good enough for the first prototype.
+> - **Path B — ADS1115 16-bit external ADC** (I²C on GPIO 8/9, sampling the same row MUX SIG). Reserved for the v2 firmware drop. ~90 dB ENOB. Lower 200 Hz frame rate (≈800 SPS / 256 cells ≈ 3 Hz full frame), so use for slow conveyors only.
+
+## Mesh ↔ PCB net mapping
+
+```
+Tactile Mesh                       Scanner PCB
+────────────────                   ─────────────────────────
+ROW conductor 0    ────────────→   J1 pin 1   (U2 Y0)
+ROW conductor 1    ────────────→   J1 pin 2   (U2 Y1)
+...
+ROW conductor 15   ────────────→   J1 pin 16  (U2 Y15)
+
+COL conductor 0    ────────────→   J2 pin 1   (U3 Y0)
+COL conductor 1    ────────────→   J2 pin 2   (U3 Y1)
+...
+COL conductor 15   ────────────→   J2 pin 16  (U3 Y15)
+```
+
+- U2 (ROW) SIG  → ADC_IN (GPIO 1).
+- U3 (COL) SIG  → 10 kΩ pull-down to GND, also tied to U2 SIG through the mesh's Velostat layer. The col MUX selects which column is "active" while the row MUX scans rows; the cell at (row, col) appears as a resistance between ADC_IN and GND.
+
+## Power
+
+- **USB-C 5 V** → input.
+- TLV1117LV33 → **3.3 V** rail to U1, U2, U3, U4, LEDs.
+- Decoupling: 10 µF + 100 nF + 10 nF at every IC, 47 µF bulk at the 3.3 V rail.
+- USB-C ESD: USBLC6-2SC6Y on D+/D-.
+
+## Known issues / errata
+
+- **None in v1 yet** — this PR is the first manufacturing tape-out of the schematic. We'll log errata here after the first batch comes back from JLCPCB.
+- **Anticipated**: Row MUX SIG → ADC_IN trace may need a small RC filter (10 kΩ + 100 nF) for noise reduction on long mesh runs. The current schematic includes the filter as DNP (do-not-populate) footprints so we can bodge it on if needed.
+
+## Ordering JLCPCB
+
+See [`../../../HARDWARE_BUILD_GUIDE.md`](../../../HARDWARE_BUILD_GUIDE.md) §2.2 + §3.4. Short version:
+
+1. jlcpcb.com → Order Now → upload `gerbers.zip`.
+2. 4 layers / ENIG lead-free / 5 pcs / black or purple.
+3. Tick **PCB Assembly** → Top Side, Standard.
+4. Upload `bom.csv` (BOM File) and `cpl.csv` (CPL File).
+5. Resolve any "Out of Stock" rows by clicking **Alternative** and picking the closest substitute in stock.
+6. DHL Express → Pay → wait 8–10 days.
+
+Expected price: ~$80 for 5 boards fully assembled. New-user coupon usually shaves $30 off the first order.
