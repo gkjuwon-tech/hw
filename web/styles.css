@@ -1110,8 +1110,23 @@ p {
     padding-top: 0;
   }
   .hero__meta {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
+    /* Keep the three readouts side-by-side on phones — collapsing them
+       to a vertical stack pushed everything below the fold and made the
+       hero feel like a CV. */
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+  .hero__meta p {
+    gap: 0.25rem;
+  }
+  .hero__meta .num {
+    font-size: 1.05rem;
+    letter-spacing: -0.015em;
+  }
+  .hero__meta .unit {
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    line-height: 1.2;
   }
   .form {
     grid-template-columns: 1fr;

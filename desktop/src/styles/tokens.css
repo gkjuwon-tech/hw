@@ -28,10 +28,25 @@
   --field: #ffffff;          /* white inputs, tables, heatmap bg */
   --field-2: #f4f3ee;        /* striped table row */
 
-  /* ── bevels (Windows 95 / industrial HMI raised/inset look) ─────── */
+  /* ── bevels (Windows 3.x / 95 raised/inset look) ────────────────── *
+   *   Two-tone for the highlight and a separate mid-gray "shadow"
+   *   stop so the bevel reads as a *3-step* ramp (white → surface →
+   *   mid-gray → black), which is what real 4-bit/8-bit chrome did.  */
   --bevel-hi: #ffffff;
+  --bevel-hi-2: #dcd8d0;
   --bevel-lo: #404040;
   --bevel-shadow: #808080;
+  --bevel-w: 2px;
+
+  /* ── dither / stipple chrome overlay ────────────────────────────── *
+   *   A 2×2 checkerboard at low opacity, baked into chrome surfaces
+   *   to make them read as 4-bit dithered fills (Win 3.x / VGA era)
+   *   instead of clean modern flat panels.                             */
+  --dither-ink: rgba(0, 0, 0, 0.07);
+  --dither-light: rgba(255, 255, 255, 0.12);
+
+  /* ── CRT scanline overlay (titlebar) ────────────────────────────── */
+  --scanline: rgba(0, 0, 0, 0.18);
 
   /* ── text ───────────────────────────────────────────────────────── */
   --ink: #000000;
@@ -72,12 +87,17 @@
   --heat-hot: #d40000;
 
   /* ── type ───────────────────────────────────────────────────────── */
+  /* Bitmap-era system fonts FIRST so machines that still ship MS Sans
+     Serif / System (Win 3.x → 7) render with their pixel-perfect
+     bitmap face. Modern boxes fall through to Tahoma/Segoe UI. No
+     webfonts, ever. */
   --font:
-    "Segoe UI", Tahoma, "Trebuchet MS", "MS Shell Dlg 2", "DejaVu Sans",
+    "MS Sans Serif", "Microsoft Sans Serif", "System", Tahoma,
+    "Segoe UI", "Trebuchet MS", "MS Shell Dlg 2", "DejaVu Sans",
     Verdana, sans-serif;
   --font-mono:
-    "Cascadia Mono", Consolas, "Lucida Console", "DejaVu Sans Mono",
-    "Courier New", monospace;
+    "Terminal", "Fixedsys", "Lucida Console", "Courier New",
+    "Cascadia Mono", Consolas, "DejaVu Sans Mono", monospace;
 
   --tx-micro: 10px;
   --tx-small: 11px;
