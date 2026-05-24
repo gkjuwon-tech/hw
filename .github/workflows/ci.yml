@@ -5,6 +5,12 @@ on:
     branches: ["**"]
   pull_request:
     branches: ["**"]
+  workflow_dispatch:
+    inputs:
+      run_wokwi:
+        description: "Also run the Wokwi hardware-sim scenarios (needs WOKWI_CLI_TOKEN secret)"
+        required: false
+        default: "false"
 
 jobs:
   backend:
@@ -32,3 +38,70 @@ jobs:
 
       - name: Pytest
         run: pytest -q
+
+  firmware-software-sim:
+    # Software-mode scenarios for the tactile-scanner firmware. Runs on every
+    # push — no Wokwi token needed, pure host-compiled logic.
+    name: firmware — software-mode sim
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: firmware/tactile_scanner_esp32/wokwi
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build host-mode scanner simulator
+        run: make -C host_sim
+
+      - name: Run software-mode scenarios (must be all-green)
+        run: python3 run_tests.py --mode software
+
+  firmware-wokwi-sim:
+    # Wokwi hardware-in-loop scenarios. NOT run on push — requires the
+    # WOKWI_CLI_TOKEN secret and burns ~50s wall-clock per simulation, so
+    # this is workflow_dispatch only.
+    name: firmware — wokwi hardware sim
+    if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.run_wokwi == 'true' }}
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: firmware/tactile_scanner_esp32/wokwi
+    env:
+      WOKWI_CLI_TOKEN: ${{ secrets.WOKWI_CLI_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install arduino-cli
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh \
+            | BINDIR="${HOME}/.local/bin" sh
+          echo "${HOME}/.local/bin" >> "${GITHUB_PATH}"
+
+      - name: Install esp32 board package
+        run: |
+          arduino-cli config init --overwrite
+          arduino-cli config add board_manager.additional_urls \
+            https://espressif.github.io/arduino-esp32/package_esp32_index.json
+          arduino-cli core update-index
+          arduino-cli core install esp32:esp32
+
+      - name: Install wokwi-cli
+        run: |
+          curl -L https://wokwi.com/ci/install.sh | sh
+          echo "${HOME}/.wokwi/bin" >> "${GITHUB_PATH}"
+
+      - name: Build firmware (CDCOnBoot=cdc for native USB)
+        run: bash build_firmware.sh
+
+      - name: Run wokwi-mode scenarios
+        run: python3 run_tests.py --mode wokwi
