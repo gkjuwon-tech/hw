@@ -689,6 +689,208 @@ p {
   border-top: 1px solid var(--ink);
 }
 
+/* ---------- pricing ---------- */
+.section--pricing {
+  padding-top: clamp(5rem, 9vw, 7.5rem);
+  padding-bottom: clamp(5rem, 9vw, 7.5rem);
+}
+.section--pricing::before {
+  /* The warehouse strip-light ceiling has very bright spots; we lean on a
+     deeper-than-default overlay so body copy stays legible at every scroll
+     position without resorting to gradients or card backgrounds. */
+  background: rgba(11, 12, 10, 0.74);
+}
+.eyebrow--light {
+  color: rgba(245, 245, 241, 0.82);
+}
+.eyebrow--light .eyebrow__dot {
+  background: var(--lime);
+}
+.section__lede {
+  max-width: 62ch;
+  margin: 0.25rem 0 3.25rem;
+  font-size: var(--tx-lede);
+  font-weight: 300;
+  line-height: 1.55;
+  color: var(--muted);
+}
+.section__lede--light {
+  color: rgba(245, 245, 241, 0.88);
+}
+/* Pricing columns mirror the `steps` pattern: bare typography on top of the
+   photo background, with hairline separators between columns. No card
+   backgrounds, no shadows. */
+.pricing {
+  margin-top: clamp(2.5rem, 5vw, 4rem);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  border-top: 1px solid rgba(245, 245, 241, 0.22);
+  color: var(--paper);
+}
+.plan {
+  padding: 2.5rem 2rem 2.5rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  border-right: 1px solid rgba(245, 245, 241, 0.18);
+}
+.plan:last-child {
+  border-right: 0;
+}
+.plan + .plan {
+  padding-left: 2rem;
+}
+.plan__head {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.plan__kicker {
+  margin: 0;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--lime);
+}
+.plan__title {
+  margin: 0.1rem 0 0.45rem;
+  font-size: 1.45rem;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  line-height: 1.18;
+  color: var(--paper);
+}
+.plan__body {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 300;
+  line-height: 1.6;
+  color: rgba(245, 245, 241, 0.78);
+}
+.plan__price {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+.plan__price th,
+.plan__price td {
+  padding: 0.85rem 0;
+  border-top: 1px solid rgba(245, 245, 241, 0.18);
+  text-align: left;
+  vertical-align: top;
+  font-weight: 300;
+}
+.plan__price tr:last-child th,
+.plan__price tr:last-child td {
+  border-bottom: 1px solid rgba(245, 245, 241, 0.18);
+}
+.plan__price th {
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(245, 245, 241, 0.55);
+  font-weight: 500;
+  width: 44%;
+  padding-right: 0.75rem;
+}
+.plan__price td {
+  color: var(--paper);
+  font-size: 0.98rem;
+}
+.plan__price td strong {
+  display: block;
+  font-weight: 400;
+  font-size: 1.05rem;
+  letter-spacing: -0.005em;
+  color: var(--paper);
+}
+.plan__usd {
+  display: inline-block;
+  margin-top: 0.2rem;
+  margin-right: 0.55rem;
+  color: rgba(245, 245, 241, 0.55);
+  font-size: 0.82rem;
+}
+.plan__unit {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.78rem;
+  color: rgba(245, 245, 241, 0.6);
+  letter-spacing: 0.01em;
+  line-height: 1.45;
+}
+.plan__hero {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 1.25rem 0 0.5rem;
+  border-top: 1px solid rgba(245, 245, 241, 0.18);
+  font-variant-numeric: tabular-nums;
+}
+.plan__hero-amount {
+  font-size: clamp(2.1rem, 3vw, 2.6rem);
+  font-weight: 200;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  color: var(--paper);
+}
+.plan__hero-usd {
+  margin-top: 0.5rem;
+  font-size: 0.92rem;
+  color: rgba(245, 245, 241, 0.6);
+}
+.plan__hero-unit {
+  margin-top: 0.9rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(245, 245, 241, 0.5);
+}
+.plan__notes {
+  list-style: none;
+  margin: 0.25rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+.plan__notes li {
+  position: relative;
+  padding-left: 1.1rem;
+  font-size: 0.86rem;
+  font-weight: 300;
+  line-height: 1.5;
+  color: rgba(245, 245, 241, 0.78);
+}
+.plan__notes li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55rem;
+  width: 0.55rem;
+  height: 1px;
+  background: var(--lime);
+}
+.pricing__footnote {
+  margin: 2.5rem 0 0;
+  font-size: 0.86rem;
+  font-weight: 300;
+  color: rgba(245, 245, 241, 0.72);
+  line-height: 1.6;
+}
+.pricing__footnote .link-quiet--ink {
+  color: var(--paper);
+  margin-left: 0.3rem;
+  border-bottom: 1px solid rgba(245, 245, 241, 0.32);
+  padding-bottom: 2px;
+}
+.pricing__footnote .link-quiet--ink:hover {
+  color: var(--lime);
+  border-color: var(--lime);
+}
+
 /* ---------- contact ---------- */
 .section--contact {
   padding-top: clamp(5rem, 10vw, 8rem);
@@ -873,6 +1075,20 @@ p {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.5rem;
+  }
+  .pricing {
+    grid-template-columns: 1fr;
+  }
+  .plan {
+    border-right: 0;
+    padding: 2.25rem 0;
+    border-bottom: 1px solid rgba(245, 245, 241, 0.18);
+  }
+  .plan + .plan {
+    padding-left: 0;
+  }
+  .plan:last-child {
+    border-bottom: 0;
   }
 }
 
