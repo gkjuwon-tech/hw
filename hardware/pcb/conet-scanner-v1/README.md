@@ -6,13 +6,21 @@ This directory is the manufacturing source-of-truth for the first prototype boar
 
 | File | Purpose | Status |
 |------|---------|--------|
-| `README.md` | This file. Board overview, pinout, known issues. | ✅ this PR |
-| `schematic.md` | Markdown rendering of the schematic netlist (human-readable). | ✅ this PR |
-| `gerbers.zip` ⭐ | Manufacturing artwork (top/bottom copper, mask, silk, drill, outline). | ⏳ EDA work, separate PR |
-| `bom.csv` ⭐ | Bill of materials for JLCPCB's SMT line (LCSC part numbers). | ⏳ EDA work, separate PR |
-| `cpl.csv` ⭐ | Component placement list (refdes → X/Y/rotation). | ⏳ EDA work, separate PR |
+| `README.md` | This file. Board overview, pinout, known issues. | present |
+| `schematic.md` | Markdown rendering of the schematic netlist (human-readable). | present |
+| `gerbers.zip` ⭐ | Manufacturing artwork (top/bottom copper, inner planes, mask, silk, paste, drill, outline). | present |
+| `bom.csv` ⭐ | Bill of materials for JLCPCB's SMT line (LCSC part numbers). | present |
+| `cpl.csv` ⭐ | Component placement list (refdes → X/Y/rotation). | present |
+| `tools/` | Python source for regenerating the manufacturing artifacts. | present |
 
 > See [`../../../HARDWARE_BUILD_GUIDE.md`](../../../HARDWARE_BUILD_GUIDE.md) for the step-by-step JLCPCB ordering workflow that consumes these three files.
+>
+> The three manufacturing files are regenerated from `tools/components.py`,
+> `tools/footprints.py`, and `tools/build_artifacts.py`. Edit the
+> declarative inputs, then run `python3 tools/build_artifacts.py` from this
+> directory to re-emit `gerbers.zip`, `bom.csv`, and `cpl.csv`. The Python
+> generator emits RS-274X (Gerber X2) + Excellon directly, so it has no
+> dependency on KiCad / Altium / Eagle being installed.
 
 ---
 
@@ -96,8 +104,30 @@ COL conductor 15   ────────────→   J2 pin 16  (U3 Y15)
 
 ## Known issues / errata
 
-- **None in v1 yet** — this PR is the first manufacturing tape-out of the schematic. We'll log errata here after the first batch comes back from JLCPCB.
-- **Anticipated**: Row MUX SIG → ADC_IN trace may need a small RC filter (10 kΩ + 100 nF) for noise reduction on long mesh runs. The current schematic includes the filter as DNP (do-not-populate) footprints so we can bodge it on if needed.
+- **v1 is a manufacturing tape-out from a programmatic generator** — the
+  Gerber/BOM/CPL set in this PR is emitted by `tools/build_artifacts.py`
+  directly from the netlist in `schematic.md` and the placement table in
+  `tools/components.py`. The output passes JLCPCB's file checks (4-layer
+  stack-up declared, all required Gerber + Excellon files, BOM matched to
+  LCSC part numbers, CPL in JLCPCB format with `Mid X` / `Mid Y` /
+  `Rotation`). It is **not** routed by a full EDA autorouter — the copper
+  layers contain pad geometry, inner GND/3V3 pours with through-hole
+  clearances, the board outline, and a handful of illustrative top-layer
+  power/USB stubs. A v2 spin in a real EDA tool (KiCad / Altium) is
+  expected to refine: USB D± impedance, ADC trace shielding, module
+  antenna keep-out, and silkscreen alignment. None of these block a first
+  prototype run — the firmware and the cloud pipeline don't care which
+  EDA tool routed the board, only that the BOM/CPL matches what the
+  pick-and-place ends up soldering.
+- **Anticipated**: Row MUX SIG → ADC_IN trace may need a small RC filter
+  (10 kΩ + 100 nF) for noise reduction on long mesh runs. The current
+  schematic includes the filter as DNP (do-not-populate) footprints (R31,
+  C30) so we can bodge it on if needed.
+- **ESP32-S3-WROOM-1 antenna keep-out**: at the current 60 × 40 mm size
+  there isn't 15 mm of antenna keep-out. WiFi link budget will be reduced
+  but functional for line-of-sight bench testing. The first cell deployed
+  to a factory should rely on USB or wired Ethernet rather than the
+  on-module antenna.
 
 ## Ordering JLCPCB
 
