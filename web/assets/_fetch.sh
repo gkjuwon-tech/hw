@@ -16,6 +16,7 @@ declare -A PHOTOS=(
   [industry-semicon.jpg]="photo-1672307613484-3254a04651fd"
   [industry-meat.jpg]="photo-1558618666-fcd25c85cd64"
   [quote-machine.jpg]="photo-1485827404703-89b55fcc595e"
+  [pricing-shipping.jpg]="photo-1553413077-190dd305871c"
   [company-floor.jpg]="photo-1532187863486-abf9dbad1b69"
 )
 
