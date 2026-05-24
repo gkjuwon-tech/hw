@@ -30,8 +30,8 @@ async function createWindow(): Promise<void> {
     height: 880,
     minWidth: 1024,
     minHeight: 700,
-    backgroundColor: "#f5f5f1",
-    title: "Conet Tactile",
+    backgroundColor: "#d4d0c8",
+    title: "Conet Tactile — Operator",
     autoHideMenuBar: true,
     webPreferences: {
       preload: join(__dirname, "preload.js"),

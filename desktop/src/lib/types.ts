@@ -1,9 +1,10 @@
 /**
- * Wire types for the FastAPI sidecar. We model only the fields the desktop
- * surface actually renders — the backend's full schemas live in
- * `backend/app/schemas.py`. If a field appears here, the desktop displays it;
- * if a field is in the backend but not here, the desktop deliberately
- * ignores it.
+ * Wire types for the FastAPI sidecar.
+ *
+ * The desktop is now a real client of the production control plane —
+ * lines + edges + mesh segments are all first-class resources. We model
+ * the subset of fields the operator UI surfaces; the backend's full
+ * schemas live in `backend/app/schemas.py`.
  */
 
 export interface ConetBridge {
@@ -45,4 +46,70 @@ export interface HealthResponse {
   service: string;
   version: string;
   environment: string;
+}
+
+export type EdgeStatus = "online" | "degraded" | "offline";
+
+export interface Edge {
+  id: string;
+  org_id: string;
+  hostname: string;
+  serial: string;
+  model: string;
+  site: string;
+  firmware_version: string;
+  agent_version: string;
+  status: EdgeStatus;
+  last_seen_at: string | null;
+  enrolled_at: string;
+  cpu_pct: number;
+  gpu_pct: number;
+  gpu_temp_c: number;
+  cpu_temp_c: number;
+  ram_used_mb: number;
+  ram_total_mb: number;
+  power_mw: number;
+  inference_p50_ms: number;
+  inference_p99_ms: number;
+  frames_per_second: number;
+}
+
+export interface EdgeTelemetry {
+  edge_id: string;
+  status: EdgeStatus;
+  ts: string | null;
+  cpu_pct: number;
+  gpu_pct: number;
+  gpu_temp_c: number;
+  cpu_temp_c: number;
+  ram_used_mb: number;
+  ram_total_mb: number;
+  power_mw: number;
+  inference_p50_ms: number;
+  inference_p99_ms: number;
+  frames_per_second: number;
+  firmware_version: string;
+  agent_version: string;
+}
+
+export interface MeshSegment {
+  id: string;
+  org_id: string;
+  line_id: string;
+  edge_id: string | null;
+  roll_lot: string;
+  belt_width_mm: number;
+  length_mm: number;
+  rows: number;
+  cols: number;
+  installed_at: string;
+  expected_lifetime_days: number;
+  health_pct: number;
+  dead_cells: number;
+  notes: string;
+}
+
+export interface ApiError extends Error {
+  status: number;
+  body: string;
 }

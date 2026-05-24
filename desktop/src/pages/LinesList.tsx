@@ -1,11 +1,18 @@
-import { useEffect, useState } from "react";
+/**
+ * Lines list page.
+ *
+ * Inventory of every conveyor line registered to the current org. The
+ * heavy lifting of polling lives in `App.tsx`; this component is pure
+ * presentation + click-to-open.
+ */
+
 import { PageHeader } from "../components/PageHeader";
-import { api } from "../lib/api";
-import type { Line } from "../lib/types";
+import type { Line, LineStatus } from "../lib/types";
 
 export interface LinesListProps {
+  lines: Line[];
   onOpen: (lineId: string) => void;
-  onCountChange: (n: number) => void;
+  apiError: boolean;
 }
 
 function formatDate(iso: string): string {
@@ -16,108 +23,91 @@ function formatDate(iso: string): string {
   }
 }
 
-export function LinesList({ onOpen, onCountChange }: LinesListProps): JSX.Element {
-  const [lines, setLines] = useState<Line[] | null>(null);
-  const [err, setErr] = useState<string | null>(null);
+function ledStateFor(status: LineStatus | undefined): string {
+  const s = status ?? "uncalibrated";
+  if (s === "live") return "online";
+  if (s === "error") return "bad";
+  if (s === "uncalibrated") return "warn";
+  return "off";
+}
 
-  useEffect(() => {
-    let cancelled = false;
-    api
-      .listLines()
-      .then((rows) => {
-        if (cancelled) return;
-        setLines(rows);
-        onCountChange(rows.length);
-      })
-      .catch((e: unknown) => {
-        if (cancelled) return;
-        setErr(e instanceof Error ? e.message : String(e));
-        setLines([]);
-        onCountChange(0);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [onCountChange]);
-
+export function LinesList({ lines, onOpen, apiError }: LinesListProps): JSX.Element {
   return (
     <div className="page">
       <PageHeader
-        eyebrow="01 — Lines"
-        title="Every part on the line, scored."
-        lede="One row per conveyor segment. Click a line to open its live tactile dashboard, drift, and last 24 hours of inspections."
-        actions={
-          <>
-            <button type="button" className="btn btn--ghost">
-              Filter
-            </button>
-            <button type="button" className="btn btn--primary">
-              Register a line
-            </button>
-          </>
-        }
+        eyebrow="LINES"
+        title="Conveyor inventory"
+        lede="One row per conveyor segment. Status reflects the line's last reported state from its assigned Edge appliance."
       />
 
-      {err && lines !== null && lines.length === 0 ? (
-        <div className="empty">
-          <p className="eyebrow">
-            <span className="eyebrow__dot" aria-hidden="true" />
-            No data yet
-          </p>
-          <p className="body" style={{ marginInline: "auto" }}>
-            The sidecar responded but no lines are registered for this
-            organization. Add the first line via <code className="mono">POST /v1/lines</code> or
-            the {`"`}Register a line{`"`} button.
-          </p>
-          <p className="mono" style={{ marginTop: "1rem", fontSize: "0.8rem", color: "var(--muted-2)" }}>
-            {err}
-          </p>
+      {apiError ? (
+        <div className="banner">
+          <b>SIDECAR DOWN.</b>&nbsp;The list below may be stale.
         </div>
-      ) : (
-        <table className="lines-table">
-          <thead>
-            <tr>
-              <th>Line ID</th>
-              <th>Customer tag</th>
-              <th>Mesh</th>
-              <th>Status</th>
-              <th>Registered</th>
-            </tr>
-          </thead>
-          <tbody>
-            {(lines ?? []).map((line) => (
-              <tr key={line.id} onClick={() => onOpen(line.id)}>
-                <td className="id">{line.id}</td>
-                <td>{line.customer_tag}</td>
-                <td className="mono">
-                  {line.rows}×{line.cols}
-                </td>
-                <td>
-                  <span className="status-dot" data-state={line.status ?? "uncalibrated"}>
-                    <span className="d" aria-hidden="true" />
-                    {(line.status ?? "uncalibrated").toUpperCase()}
-                  </span>
-                </td>
-                <td className="mono">{formatDate(line.created_at)}</td>
-              </tr>
-            ))}
-            {lines !== null && lines.length === 0 && !err ? (
-              <tr>
-                <td colSpan={5} style={{ textAlign: "center", padding: "2rem", color: "var(--muted)" }}>
-                  No lines registered yet.
-                </td>
-              </tr>
-            ) : null}
-            {lines === null ? (
-              <tr>
-                <td colSpan={5} style={{ textAlign: "center", padding: "2rem", color: "var(--muted)" }}>
-                  Loading…
-                </td>
-              </tr>
-            ) : null}
-          </tbody>
-        </table>
-      )}
+      ) : null}
+
+      <section className="card">
+        <header className="card__head">
+          <h3 className="h3">Lines</h3>
+          <span className="mono" style={{ fontSize: 11, color: "var(--muted)" }}>
+            {lines.length} total
+          </span>
+        </header>
+        <div className="card__body" style={{ padding: 0 }}>
+          {lines.length === 0 ? (
+            <div className="empty">No lines registered.</div>
+          ) : (
+            <table className="datagrid">
+              <thead>
+                <tr>
+                  <th>Line ID</th>
+                  <th>Customer tag</th>
+                  <th>Mesh</th>
+                  <th>Status</th>
+                  <th className="right">Score</th>
+                  <th className="right">Drift (z)</th>
+                  <th>Registered</th>
+                </tr>
+              </thead>
+              <tbody>
+                {lines.map((line) => {
+                  const s = line.status ?? "uncalibrated";
+                  return (
+                    <tr
+                      key={line.id}
+                      className="is-clickable"
+                      onClick={() => onOpen(line.id)}
+                    >
+                      <td className="id">{line.id}</td>
+                      <td>{line.customer_tag}</td>
+                      <td>
+                        {line.rows}×{line.cols}
+                      </td>
+                      <td>
+                        <span className="led" data-state={ledStateFor(line.status)}>
+                          <span className="led__dot" aria-hidden="true" />
+                          {s.toUpperCase()}
+                        </span>
+                      </td>
+                      <td className="right">
+                        {line.recent_score !== null && line.recent_score !== undefined
+                          ? line.recent_score.toFixed(3)
+                          : "—"}
+                      </td>
+                      <td className="right">
+                        {line.drift_z !== null && line.drift_z !== undefined
+                          ? line.drift_z.toFixed(2)
+                          : "—"}
+                      </td>
+                      <td>{formatDate(line.created_at)}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          )}
+        </div>
+      </section>
     </div>
   );
 }

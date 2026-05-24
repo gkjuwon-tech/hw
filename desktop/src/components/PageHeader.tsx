@@ -8,9 +8,13 @@ export interface PageHeaderProps {
 }
 
 /**
- * Page-level header in the landing-page grammar:
- *   eyebrow (lime dot + uppercase) → h2 (light weight, tight tracking) → lede.
- * Actions land to the right of the heading on a single baseline.
+ * Compact page header in the industrial register:
+ *
+ *   [eyebrow · TITLE]            [actions]
+ *
+ * The previous landing-page "eyebrow → h2 → lede" cluster is replaced
+ * with a single uppercase title (`h1`) and an optional muted subtitle
+ * shown after it on the same line on wide screens.
  */
 export function PageHeader({
   eyebrow,
@@ -25,8 +29,8 @@ export function PageHeader({
           <span className="eyebrow__dot" aria-hidden="true" />
           {eyebrow}
         </p>
-        <h1 className="h2">{title}</h1>
-        {lede ? <p className="lede">{lede}</p> : null}
+        <h1 className="h1" style={{ marginTop: 2 }}>{title}</h1>
+        {lede ? <p className="lede" style={{ marginTop: 4 }}>{lede}</p> : null}
       </div>
       {actions ? <div className="actions">{actions}</div> : null}
     </header>

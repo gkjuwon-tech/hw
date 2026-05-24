@@ -1,9 +1,10 @@
 /* =====================================================================
-   Conet Tactile — typography.
-   Same grammar as web/styles.css: eyebrow → h2 → lede → body, plus
-   .kv (description list) and .checks (bulleted list). Component classes
-   in app.css extend this vocabulary; the desktop never introduces a
-   competing type ramp.
+   Conet Tactile desktop — type rules.
+
+   Industrial HMI typography: low height, normal weight, no font
+   smoothing (operator screens are often cheap TN panels — antialiased
+   light fonts smear). All-caps for labels and crumbs is mandatory in
+   this register; mixed-case body only for sentence-shaped strings.
    ===================================================================== */
 
 *,
@@ -24,19 +25,24 @@ html {
 
 body {
   font-family: var(--font);
-  font-weight: 300;
+  font-weight: 400;
   font-size: var(--tx-body);
-  line-height: 1.55;
+  line-height: 1.35;
   color: var(--ink);
-  background: var(--paper);
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
-  overflow: hidden; /* the app shell handles its own scroll regions */
+  background: var(--surface);
+  /* Deliberately NOT antialiased — pixel-snapped text reads more like
+     "real software" on factory monitors. */
+  -webkit-font-smoothing: none;
+  -moz-osx-font-smoothing: auto;
+  text-rendering: geometricPrecision;
+  overflow: hidden;
+  user-select: none;
+  cursor: default;
 }
 
 a {
-  color: inherit;
-  text-decoration: none;
+  color: var(--link);
+  text-decoration: underline;
 }
 
 button {
@@ -45,7 +51,7 @@ button {
   background: none;
   border: 0;
   padding: 0;
-  cursor: pointer;
+  cursor: default;
 }
 
 ul,
@@ -56,15 +62,7 @@ dl {
   padding: 0;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p,
-dd,
-dt {
+h1, h2, h3, h4, h5, h6, p, dd, dt {
   margin: 0;
 }
 
@@ -73,149 +71,138 @@ img {
   display: block;
 }
 
-/* ---------- eyebrow ---------- */
+/* ---------- eyebrow / section label ---------- */
 .eyebrow {
-  font-size: var(--tx-1);
-  letter-spacing: 0.18em;
+  font-family: var(--font);
+  font-size: var(--tx-micro);
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  font-weight: 500;
+  font-weight: 700;
   color: var(--muted);
   display: inline-flex;
   align-items: center;
-  gap: 0.55rem;
+  gap: 6px;
 }
 .eyebrow__dot {
-  width: 0.45rem;
-  height: 0.45rem;
-  background: var(--lime);
+  width: 8px;
+  height: 8px;
+  background: var(--navy);
   display: inline-block;
 }
-.eyebrow--light {
-  color: var(--paper-2);
-}
-.eyebrow--light .eyebrow__dot {
-  background: var(--lime);
-}
 
-/* ---------- headings ---------- */
+/* ---------- headings (compact, all-caps for top-level) ---------- */
 .h1 {
   font-size: var(--tx-h1);
-  font-weight: 300;
-  line-height: 1.06;
-  letter-spacing: -0.022em;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
   color: var(--ink);
-  margin-top: 1rem;
-  max-width: 24ch;
+  line-height: 1.2;
 }
 .h2 {
   font-size: var(--tx-h2);
-  font-weight: 300;
-  line-height: 1.08;
-  letter-spacing: -0.02em;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
   color: var(--ink);
-  margin-top: 0.85rem;
-  max-width: 22ch;
-}
-.h2--light {
-  color: var(--paper);
+  line-height: 1.2;
 }
 .h3 {
   font-size: var(--tx-h3);
-  font-weight: 500;
-  letter-spacing: -0.01em;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
   color: var(--ink);
 }
 
 /* ---------- body / lede ---------- */
 .body {
-  margin-top: 1rem;
-  color: var(--ink-2);
-  max-width: 64ch;
-  font-weight: 300;
+  font-size: var(--tx-body);
+  color: var(--ink);
+  font-weight: 400;
 }
 .lede {
-  margin-top: 0.9rem;
-  font-size: var(--tx-lede);
+  font-size: var(--tx-body);
   color: var(--muted);
-  font-weight: 300;
-  max-width: 60ch;
-  line-height: 1.5;
-}
-.lede--light {
-  color: rgba(245, 245, 241, 0.86);
+  font-weight: 400;
+  max-width: 64ch;
 }
 
-/* ---------- numbers (hero meta in landing → stat cards here) ---------- */
+/* ---------- numbers (big readouts in dashboards) ---------- */
 .num {
+  font-family: var(--font-mono);
   font-size: var(--tx-num);
-  font-weight: 200;
-  letter-spacing: -0.03em;
+  font-weight: 700;
+  letter-spacing: 0;
   color: var(--ink);
   line-height: 1;
   font-variant-numeric: tabular-nums;
 }
-.num--light {
-  color: var(--paper);
-}
 .unit {
   display: block;
-  font-size: var(--tx-1);
+  font-size: var(--tx-micro);
   text-transform: uppercase;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.1em;
   color: var(--muted);
-  margin-top: 0.5rem;
+  margin-top: 4px;
+  font-weight: 700;
 }
 
-/* ---------- key/value pairs (kv) ---------- */
+/* ---------- key/value pairs (dense data sheet) ---------- */
 .kv {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 0.85rem;
-  margin-top: 1rem;
+  gap: 0;
+  margin: 0;
+  border-top: 1px solid var(--line-soft);
 }
 .kv > div {
   display: grid;
-  grid-template-columns: 12rem 1fr;
-  gap: 1rem;
-  padding-block: 0.55rem;
-  border-bottom: 1px solid var(--line);
+  grid-template-columns: 130px 1fr;
+  gap: 0;
+  border-bottom: 1px solid var(--line-soft);
 }
 .kv dt {
-  font-size: var(--tx-1);
-  letter-spacing: 0.14em;
+  padding: 4px 8px;
+  font-size: var(--tx-small);
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--muted);
-  font-weight: 500;
+  font-weight: 700;
+  background: var(--surface-3);
+  border-right: 1px solid var(--line-soft);
 }
 .kv dd {
+  padding: 4px 8px;
+  font-family: var(--font-mono);
+  font-size: var(--tx-body);
   color: var(--ink);
-  font-feature-settings: "tnum";
+  font-variant-numeric: tabular-nums;
 }
 
-/* ---------- check lists ---------- */
+/* ---------- check lists / bullets ---------- */
 .checks {
-  margin-top: 1.2rem;
   display: grid;
-  gap: 0.55rem;
+  gap: 4px;
+  margin: 4px 0 0;
 }
 .checks li {
   position: relative;
-  padding-left: 1.25rem;
-  color: var(--ink-2);
+  padding-left: 14px;
+  color: var(--ink);
 }
 .checks li::before {
-  content: "";
+  content: "•";
   position: absolute;
-  left: 0;
-  top: 0.55em;
-  width: 0.55rem;
-  height: 0.55rem;
-  background: var(--lime);
+  left: 2px;
+  top: 0;
+  color: var(--navy);
+  font-weight: 700;
 }
 
 /* ---------- mono ---------- */
 .mono {
   font-family: var(--font-mono);
-  font-feature-settings: "tnum", "ss01";
+  font-feature-settings: "tnum";
   font-weight: 400;
 }
