@@ -13,9 +13,9 @@ files:
   - package.json
 
 extraResources:
-  - from: python-sidecar/dist/sidecar
+  - from: python-sidecar/dist
     to: sidecar
-    filter: ["**/*"]
+    filter: ["sidecar", "sidecar.exe"]
 
 asar: true
 
