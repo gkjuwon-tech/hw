@@ -1,4 +1,4 @@
-"""Frame ingestion."""
+"""Frame ingestion (calibration buffer)."""
 
 from __future__ import annotations
 
@@ -6,6 +6,7 @@ import numpy as np
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.security import AuthContext, require_write_scope
 from app.core.storage import calibration_buffer
 from app.db import Line, get_session
 from app.schemas import FrameIn
@@ -27,16 +28,12 @@ async def _frame_to_array(line: Line, payload: FrameIn) -> np.ndarray:
 async def ingest_frame(
     line_id: str,
     payload: FrameIn,
+    auth: AuthContext = Depends(require_write_scope),
     session: AsyncSession = Depends(get_session),
 ) -> dict[str, int | str]:
-    """Append a frame to the in-memory calibration buffer.
-
-    During inspection, callers should use ``/inspect`` directly; this endpoint
-    exists for the calibration phase, where the Edge streams samples that the
-    customer marks as known-good in the web console.
-    """
+    """Append a frame to the in-memory calibration buffer."""
     line = await session.get(Line, line_id)
-    if line is None:
+    if line is None or line.org_id != auth.org_id:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "line not found")
 
     arr = await _frame_to_array(line, payload)

@@ -8,7 +8,8 @@ the service depends on.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from collections import deque
+from dataclasses import dataclass, field
 
 import numpy as np
 
@@ -28,6 +29,9 @@ class Score:
 
     frame_features: dict[str, float]
     """Aggregate scalar features for downstream analytics."""
+
+    heatmap: list[list[float]] = field(default_factory=list)
+    """Per-cell sigma deviation, optionally downsampled. Shape ``(h', w')``."""
 
 
 @dataclass
@@ -120,6 +124,7 @@ class Baseline:
                 "centroid_col": float(feats[4]),
                 "peak_gradient": float(feats[5]),
             },
+            heatmap=_downsample(cell_dev, max_cells=4096).tolist(),
         )
 
     def to_bytes(self) -> bytes:
@@ -178,3 +183,69 @@ def _features(frame: np.ndarray) -> np.ndarray:
     peak_grad = float(np.sqrt(gx * gx + gy * gy).max())
 
     return np.array([s, mx, area, cr, cc, peak_grad], dtype=np.float32)
+
+
+def _downsample(arr: np.ndarray, max_cells: int = 4096) -> np.ndarray:
+    """Box-average ``arr`` down so the result has at most ``max_cells`` cells.
+
+    Used to keep the per-frame heatmap payload bounded regardless of the
+    underlying sensor resolution. We deliberately avoid SciPy so this stays
+    a single numpy dependency.
+    """
+    if arr.size <= max_cells:
+        return arr.astype(np.float32)
+    h, w = arr.shape
+    factor = max(1, int(np.ceil(np.sqrt(arr.size / float(max_cells)))))
+    new_h = max(1, h // factor)
+    new_w = max(1, w // factor)
+    # Trim to multiples and reshape into blocks for vectorized mean.
+    trim_h = new_h * factor
+    trim_w = new_w * factor
+    trimmed = arr[:trim_h, :trim_w]
+    return (
+        trimmed.reshape(new_h, factor, new_w, factor)
+        .mean(axis=(1, 3))
+        .astype(np.float32)
+    )
+
+
+@dataclass
+class RollingDriftTracker:
+    """Online mean/std of recent inspection scores per line, with a z-score.
+
+    The tracker stores the last ``window`` scores in memory and reports the
+    standard score (``z``) of the current rolling mean against the calibration
+    cohort. Production replaces this with EWMA or CUSUM but the public shape
+    is the same.
+    """
+
+    window: int = 200
+    baseline_mean: float = 0.0
+    baseline_std: float = 1.0
+    _samples: deque[float] = field(default_factory=deque)
+
+    def __post_init__(self) -> None:
+        if not isinstance(self._samples, deque):  # type: ignore[unreachable]
+            self._samples = deque(maxlen=self.window)
+        else:
+            self._samples = deque(self._samples, maxlen=self.window)
+
+    def calibrate(self, scores: list[float]) -> None:
+        if not scores:
+            return
+        arr = np.asarray(scores, dtype=np.float32)
+        self.baseline_mean = float(arr.mean())
+        self.baseline_std = max(0.05, float(arr.std()))
+
+    def observe(self, score: float) -> float:
+        self._samples.append(float(score))
+        return self.z()
+
+    def z(self) -> float:
+        if not self._samples:
+            return 0.0
+        m = float(np.mean(self._samples))
+        return float((m - self.baseline_mean) / self.baseline_std)
+
+    def reset(self) -> None:
+        self._samples.clear()

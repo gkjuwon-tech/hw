@@ -2,35 +2,10 @@
 
 from __future__ import annotations
 
-import os
-import tempfile
 import uuid
-from collections.abc import AsyncIterator
-from pathlib import Path
 
 import numpy as np
-import pytest
-from httpx import ASGITransport, AsyncClient
-
-
-@pytest.fixture(autouse=True)
-def _isolated_env(monkeypatch: pytest.MonkeyPatch) -> None:
-    tmp = Path(tempfile.mkdtemp(prefix="conet-test-"))
-    monkeypatch.setenv("CONET_DATA_DIR", str(tmp))
-    monkeypatch.setenv("CONET_DATABASE_URL", f"sqlite+aiosqlite:///{tmp / 'test.db'}")
-    # Force re-import so the fresh env is picked up.
-    for mod in [m for m in list(os.sys.modules) if m.startswith("app")]:
-        del os.sys.modules[mod]
-
-
-@pytest.fixture
-async def client() -> AsyncIterator[AsyncClient]:
-    from app.main import app
-
-    transport = ASGITransport(app=app)
-    async with AsyncClient(transport=transport, base_url="http://test") as c:
-        async with app.router.lifespan_context(app):
-            yield c
+from httpx import AsyncClient
 
 
 def _good_frame(rng: np.random.Generator, rows: int = 8, cols: int = 8) -> list[float]:
@@ -52,7 +27,10 @@ async def test_full_loop(client: AsyncClient) -> None:
         json={"id": line_id, "customer_tag": "test-bakery", "rows": 8, "cols": 8},
     )
     assert r.status_code == 201, r.text
-    assert r.json()["status"] == "awaiting_calibration"
+    body = r.json()
+    assert body["status"] == "awaiting_calibration"
+    assert body["org_id"] == "org_default"
+    assert body["threshold_score"] == 3.0
 
     for _ in range(7):
         r = await client.post(
@@ -70,15 +48,19 @@ async def test_full_loop(client: AsyncClient) -> None:
     assert r.status_code == 200, r.text
     good = r.json()
     assert good["verdict"] == "pass"
+    assert "drift_z" in good
 
     bad = np.array(_good_frame(rng), dtype=np.float32).reshape(8, 8)
     bad[0:3, 0:3] = 240.0
     r = await client.post(
-        f"/v1/lines/{line_id}/inspect",
+        f"/v1/lines/{line_id}/inspect?include_heatmap=true",
         json={"data": bad.reshape(-1).tolist()},
     )
     assert r.status_code == 200, r.text
-    assert r.json()["score"] > good["score"]
+    bad_body = r.json()
+    assert bad_body["score"] > good["score"]
+    assert bad_body["heatmap"] is not None
+    assert len(bad_body["heatmap"]) > 0
 
 
 async def test_calibrate_requires_min_samples(client: AsyncClient) -> None:
@@ -106,3 +88,18 @@ async def test_inspect_requires_calibration(client: AsyncClient) -> None:
         f"/v1/lines/{line_id}/inspect", json={"data": _good_frame(rng)}
     )
     assert r.status_code == 409
+
+
+async def test_line_patch_thresholds(client: AsyncClient) -> None:
+    line_id = f"line-{uuid.uuid4().hex[:8]}"
+    await client.post(
+        "/v1/lines",
+        json={"id": line_id, "customer_tag": "", "rows": 8, "cols": 8},
+    )
+    r = await client.patch(
+        f"/v1/lines/{line_id}",
+        json={"threshold_score": 4.5, "threshold_hits": 12},
+    )
+    assert r.status_code == 200, r.text
+    assert r.json()["threshold_score"] == 4.5
+    assert r.json()["threshold_hits"] == 12
