@@ -45,7 +45,7 @@ export function Spark({ values, threshold, variant = "paper" }: SparkProps): JSX
       ? h - padY - ((threshold - min) / range) * (h - 2 * padY)
       : null;
 
-  const stroke = variant === "ink" ? "#e8e4dc" : "#003c71";
+  const stroke = variant === "ink" ? "#e8e4dc" : "#4f7d1f";
 
   return (
     <div className={inkClass} aria-label="Anomaly score timeline">

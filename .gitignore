@@ -53,6 +53,8 @@ desktop/node_modules/
 desktop/dist/
 desktop/dist-electron/
 desktop/release/
+desktop/artifacts/*
+!desktop/artifacts/Conet-Tactile-0.1.0-win-x64-setup.exe
 desktop/python-sidecar/build/
 desktop/python-sidecar/dist/
 desktop/.vite/
