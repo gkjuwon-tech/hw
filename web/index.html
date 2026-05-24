@@ -1,0 +1,663 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Conet Tactile — Industrial tactile inspection that no camera can do</title>
+    <meta
+      name="description"
+      content="Conet Tactile turns any conveyor line into a per-part tactile inspection station. A peel-and-stick pressure-sensing mesh, calibrated with five known-good samples, scoring every part for defects no camera can see."
+    />
+    <meta name="theme-color" content="#0b0c0a" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+
+  <body>
+    <a class="skiplink" href="#main">Skip to content</a>
+
+    <header class="topbar" id="topbar">
+      <div class="topbar__inner">
+        <a class="brand" href="#top" aria-label="Conet Tactile, home">
+          <span class="brand__mark" aria-hidden="true"></span>
+          <span class="brand__word">Conet&nbsp;Tactile</span>
+        </a>
+
+        <nav class="nav" aria-label="Primary">
+          <a href="#problem">Why tactile</a>
+          <a href="#product">Product</a>
+          <a href="#industries">Industries</a>
+          <a href="#pricing">Pricing</a>
+          <a href="#specs">Specifications</a>
+          <a href="#company">Company</a>
+        </nav>
+
+        <a class="cta-link" href="#contact">
+          Book a pilot
+          <span aria-hidden="true" class="arrow">&rarr;</span>
+        </a>
+      </div>
+    </header>
+
+    <main id="main">
+      <!-- ─────────────────────────────── HERO ─────────────────────────────── -->
+      <section
+        class="hero section--photo"
+        id="top"
+        style="--bg: url('assets/hero-factory.jpg')"
+        aria-label="Hero"
+      >
+        <div class="hero__inner">
+          <p class="eyebrow">
+            <span class="eyebrow__dot" aria-hidden="true"></span>
+            Conet&nbsp;Tactile&nbsp;/ for production lines
+          </p>
+          <h1 class="hero__title">
+            Tactile inspection<br />
+            for every part on the&nbsp;line.
+          </h1>
+          <p class="hero__lede">
+            A thin, flexible pressure-sensing mesh that lays on top of an existing
+            conveyor and scores every part the way a trained operator&rsquo;s hand
+            would &mdash; for fill, springback, voids, and bondline pressure that no
+            camera can see.
+          </p>
+          <div class="hero__actions">
+            <a class="link-strong" href="#contact">Start a pilot</a>
+            <a class="link-quiet" href="#product">
+              See how it works
+              <span class="arrow" aria-hidden="true">&rarr;</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="hero__meta">
+          <p><span class="num">5</span><span class="unit">samples to calibrate</span></p>
+          <p><span class="num">&lt;50&nbsp;ms</span><span class="unit">edge inference</span></p>
+          <p><span class="num">200&ndash;750&nbsp;mm</span><span class="unit">belt widths</span></p>
+        </div>
+      </section>
+
+      <!-- ────────────────────────────── PROBLEM ───────────────────────────── -->
+      <section
+        class="section section--split section--photo section--photo--left"
+        id="problem"
+        style="--bg: url('assets/problem-line.jpg')"
+      >
+        <div class="split">
+          <div class="split__photo" aria-hidden="true"></div>
+          <div class="split__copy">
+            <p class="eyebrow">01 &mdash; The problem</p>
+            <h2 class="h2">Cameras cannot feel the&nbsp;part.</h2>
+            <p class="body">
+              The defects that get past machine vision are the ones a person would
+              catch by touch &mdash; a softer cookie, an underfilled capsule, a
+              cushion compact with a hollow chamber, a patty with the wrong fat
+              distribution, a seam stitched through two plies instead of three.
+            </p>
+            <p class="body">
+              Today these are caught with downstream lab sampling, X-ray, or a line
+              of human inspectors. Each is slow, expensive, or both. Conet Tactile
+              puts a thin layer of synthetic touch directly on the conveyor and
+              scores every part as it passes.
+            </p>
+            <ul class="checks">
+              <li>Soft, deformable, translucent, or matte-black products</li>
+              <li>Internal voids, missing fill, layered structure defects</li>
+              <li>Bondline pressure and post-cure mechanical signatures</li>
+              <li>Per-part decisions, not statistical batch sampling</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ─────────────────────────── HOW IT WORKS ─────────────────────────── -->
+      <section
+        class="section section--photo"
+        id="product"
+        style="--bg: url('assets/product-process.jpg')"
+      >
+        <div class="section__inner">
+          <header class="section__head">
+            <p class="eyebrow">02 &mdash; Product</p>
+            <h2 class="h2 h2--light">
+              A roll, a box,<br />a five-minute&nbsp;install.
+            </h2>
+            <p class="lede lede--light">
+              Conet Tactile ships in three pieces. There is no integration project,
+              no scaffolding, no engineering visit. Your maintenance team installs
+              it during a normal change-over window.
+            </p>
+          </header>
+
+          <ol class="steps">
+            <li class="step">
+              <span class="step__num">01</span>
+              <h3 class="step__title">Tactile Mesh</h3>
+              <p class="step__body">
+                A flexible piezo-resistive sheet ships on a roll. Cut it to belt
+                width with the included rotary cutter, peel the adhesive backing,
+                and lay it down. Five-millimetre pressure grid, food-grade laminate.
+              </p>
+            </li>
+            <li class="step">
+              <span class="step__num">02</span>
+              <h3 class="step__title">Tactile Edge</h3>
+              <p class="step__body">
+                A small fanless inference appliance reads the mesh, segments parts,
+                and runs anomaly scoring in under fifty milliseconds. Mounts on the
+                line cabinet with a magnetic base or a DIN-rail clip.
+              </p>
+            </li>
+            <li class="step">
+              <span class="step__num">03</span>
+              <h3 class="step__title">Five known-good parts</h3>
+              <p class="step__body">
+                Run five good parts down the belt and tap calibrate in the web
+                console. Tactile Cloud auto-detects line speed, builds the
+                signature, and is live. Optional bad-sample tuning takes minutes.
+              </p>
+            </li>
+            <li class="step">
+              <span class="step__num">04</span>
+              <h3 class="step__title">Reject on signal</h3>
+              <p class="step__body">
+                Anomaly score crosses threshold, the Edge fires a 24&nbsp;V relay
+                into your reject actuator. Webhooks, OPC-UA, and PROFINET are
+                supported for downstream MES and SCADA.
+              </p>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- ────────────────────────── TACTILE CLOUD ─────────────────────────── -->
+      <section
+        class="section section--split section--photo section--photo--right"
+        id="cloud"
+        style="--bg: url('assets/cloud-circuit.jpg')"
+      >
+        <div class="split split--reverse">
+          <div class="split__copy">
+            <p class="eyebrow">03 &mdash; Tactile Cloud</p>
+            <h2 class="h2">The five-sample&nbsp;calibration.</h2>
+            <p class="body">
+              Tactile Cloud is the part of Conet Tactile that learns. From five
+              known-good parts, it builds a per-cell tactile signature and a
+              per-part feature distribution. It runs an inspection-grade one-class
+              anomaly model on top &mdash; the same algorithmic family used in
+              modern visual anomaly detection, adapted for pressure-time fields.
+            </p>
+            <p class="body">
+              Models train on commodity GPUs in minutes and deploy back to the Edge
+              the same hour. Customers who have similar products get warm-start
+              models from our fleet, with strict per-tenant isolation on raw data.
+            </p>
+            <dl class="kv">
+              <div><dt>Calibration time</dt><dd>4&ndash;9 minutes, end&ndash;to&ndash;end</dd></div>
+              <div><dt>Drift detection</dt><dd>per-cell, daily</dd></div>
+              <div><dt>Inference</dt><dd>edge-local, &lt; 50 ms / part</dd></div>
+              <div><dt>Data residency</dt><dd>KR, JP, EU regions</dd></div>
+            </dl>
+          </div>
+          <div class="split__photo" aria-hidden="true"></div>
+        </div>
+      </section>
+
+      <!-- ──────────────────────────── INDUSTRIES ──────────────────────────── -->
+      <section class="section section--solid" id="industries">
+        <div class="section__inner">
+          <header class="section__head section__head--narrow">
+            <p class="eyebrow">04 &mdash; Industries</p>
+            <h2 class="h2">Where touch beats vision.</h2>
+            <p class="lede">
+              Conet Tactile is built for product categories where the defect is
+              physical, not visual. We have deliberately stayed out of the
+              well-served vision-friendly verticals.
+            </p>
+          </header>
+
+          <div class="industries">
+            <article
+              class="industry"
+              style="--bg: url('assets/industry-bakery.jpg')"
+            >
+              <span class="industry__bg" aria-hidden="true"></span>
+              <div class="industry__body">
+                <h3>Bakery &amp; confectionery</h3>
+                <p>
+                  Fill, springback, sandwich-layer count, soft-defect detection on
+                  matte and floured surfaces.
+                </p>
+              </div>
+            </article>
+
+            <article
+              class="industry"
+              style="--bg: url('assets/industry-pharma.jpg')"
+            >
+              <span class="industry__bg" aria-hidden="true"></span>
+              <div class="industry__body">
+                <h3>Pharmaceutical capsules</h3>
+                <p>
+                  Per-capsule fill weight surrogate, deformation, void detection
+                  at line speed &mdash; without the cost of X-ray.
+                </p>
+              </div>
+            </article>
+
+            <article
+              class="industry"
+              style="--bg: url('assets/industry-cosmetics.jpg')"
+            >
+              <span class="industry__bg" aria-hidden="true"></span>
+              <div class="industry__body">
+                <h3>Cosmetics filling</h3>
+                <p>
+                  Pump chamber fill, cushion compact integrity, cap-torque proxy
+                  via post-fill pressure footprint.
+                </p>
+              </div>
+            </article>
+
+            <article
+              class="industry"
+              style="--bg: url('assets/industry-textile.jpg')"
+            >
+              <span class="industry__bg" aria-hidden="true"></span>
+              <div class="industry__body">
+                <h3>Technical textile</h3>
+                <p>
+                  Ply count verification, seam-thickness uniformity, double-feed
+                  detection in continuous web&nbsp;processes.
+                </p>
+              </div>
+            </article>
+
+            <article
+              class="industry"
+              style="--bg: url('assets/industry-semicon.jpg')"
+            >
+              <span class="industry__bg" aria-hidden="true"></span>
+              <div class="industry__body">
+                <h3>Semiconductor back-end</h3>
+                <p>
+                  Die-attach bondline pressure profile after cure, pre-mold
+                  uniformity, package warpage screening.
+                </p>
+              </div>
+            </article>
+
+            <article
+              class="industry"
+              style="--bg: url('assets/industry-meat.jpg')"
+            >
+              <span class="industry__bg" aria-hidden="true"></span>
+              <div class="industry__body">
+                <h3>Processed meat &amp; protein</h3>
+                <p>
+                  Patty and fillet thickness, fat-distribution, spring-back, and
+                  ply-cohesion at packaging speed.
+                </p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- ──────────────────────────────── QUOTE ──────────────────────────────── -->
+      <section
+        class="section section--photo section--quote"
+        style="--bg: url('assets/quote-machine.jpg')"
+      >
+        <figure class="quote">
+          <blockquote>
+            <p>
+              <span class="quote__open" aria-hidden="true">&ldquo;</span>
+              We had been buying a vision system every two years for the same
+              defect class and getting the same eighty-eight percent recall.
+              Conet&rsquo;s mesh went on in an afternoon and we&rsquo;re past
+              ninety-seven on the first line.
+              <span class="quote__close" aria-hidden="true">&rdquo;</span>
+            </p>
+          </blockquote>
+          <figcaption>
+            <span>Plant manager, Tier-1 confectionery OEM</span>
+            <span class="quote__divider" aria-hidden="true"></span>
+            <span>Pilot line, Daejeon</span>
+          </figcaption>
+        </figure>
+      </section>
+
+      <!-- ───────────────────────────── PRICING ───────────────────────────── -->
+      <section
+        class="section section--photo section--pricing"
+        id="pricing"
+        style="--bg: url('assets/pricing-shipping.jpg')"
+      >
+        <div class="section__inner">
+          <header class="section__head section__head--inline">
+            <p class="eyebrow eyebrow--light">05 &mdash; Pricing</p>
+            <h2 class="h2 h2--light">Shipped, not&nbsp;installed.</h2>
+          </header>
+
+          <p class="section__lede section__lede--light">
+            Conet Tactile is sold like a consumable, not a capital project.
+            There is no SI integration fee. There is no engineering visit.
+            Mesh by the running meter, the appliance once, the cloud monthly.
+          </p>
+
+          <div class="pricing">
+            <article class="plan">
+              <header class="plan__head">
+                <p class="plan__kicker">Mesh</p>
+                <h3 class="plan__title">Tactile&nbsp;Mesh</h3>
+                <p class="plan__body">
+                  Auto-replenish consumable. Sold by the running meter at the
+                  belt width you choose. 6&ndash;12 month lifetime under
+                  continuous duty. Cut to width on-site, no SI fee.
+                </p>
+              </header>
+              <table class="plan__price" aria-label="Mesh pricing by belt width">
+                <tbody>
+                  <tr>
+                    <th scope="row">200&nbsp;mm wide</th>
+                    <td>
+                      <strong>&#8361;48,000</strong>
+                      <span class="plan__usd">USD&nbsp;35</span>
+                      <span class="plan__unit">/ running meter</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th scope="row">350&nbsp;mm wide</th>
+                    <td>
+                      <strong>&#8361;72,000</strong>
+                      <span class="plan__usd">USD&nbsp;53</span>
+                      <span class="plan__unit">/ running meter</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th scope="row">500&nbsp;mm wide</th>
+                    <td>
+                      <strong>&#8361;98,000</strong>
+                      <span class="plan__usd">USD&nbsp;72</span>
+                      <span class="plan__unit">/ running meter</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th scope="row">750&nbsp;mm wide</th>
+                    <td>
+                      <strong>&#8361;135,000</strong>
+                      <span class="plan__usd">USD&nbsp;99</span>
+                      <span class="plan__unit">/ running meter</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th scope="row">1,200&nbsp;mm custom</th>
+                    <td>
+                      <strong>From &#8361;205,000</strong>
+                      <span class="plan__usd">USD&nbsp;152</span>
+                      <span class="plan__unit">/ running meter</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <ul class="plan__notes">
+                <li>Rotary cutter, termination clips, and install jig in every roll.</li>
+                <li>Volume tier at 50&nbsp;m / month, contract tier at 250&nbsp;m / month.</li>
+                <li>Lead time 2&ndash;3 weeks from Seoul.</li>
+              </ul>
+            </article>
+
+            <article class="plan">
+              <header class="plan__head">
+                <p class="plan__kicker">Edge</p>
+                <h3 class="plan__title">Tactile&nbsp;Edge</h3>
+                <p class="plan__body">
+                  Fanless inference appliance. One per line. Mounts on the line
+                  cabinet with a DIN-rail clip or magnetic base. Two-year
+                  warranty and onsite swap.
+                </p>
+              </header>
+              <div class="plan__hero">
+                <span class="plan__hero-amount">&#8361;1,690,000</span>
+                <span class="plan__hero-usd">USD&nbsp;1,290</span>
+                <span class="plan__hero-unit">one&#8209;time, per&nbsp;line</span>
+              </div>
+              <ul class="plan__notes">
+                <li>NVIDIA Jetson Orin Nano 8&nbsp;GB, IP54 enclosure, PoE+ or 24&nbsp;V&nbsp;DC.</li>
+                <li>24&nbsp;V relay, OPC-UA, PROFINET, MQTT, and REST webhooks built-in.</li>
+                <li>Pre-flashed and provisioned to your Cloud workspace before shipping.</li>
+              </ul>
+            </article>
+
+            <article class="plan">
+              <header class="plan__head">
+                <p class="plan__kicker">Cloud</p>
+                <h3 class="plan__title">Tactile&nbsp;Cloud</h3>
+                <p class="plan__body">
+                  Per-line SaaS. Calibration, drift detection, fleet
+                  dashboards, webhook delivery, OPC-UA bridge. First month free
+                  with any new mesh shipment.
+                </p>
+              </header>
+              <table class="plan__price" aria-label="Cloud plans">
+                <tbody>
+                  <tr>
+                    <th scope="row">Starter</th>
+                    <td>
+                      <strong>&#8361;1,560,000</strong>
+                      <span class="plan__usd">USD&nbsp;1,200</span>
+                      <span class="plan__unit">/ line / month &middot; up to 4&nbsp;M parts</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Production</th>
+                    <td>
+                      <strong>&#8361;4,290,000</strong>
+                      <span class="plan__usd">USD&nbsp;3,300</span>
+                      <span class="plan__unit">/ site / month &middot; up to 4 lines, drift alerts, webhooks</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Fleet</th>
+                    <td>
+                      <strong>Custom</strong>
+                      <span class="plan__unit">multi-site, custom verticals, dedicated support</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <ul class="plan__notes">
+                <li>KR &middot; JP &middot; EU regional clusters. Per-tenant data isolation.</li>
+                <li>SSO, audit log, and SOC&nbsp;2 evidence package on Production+.</li>
+              </ul>
+            </article>
+          </div>
+
+          <p class="pricing__footnote">
+            KRW is billed in won; USD shown at an internal rate for reference.
+            Korean VAT, freight, and customs are calculated at checkout.
+            <a class="link-quiet link-quiet--ink" href="#contact">
+              Get a written quote
+              <span class="arrow" aria-hidden="true">&rarr;</span>
+            </a>
+          </p>
+        </div>
+      </section>
+
+      <!-- ───────────────────────────── SPECIFICATIONS ─────────────────────── -->
+      <section class="section section--solid" id="specs">
+        <div class="section__inner section__inner--specs">
+          <header class="section__head section__head--inline">
+            <p class="eyebrow">06 &mdash; Specifications</p>
+            <h2 class="h2">Engineering reference.</h2>
+          </header>
+
+          <div class="specs">
+            <table class="specs__table" aria-label="Specifications">
+              <tbody>
+                <tr>
+                  <th scope="row">Sensing principle</th>
+                  <td>Piezo-resistive textile matrix, row &times; column scanning</td>
+                </tr>
+                <tr>
+                  <th scope="row">Spatial pitch</th>
+                  <td>5&nbsp;mm (200 cells / cm²)</td>
+                </tr>
+                <tr>
+                  <th scope="row">Pressure range</th>
+                  <td>0.5&nbsp;kPa &ndash; 200&nbsp;kPa</td>
+                </tr>
+                <tr>
+                  <th scope="row">Per-cell resolution</th>
+                  <td>16-bit raw, 8-bit transmitted</td>
+                </tr>
+                <tr>
+                  <th scope="row">Refresh rate</th>
+                  <td>1&nbsp;kHz scanner, 200&nbsp;Hz uplink</td>
+                </tr>
+                <tr>
+                  <th scope="row">Belt widths</th>
+                  <td>200 / 350 / 500 / 750&nbsp;mm rolls, custom up to 1200&nbsp;mm</td>
+                </tr>
+                <tr>
+                  <th scope="row">Operating range</th>
+                  <td>0&nbsp;°C &ndash; 60&nbsp;°C, IP54 enclosure for Tactile&nbsp;Edge</td>
+                </tr>
+                <tr>
+                  <th scope="row">Edge compute</th>
+                  <td>NVIDIA Jetson Orin Nano 8&nbsp;GB, 40&nbsp;TOPS</td>
+                </tr>
+                <tr>
+                  <th scope="row">Inference latency</th>
+                  <td>&lt; 50&nbsp;ms end-to-end</td>
+                </tr>
+                <tr>
+                  <th scope="row">Integrations</th>
+                  <td>24&nbsp;V&nbsp;DC relay, OPC-UA, PROFINET, MQTT, REST webhooks</td>
+                </tr>
+                <tr>
+                  <th scope="row">Data residency</th>
+                  <td>KR &middot; JP &middot; EU regional clusters</td>
+                </tr>
+                <tr>
+                  <th scope="row">Mesh lifetime</th>
+                  <td>6&ndash;12 months continuous, sold as subscription consumable</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ───────────────────────────── COMPANY ─────────────────────── -->
+      <section
+        class="section section--split section--photo section--photo--left"
+        id="company"
+        style="--bg: url('assets/company-floor.jpg')"
+      >
+        <div class="split">
+          <div class="split__photo" aria-hidden="true"></div>
+          <div class="split__copy">
+            <p class="eyebrow">07 &mdash; Company</p>
+            <h2 class="h2">A small team from software, building hardware on purpose.</h2>
+            <p class="body">
+              Conet is an AI engineering studio that has spent the last two years
+              building things software could not solve alone &mdash; coding agents,
+              custom diffusion-transformer video models, finetuning pipelines, and
+              new architectures beyond the standard transformer recipe.
+            </p>
+            <p class="body">
+              Conet&nbsp;Tactile is the hardware that ships when we can show that
+              physical presence on the line is the only honest path. We are based
+              in Seoul, and we ship from Korea.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ───────────────────────────── CONTACT ─────────────────────── -->
+      <section class="section section--contact section--solid" id="contact">
+        <div class="section__inner section__inner--contact">
+          <p class="eyebrow">Get started</p>
+          <h2 class="h2">Book a pilot.</h2>
+          <p class="lede">
+            Tell us your line, your defect category, and your throughput. We will
+            send a sample roll, a Tactile Edge, and an install kit &mdash;
+            typically inside three weeks.
+          </p>
+
+          <form
+            class="form"
+            action="https://formspree.io/f/replace-with-real-endpoint"
+            method="post"
+            novalidate
+          >
+            <div class="form__row">
+              <label for="f-name">Your name</label>
+              <input id="f-name" name="name" type="text" autocomplete="name" required />
+            </div>
+            <div class="form__row">
+              <label for="f-company">Company</label>
+              <input id="f-company" name="company" type="text" autocomplete="organization" required />
+            </div>
+            <div class="form__row">
+              <label for="f-email">Work email</label>
+              <input id="f-email" name="email" type="email" autocomplete="email" required />
+            </div>
+            <div class="form__row">
+              <label for="f-line">Line type</label>
+              <input id="f-line" name="line" type="text" placeholder="e.g. cushion-compact filling, 120 pcs/min" />
+            </div>
+            <div class="form__row form__row--wide">
+              <label for="f-notes">Notes</label>
+              <textarea id="f-notes" name="notes" rows="4" placeholder="Defect categories you would like to detect, current inspection approach, any constraints."></textarea>
+            </div>
+            <div class="form__row form__row--wide form__row--submit">
+              <button class="submit" type="submit">
+                Request pilot
+                <span class="arrow" aria-hidden="true">&rarr;</span>
+              </button>
+              <p class="form__legal">
+                Or write to
+                <a href="mailto:tactile@conet.studio">tactile@conet.studio</a>.
+                We respond within one business day, Seoul time.
+              </p>
+            </div>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer__inner">
+        <div class="footer__brand">
+          <span class="brand__mark" aria-hidden="true"></span>
+          <span>Conet&nbsp;Tactile</span>
+        </div>
+        <nav class="footer__nav" aria-label="Footer">
+          <a href="#problem">Why tactile</a>
+          <a href="#product">Product</a>
+          <a href="#industries">Industries</a>
+          <a href="#pricing">Pricing</a>
+          <a href="#specs">Specifications</a>
+          <a href="#company">Company</a>
+          <a href="#contact">Contact</a>
+        </nav>
+        <p class="footer__legal">
+          &copy; <span id="year">2026</span> Conet Studio. Seoul, Korea. All rights reserved.
+        </p>
+      </div>
+    </footer>
+
+    <script src="script.js" defer></script>
+  </body>
+</html>
