@@ -38,6 +38,7 @@
 
 /* ---------- titlebar (navy header with build/uptime) ---------- */
 .titlebar {
+  position: relative;
   background: var(--navy);
   color: var(--navy-on);
   display: grid;
@@ -48,15 +49,29 @@
   font-size: var(--tx-small);
   letter-spacing: 0.04em;
   -webkit-app-region: drag;
-  /* Re-create the classic Windows "two-tone" titlebar gradient with
-     hard, banded stops — no soft easing. */
-  background-image: linear-gradient(
-    90deg,
-    var(--navy-deep) 0,
-    var(--navy-deep) 12px,
-    var(--navy) 12px,
-    var(--navy) 100%
-  );
+  /* Banded two-tone fill + 1px CRT scanlines. The repeating-linear-
+     gradient renders as one black scanline per two pixels and gives
+     the navy bar a real "glowing CRT" presence instead of a flat
+     web-2.0 hero block. */
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      transparent 0,
+      transparent 1px,
+      var(--scanline) 1px,
+      var(--scanline) 2px
+    ),
+    linear-gradient(
+      90deg,
+      var(--navy-deep) 0,
+      var(--navy-deep) 12px,
+      var(--navy) 12px,
+      var(--navy) 100%
+    );
+  /* Hard 1px highlight along the very top edge — classic CDE/Win95
+     "window has a light source above" cue. */
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25),
+              inset 0 -1px 0 rgba(0, 0, 0, 0.4);
 }
 .titlebar__brand {
   display: inline-flex;
@@ -103,12 +118,33 @@
 .toolbar {
   height: var(--toolbar-h);
   background: var(--surface);
+  /* 2x2 dithered chrome — barely visible, but it kills the "flat
+     modern panel" tell and reads as a 4-bit dithered fill. */
+  background-image:
+    linear-gradient(
+      45deg,
+      var(--dither-ink) 25%,
+      transparent 25%,
+      transparent 75%,
+      var(--dither-ink) 75%
+    ),
+    linear-gradient(
+      45deg,
+      var(--dither-light) 25%,
+      transparent 25%,
+      transparent 75%,
+      var(--dither-light) 75%
+    );
+  background-size: 2px 2px;
+  background-position: 0 0, 1px 1px;
   display: flex;
   align-items: center;
   gap: 6px;
   padding: 0 8px;
   border-bottom: 1px solid var(--line-strong);
-  box-shadow: inset 0 -1px 0 var(--bevel-shadow);
+  box-shadow:
+    inset 0 1px 0 var(--bevel-hi),
+    inset 0 -2px 0 var(--bevel-shadow);
 }
 .toolbar__crumb {
   margin-left: auto;
@@ -122,7 +158,11 @@
   color: var(--ink);
 }
 
-/* ---------- buttons (Windows-style raised bevel) ---------- */
+/* ---------- buttons (Windows-3.x chunky chiclet bevel) ---------- */
+/* Two-pixel raised bevel: outer white highlight + inner light
+   surface; outer black shadow + inner mid-gray shadow. This is the
+   "4-step" bevel from Win 3.x / Motif, much chunkier than the 1px
+   Cognex bevel we shipped first. */
 .btn {
   font-family: var(--font);
   font-size: var(--tx-small);
@@ -130,13 +170,15 @@
   letter-spacing: 0;
   text-transform: none;
   padding: 3px 12px;
-  min-height: 22px;
+  min-height: 24px;
   color: var(--ink);
   background: var(--surface);
   border: 1px solid var(--line-strong);
   box-shadow:
     inset 1px 1px 0 var(--bevel-hi),
-    inset -1px -1px 0 var(--bevel-lo);
+    inset 2px 2px 0 var(--bevel-hi-2),
+    inset -1px -1px 0 var(--bevel-lo),
+    inset -2px -2px 0 var(--bevel-shadow);
   cursor: default;
   display: inline-flex;
   align-items: center;
@@ -150,9 +192,14 @@
 .btn:active,
 .btn[aria-pressed="true"] {
   background: var(--surface-2);
+  /* When pressed, the bevel inverts AND the text shifts one pixel
+     down-right, exactly like every Win 3.x dialog button. */
   box-shadow:
     inset 1px 1px 0 var(--bevel-lo),
-    inset -1px -1px 0 var(--bevel-hi);
+    inset 2px 2px 0 var(--bevel-shadow),
+    inset -1px -1px 0 var(--bevel-hi-2),
+    inset -2px -2px 0 var(--bevel-hi);
+  padding: 4px 11px 2px 13px;
 }
 .btn:disabled,
 .btn[aria-disabled="true"] {
@@ -206,8 +253,21 @@
   gap: 6px;
   padding: 0 8px;
   border-bottom: 1px solid var(--line-strong);
-  background: var(--surface-3);
-  box-shadow: inset 0 -1px 0 var(--bevel-shadow);
+  background-color: var(--surface-3);
+  /* Subtle dither — same checker as the toolbar so chrome reads as
+     one continuous panel. */
+  background-image:
+    linear-gradient(
+      45deg,
+      var(--dither-ink) 25%,
+      transparent 25%,
+      transparent 75%,
+      var(--dither-ink) 75%
+    );
+  background-size: 2px 2px;
+  box-shadow:
+    inset 0 1px 0 var(--bevel-hi),
+    inset 0 -2px 0 var(--bevel-shadow);
 }
 .sidebar__bar .h3 {
   font-size: var(--tx-small);
@@ -308,11 +368,11 @@
   color: var(--ink);
 }
 
-/* ---------- status LEDs ---------- */
+/* ---------- status LEDs (chunky pixel block + diagonal hi-light) ---------- */
 .led {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
   font-family: var(--font);
   font-size: var(--tx-micro);
   font-weight: 700;
@@ -322,12 +382,18 @@
   white-space: nowrap;
 }
 .led__dot {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
   background: var(--signal-off);
   display: inline-block;
   border: 1px solid var(--line-strong);
-  box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.45);
+  /* Inner 2px white highlight on the top-left and 2px black shadow
+     on the bottom-right — gives the LED a real "surface mount"
+     pixel-block feel instead of a flat dot. */
+  box-shadow:
+    inset 2px 2px 0 rgba(255, 255, 255, 0.55),
+    inset -2px -2px 0 rgba(0, 0, 0, 0.45);
+  image-rendering: pixelated;
 }
 .led[data-state="good"] .led__dot,
 .led[data-state="online"] .led__dot,
@@ -374,14 +440,33 @@
 /* ---------- statusbar (very bottom) ---------- */
 .statusbar {
   height: var(--statusbar-h);
-  background: var(--surface);
+  background-color: var(--surface);
+  background-image:
+    linear-gradient(
+      45deg,
+      var(--dither-ink) 25%,
+      transparent 25%,
+      transparent 75%,
+      var(--dither-ink) 75%
+    ),
+    linear-gradient(
+      45deg,
+      var(--dither-light) 25%,
+      transparent 25%,
+      transparent 75%,
+      var(--dither-light) 75%
+    );
+  background-size: 2px 2px;
+  background-position: 0 0, 1px 1px;
   display: grid;
   grid-template-columns: 1fr auto auto auto auto auto auto;
   align-items: center;
   gap: 12px;
   padding: 0 8px;
   border-top: 1px solid var(--line-strong);
-  box-shadow: inset 0 1px 0 var(--bevel-hi);
+  box-shadow:
+    inset 0 2px 0 var(--bevel-hi),
+    inset 0 -1px 0 var(--bevel-shadow);
   font-family: var(--font-mono);
   font-size: var(--tx-small);
 }
@@ -448,13 +533,27 @@
   grid-template-rows: auto 1fr;
 }
 .card__head {
-  background: var(--surface-3);
-  border-bottom: 1px solid var(--line-soft);
+  background-color: var(--surface-3);
+  /* Card titles get the same dither so they read as raised metal
+     plates with a screen-printed label. */
+  background-image:
+    linear-gradient(
+      45deg,
+      var(--dither-ink) 25%,
+      transparent 25%,
+      transparent 75%,
+      var(--dither-ink) 75%
+    );
+  background-size: 2px 2px;
+  border-bottom: 1px solid var(--line-strong);
   padding: 4px 8px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 6px;
+  box-shadow:
+    inset 0 1px 0 var(--bevel-hi),
+    inset 0 -1px 0 var(--bevel-shadow);
 }
 .card__head .h3 {
   font-size: var(--tx-small);
@@ -634,9 +733,14 @@
   gap: 1px;
   padding: 1px;
   background: #000000;
+  /* Force the painted grid of cells to stay on the pixel grid even
+     if the container scales fractionally — the heatmap should look
+     like a memory dump of pressure values, not a smooth photograph. */
+  image-rendering: pixelated;
 }
 .heatmap__cell {
   background: #1a1a1a;
+  image-rendering: pixelated;
 }
 .heatmap-card .meta {
   font-family: var(--font-mono);
@@ -658,18 +762,26 @@
   height: 96px;
   background: var(--field);
   border: 1px solid var(--line);
-  /* Graph-paper background. */
+  /* Denser 8-pixel graph paper — reads as a real plotter chart. */
   background-image:
-    linear-gradient(to right, rgba(0, 0, 0, 0.06) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(0, 0, 0, 0.06) 1px, transparent 1px);
-  background-size: 16px 16px;
+    linear-gradient(to right, rgba(0, 0, 0, 0.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.07) 1px, transparent 1px),
+    linear-gradient(to right, rgba(0, 0, 0, 0.13) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.13) 1px, transparent 1px);
+  background-size: 8px 8px, 8px 8px, 32px 32px, 32px 32px;
+  box-shadow:
+    inset 2px 2px 0 var(--bevel-shadow),
+    inset -1px -1px 0 var(--bevel-hi);
 }
 .spark--ink {
   background: #0a0a0a;
   border-color: var(--line-strong);
   background-image:
-    linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    linear-gradient(to right, rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(to right, rgba(255, 255, 255, 0.12) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.12) 1px, transparent 1px);
+  background-size: 8px 8px, 8px 8px, 32px 32px, 32px 32px;
 }
 
 /* ---------- numbered steps (calibration wizard) ---------- */
@@ -759,8 +871,13 @@
   background: var(--field);
   color: var(--ink);
   border: 1px solid var(--line-strong);
+  /* 2px sunken bevel — text inputs press *into* the panel like a
+     real Win 3.x edit field. */
   box-shadow:
-    inset 1px 1px 0 var(--bevel-shadow);
+    inset 1px 1px 0 var(--bevel-lo),
+    inset 2px 2px 0 var(--bevel-shadow),
+    inset -1px -1px 0 var(--bevel-hi),
+    inset -2px -2px 0 var(--bevel-hi-2);
 }
 .field input:focus,
 .field select:focus,

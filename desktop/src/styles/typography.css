@@ -35,9 +35,25 @@ body {
   -webkit-font-smoothing: none;
   -moz-osx-font-smoothing: auto;
   text-rendering: geometricPrecision;
+  /* Hard rasterization for bitmap-era look. Kerning off so glyphs
+     advance on the pixel grid; ligatures off for the same reason. */
+  font-feature-settings: "kern" 0, "liga" 0, "calt" 0;
+  font-kerning: none;
+  font-variant-ligatures: none;
   overflow: hidden;
   user-select: none;
   cursor: default;
+}
+
+/* Any rasterized graphic (heatmap cells painted into a span background,
+   icon sprites, etc.) should snap to the pixel grid instead of being
+   smoothed by the browser. Chrome smoothing was a deliberate concession
+   on modern web — we don't want it here. */
+img,
+canvas,
+svg {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
 }
 
 a {
