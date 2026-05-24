@@ -23,10 +23,12 @@ from app.db import dispose_engine, init_db
 from app.routers import (
     admin,
     calibrate,
+    edges,
     events,
     frames,
     inspect,
     lines,
+    meshes,
     meta,
     pricing,
     webhooks,
@@ -101,6 +103,8 @@ def create_app() -> FastAPI:
     app.include_router(calibrate.router)
     app.include_router(inspect.router)
     app.include_router(events.router)
+    app.include_router(edges.router)
+    app.include_router(meshes.router)
     app.include_router(pricing.router)
     app.include_router(webhooks.router)
     app.include_router(admin.router)

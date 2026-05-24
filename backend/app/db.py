@@ -136,6 +136,88 @@ class Inspection(Base):
     )
 
 
+class Edge(Base):
+    """A Tactile Edge appliance (Jetson Orin Nano class) deployed in a customer facility.
+
+    One Edge handles one or more Lines. The Edge agent (``edge_agent/``) calls
+    ``POST /v1/edges/{edge_id}/heartbeat`` at a regular cadence to report
+    liveness and the current hardware metrics (CPU/GPU temp, load, power
+    draw). The desktop subscribes to the per-edge SSE stream to render a
+    live status panel.
+    """
+
+    __tablename__ = "edges"
+
+    id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    org_id: Mapped[str] = mapped_column(
+        String(64), ForeignKey("organizations.id"), index=True
+    )
+    hostname: Mapped[str] = mapped_column(String(120), default="")
+    """Operator-visible hostname, e.g. ``edge-floor3-line7``."""
+    serial: Mapped[str] = mapped_column(String(64), default="")
+    """NVIDIA module serial (from ``/proc/device-tree/serial-number``)."""
+    model: Mapped[str] = mapped_column(String(80), default="jetson-orin-nano-8gb")
+    site: Mapped[str] = mapped_column(String(120), default="")
+    """Free-form facility tag, e.g. ``Plant 2 / Bakery line``."""
+    firmware_version: Mapped[str] = mapped_column(String(40), default="")
+    """Scanner firmware version reported by the connected MCU, e.g. ``TS-G4 v0.3``."""
+    agent_version: Mapped[str] = mapped_column(String(40), default="")
+    """``edge_agent`` python package version reported on heartbeat."""
+    status: Mapped[str] = mapped_column(String(16), default="offline")
+    """``online`` | ``degraded`` | ``offline``."""
+    last_seen_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    enrolled_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now()
+    )
+    cpu_pct: Mapped[float] = mapped_column(Float, default=0.0)
+    gpu_pct: Mapped[float] = mapped_column(Float, default=0.0)
+    gpu_temp_c: Mapped[float] = mapped_column(Float, default=0.0)
+    cpu_temp_c: Mapped[float] = mapped_column(Float, default=0.0)
+    ram_used_mb: Mapped[int] = mapped_column(Integer, default=0)
+    ram_total_mb: Mapped[int] = mapped_column(Integer, default=0)
+    power_mw: Mapped[int] = mapped_column(Integer, default=0)
+    inference_p50_ms: Mapped[float] = mapped_column(Float, default=0.0)
+    inference_p99_ms: Mapped[float] = mapped_column(Float, default=0.0)
+    frames_per_second: Mapped[float] = mapped_column(Float, default=0.0)
+
+
+class MeshSegment(Base):
+    """One installed piece of the Tactile Mesh roll, glued to a specific line.
+
+    Customers buy the mesh as a roll (per-meter consumable) and cut segments
+    to belt width on site. Each segment has a lot id (for QA traceability),
+    an install date (for wear/lifetime accounting), and a row/column count
+    (for the per-line geometry).
+    """
+
+    __tablename__ = "mesh_segments"
+
+    id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    org_id: Mapped[str] = mapped_column(
+        String(64), ForeignKey("organizations.id"), index=True
+    )
+    line_id: Mapped[str] = mapped_column(
+        String(64), ForeignKey("lines.id"), index=True
+    )
+    edge_id: Mapped[str | None] = mapped_column(
+        String(64), ForeignKey("edges.id"), nullable=True, index=True
+    )
+    roll_lot: Mapped[str] = mapped_column(String(64), default="")
+    """Manufacturer lot for the source roll, e.g. ``TM350-2026W21-A``."""
+    belt_width_mm: Mapped[int] = mapped_column(Integer, default=0)
+    length_mm: Mapped[int] = mapped_column(Integer, default=0)
+    rows: Mapped[int] = mapped_column(Integer)
+    cols: Mapped[int] = mapped_column(Integer)
+    installed_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now()
+    )
+    expected_lifetime_days: Mapped[int] = mapped_column(Integer, default=180)
+    health_pct: Mapped[float] = mapped_column(Float, default=100.0)
+    """Operator-visible health 0..100. Drops as dead cells accumulate."""
+    dead_cells: Mapped[int] = mapped_column(Integer, default=0)
+    notes: Mapped[str] = mapped_column(Text, default="")
+
+
 class WebhookEndpoint(Base):
     """An outbound webhook registered by a customer."""
 

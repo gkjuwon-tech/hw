@@ -1,61 +1,179 @@
-import { useEffect, useState } from "react";
-import { Sidebar } from "./components/Sidebar";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+
+import { TitleBar } from "./components/TitleBar";
+import { StatusBar } from "./components/StatusBar";
+import { Toolbar } from "./components/Toolbar";
+import { DeviceTree } from "./components/DeviceTree";
+
+import { Overview } from "./pages/Overview";
+import { EdgesList } from "./pages/EdgesList";
+import { EdgeDetail } from "./pages/EdgeDetail";
 import { LinesList } from "./pages/LinesList";
 import { LineDetail } from "./pages/LineDetail";
+import { MeshList } from "./pages/MeshList";
 import { CalibrationWizard } from "./pages/CalibrationWizard";
 import { Settings } from "./pages/Settings";
 import { About } from "./pages/About";
-import { api } from "./lib/api";
 
-export type Route = "lines" | "line-detail" | "calibrate" | "settings" | "about";
+import { api, apiBaseUrl } from "./lib/api";
+import type { Edge, EdgeStatus, Line, MeshSegment } from "./lib/types";
 
-const BUILD_LABEL = "v0.1.0 · evt-dev";
+export type Route =
+  | "overview"
+  | "edges"
+  | "edge-detail"
+  | "lines"
+  | "line-detail"
+  | "mesh"
+  | "calibrate"
+  | "settings"
+  | "about";
+
+const BUILD_LABEL = "v0.2.0 · industrial";
+const INVENTORY_POLL_MS = 5_000;
 
 export function App(): JSX.Element {
-  const [route, setRoute] = useState<Route>("lines");
+  const [route, setRoute] = useState<Route>("overview");
   const [openLineId, setOpenLineId] = useState<string | null>(null);
-  const [lineCount, setLineCount] = useState(0);
-  const [apiStatus, setApiStatus] = useState<"ok" | "boot" | "down">("boot");
+  const [openEdgeId, setOpenEdgeId] = useState<string | null>(null);
 
-  // Cheap health poll every 5s. Mainly so the sidebar status dot is honest —
-  // a downed sidecar means data on the page is stale and the user should know.
+  const [apiStatus, setApiStatus] = useState<"ok" | "boot" | "down">("boot");
+  const [apiBase, setApiBase] = useState<string>("…");
+
+  const [edges, setEdges] = useState<Edge[]>([]);
+  const [lines, setLines] = useState<Line[]>([]);
+  const [meshes, setMeshes] = useState<MeshSegment[]>([]);
+
+  const [now, setNow] = useState<Date>(() => new Date());
+  const pollRef = useRef<number | null>(null);
+
+  // Resolve the sidecar host once for the title bar readout.
   useEffect(() => {
-    let cancelled = false;
-    const check = async (): Promise<void> => {
-      try {
-        await api.health();
-        if (!cancelled) setApiStatus("ok");
-      } catch {
-        if (!cancelled) setApiStatus("down");
-      }
-    };
-    void check();
-    const id = window.setInterval(() => void check(), 5_000);
-    return () => {
-      cancelled = true;
-      window.clearInterval(id);
-    };
+    void apiBaseUrl().then(setApiBase);
   }, []);
 
-  const navigate = (r: Route): void => {
+  // Wall-clock tick for the status bar (1 Hz is more than enough — the
+  // metric numbers come from telemetry, not this).
+  useEffect(() => {
+    const id = window.setInterval(() => setNow(new Date()), 1_000);
+    return () => window.clearInterval(id);
+  }, []);
+
+  // Single poll loop that refreshes API health + the device inventory.
+  // We deliberately keep it dead simple: every N seconds, refetch the
+  // three lists and the health endpoint. Per-resource live streaming
+  // (SSE) layers on top of this inside the detail pages.
+  const refresh = useCallback(async (): Promise<void> => {
+    try {
+      await api.health();
+      setApiStatus("ok");
+    } catch {
+      setApiStatus("down");
+      return;
+    }
+    const [eList, lList, mList] = await Promise.all([
+      api.listEdges().catch(() => [] as Edge[]),
+      api.listLines().catch(() => [] as Line[]),
+      api.listMeshes().catch(() => [] as MeshSegment[]),
+    ]);
+    setEdges(eList);
+    setLines(lList);
+    setMeshes(mList);
+  }, []);
+
+  useEffect(() => {
+    void refresh();
+    pollRef.current = window.setInterval(() => void refresh(), INVENTORY_POLL_MS);
+    return () => {
+      if (pollRef.current !== null) {
+        window.clearInterval(pollRef.current);
+        pollRef.current = null;
+      }
+    };
+  }, [refresh]);
+
+  const navigate = useCallback((r: Route): void => {
     setRoute(r);
     if (r !== "line-detail") setOpenLineId(null);
-  };
+    if (r !== "edge-detail") setOpenEdgeId(null);
+  }, []);
+
+  const openLine = useCallback((id: string): void => {
+    setOpenLineId(id);
+    setRoute("line-detail");
+  }, []);
+
+  const openEdge = useCallback((id: string): void => {
+    setOpenEdgeId(id);
+    setRoute("edge-detail");
+  }, []);
+
+  // Pick a "primary" edge for the title-bar/status-bar global indicators.
+  // Heuristic: the currently opened edge, or the first online edge, or
+  // simply the first known edge.
+  const primaryEdge = useMemo<Edge | null>(() => {
+    if (openEdgeId) {
+      return edges.find((e) => e.id === openEdgeId) ?? null;
+    }
+    return (
+      edges.find((e) => e.status === "online") ??
+      edges.find((e) => e.status === "degraded") ??
+      edges[0] ??
+      null
+    );
+  }, [edges, openEdgeId]);
+
+  const edgeStatus: EdgeStatus | "boot" =
+    apiStatus === "boot"
+      ? "boot"
+      : primaryEdge
+        ? primaryEdge.status
+        : "offline";
 
   let body: JSX.Element;
   let crumb: JSX.Element;
-
   switch (route) {
+    case "overview":
+      body = (
+        <Overview
+          edges={edges}
+          lines={lines}
+          meshes={meshes}
+          apiStatus={apiStatus}
+          onOpenEdge={openEdge}
+          onOpenLine={openLine}
+        />
+      );
+      crumb = <span>OVERVIEW</span>;
+      break;
+    case "edges":
+      body = <EdgesList edges={edges} onOpen={openEdge} onRefresh={refresh} />;
+      crumb = <span>EDGES</span>;
+      break;
+    case "edge-detail":
+      body =
+        openEdgeId === null ? (
+          <EdgesList edges={edges} onOpen={openEdge} onRefresh={refresh} />
+        ) : (
+          <EdgeDetail
+            edgeId={openEdgeId}
+            onBack={() => navigate("edges")}
+          />
+        );
+      crumb = (
+        <span>
+          EDGES · <b>{openEdgeId ?? "—"}</b>
+        </span>
+      );
+      break;
+    case "lines":
+      body = <LinesList lines={lines} onOpen={openLine} apiError={apiStatus === "down"} />;
+      crumb = <span>LINES</span>;
+      break;
     case "line-detail":
       body =
         openLineId === null ? (
-          <LinesList
-            onOpen={(id) => {
-              setOpenLineId(id);
-              setRoute("line-detail");
-            }}
-            onCountChange={setLineCount}
-          />
+          <LinesList lines={lines} onOpen={openLine} apiError={apiStatus === "down"} />
         ) : (
           <LineDetail
             lineId={openLineId}
@@ -63,81 +181,98 @@ export function App(): JSX.Element {
           />
         );
       crumb = (
-        <span className="topbar__crumb">
-          Lines · <b>{openLineId ?? "—"}</b>
+        <span>
+          LINES · <b>{openLineId ?? "—"}</b>
         </span>
       );
+      break;
+    case "mesh":
+      body = <MeshList meshes={meshes} lines={lines} edges={edges} />;
+      crumb = <span>MESH SEGMENTS</span>;
       break;
     case "calibrate":
-      body = <CalibrationWizard />;
-      crumb = (
-        <span className="topbar__crumb">
-          Calibration · <b>Wizard</b>
-        </span>
-      );
+      body = <CalibrationWizard lines={lines} />;
+      crumb = <span>CALIBRATE</span>;
       break;
     case "settings":
-      body = <Settings />;
-      crumb = (
-        <span className="topbar__crumb">
-          Settings · <b>Local</b>
-        </span>
-      );
+      body = <Settings apiBase={apiBase} apiStatus={apiStatus} />;
+      crumb = <span>SETTINGS</span>;
       break;
     case "about":
       body = <About />;
-      crumb = (
-        <span className="topbar__crumb">
-          About · <b>Conet Tactile</b>
-        </span>
-      );
+      crumb = <span>ABOUT</span>;
       break;
-    case "lines":
     default:
       body = (
-        <LinesList
-          onOpen={(id) => {
-            setOpenLineId(id);
-            setRoute("line-detail");
-          }}
-          onCountChange={setLineCount}
+        <Overview
+          edges={edges}
+          lines={lines}
+          meshes={meshes}
+          apiStatus={apiStatus}
+          onOpenEdge={openEdge}
+          onOpenLine={openLine}
         />
       );
-      crumb = (
-        <span className="topbar__crumb">
-          Tactile Cloud · <b>Lines</b>
-        </span>
-      );
+      crumb = <span>OVERVIEW</span>;
       break;
   }
 
+  const selection =
+    route === "edge-detail" && openEdgeId !== null
+      ? ({ kind: "edge", id: openEdgeId } as const)
+      : route === "line-detail" && openLineId !== null
+        ? ({ kind: "line", id: openLineId } as const)
+        : null;
+
   return (
     <div className="app">
-      <Sidebar
-        current={route === "line-detail" ? "lines" : route}
-        onNavigate={navigate}
-        lineCount={lineCount}
-        apiStatus={apiStatus}
+      <TitleBar
+        hostname={apiBase}
         buildLabel={BUILD_LABEL}
+        edgeStatus={edgeStatus}
       />
-      <main className="content">
-        <header className="topbar">
-          {crumb}
-          <div className="topbar__actions">
+      <div className="app__body">
+        <aside className="sidebar">
+          <div className="sidebar__bar">
+            <h3 className="h3">Devices</h3>
             <button
               type="button"
               className="btn btn--ghost"
-              onClick={() => navigate("calibrate")}
+              onClick={() => void refresh()}
+              title="Refresh inventory"
             >
-              Start a pilot
-              <span className="arrow" aria-hidden="true">
-                {" →"}
-              </span>
+              ↻
             </button>
           </div>
-        </header>
-        {body}
-      </main>
+          <DeviceTree
+            edges={edges}
+            lines={lines}
+            meshes={meshes}
+            selection={selection}
+            onSelectEdge={openEdge}
+            onSelectLine={openLine}
+            onSelectMesh={() => navigate("mesh")}
+          />
+          <div className="sidebar__foot">
+            <span>BUILD</span>
+            <span className="build">{BUILD_LABEL}</span>
+          </div>
+        </aside>
+        <main className="content">
+          <Toolbar
+            current={route}
+            onNavigate={navigate}
+            crumb={crumb}
+          />
+          {body}
+        </main>
+      </div>
+      <StatusBar
+        apiStatus={apiStatus}
+        edge={primaryEdge}
+        edgeStatus={edgeStatus}
+        now={now}
+      />
     </div>
   );
 }

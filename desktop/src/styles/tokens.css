@@ -1,56 +1,100 @@
 /* =====================================================================
-   Conet Tactile — design tokens.
-   Ported verbatim from web/styles.css so the desktop app and the
-   marketing site share the same palette, type scale, and rhythm.
+   Conet Tactile — DESKTOP design tokens.
+
+   This file is the *only* divergence between the marketing site (web/)
+   and the desktop client (desktop/). The desktop sits in front of an
+   operator on a factory floor — not a press release — so the visual
+   language is the language of mid-2000s industrial machine-vision
+   software (Cognex, Keyence, Halcon, classic SCADA HMIs):
+
+     · cool gray chrome (#c0c0c0) instead of paper white
+     · single accent in NAVY (#003c71) — quiet, never decorative
+     · status LEDs in classic signal colors (green/amber/red), never
+       used to "brand" anything
+     · ZERO rounded corners, ZERO gradients on chrome surfaces, ZERO
+       motion / hover ease
+     · system fonts (Segoe UI/Tahoma), never a webfont — the operator's
+       PC doesn't always have Inter, and we don't want a flash of
+       fallback on a 30+ second cold boot
+
+   The marketing site continues to import web/styles.css unchanged.
    ===================================================================== */
 
 :root {
-  --ink: #0b0c0a;
-  --ink-2: #1f2220;
-  --ink-3: #2e3230;
+  /* ── chrome ─────────────────────────────────────────────────────── */
+  --surface: #d4d0c8;        /* classic Windows panel gray */
+  --surface-2: #c0bcb4;      /* one click darker — used for selection */
+  --surface-3: #e8e4dc;      /* one click lighter — list rows, fields */
+  --field: #ffffff;          /* white inputs, tables, heatmap bg */
+  --field-2: #f4f3ee;        /* striped table row */
 
-  --paper: #f5f5f1;
-  --paper-2: #ecebe5;
-  --paper-3: #e1e0d8;
+  /* ── bevels (Windows 95 / industrial HMI raised/inset look) ─────── */
+  --bevel-hi: #ffffff;
+  --bevel-lo: #404040;
+  --bevel-shadow: #808080;
 
-  --line: #d6d6cf;
-  --line-soft: #e3e3dc;
+  /* ── text ───────────────────────────────────────────────────────── */
+  --ink: #000000;
+  --ink-soft: #1a1a1a;
+  --muted: #4a4a4a;
+  --muted-2: #6e6e6e;
+  --muted-3: #8a8a8a;
+  --disabled: #8a8a8a;
 
-  --muted: #6b6e68;
-  --muted-2: #8d8f88;
-  --muted-3: #b0b1ab;
+  /* ── lines / dividers ───────────────────────────────────────────── */
+  --line: #6e6e6e;           /* 1px hard rules */
+  --line-soft: #9a9a9a;      /* secondary rules inside a panel */
+  --line-strong: #000000;    /* outer chrome borders */
 
-  --lime: #b5e853;
-  --lime-deep: #87b734;
-  --lime-ink: #1c2607;
+  /* ── accent (chrome) ────────────────────────────────────────────── */
+  --navy: #003c71;           /* Cognex-grade navy, titlebar bg */
+  --navy-deep: #002649;
+  --navy-on: #ffffff;
+  --link: #0033a0;
+  --selection: #002973;      /* selected row in a table / nav */
+  --selection-on: #ffffff;
 
-  --signal-good: #87b734;
-  --signal-warn: #d29e3a;
-  --signal-bad: #c64a4a;
+  /* ── signals (LED indicators only — never decorative) ───────────── */
+  --signal-good: #008000;
+  --signal-good-glow: #66c266;
+  --signal-warn: #c87a00;
+  --signal-warn-glow: #f0c060;
+  --signal-bad: #b00020;
+  --signal-bad-glow: #ff5050;
+  --signal-off: #5a5a5a;
 
-  --photo-overlay: rgba(11, 12, 10, 0.42);
-  --photo-overlay-strong: rgba(11, 12, 10, 0.62);
+  /* ── heatmap LUT ────────────────────────────────────────────────── *
+   *   Anomaly heatmap is rendered as cool-gray for normal cells with a
+   *   red ramp for hits. Pure grayscale below 0.4 (so a normal mesh
+   *   looks like a printout, not a Mondrian); red ramps above.        */
+  --heat-cold: #1a1a1a;
+  --heat-mid: #8a8a8a;
+  --heat-hot: #d40000;
 
-  --maxw: 1240px;
-  --gutter: clamp(1.25rem, 2.4vw, 2rem);
-  --rhythm: clamp(2rem, 4.4vw, 3.25rem);
-
+  /* ── type ───────────────────────────────────────────────────────── */
   --font:
-    "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial,
-    sans-serif;
+    "Segoe UI", Tahoma, "Trebuchet MS", "MS Shell Dlg 2", "DejaVu Sans",
+    Verdana, sans-serif;
   --font-mono:
-    "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    "Cascadia Mono", Consolas, "Lucida Console", "DejaVu Sans Mono",
+    "Courier New", monospace;
 
-  --tx-1: 0.72rem; /* eyebrow */
-  --tx-body: 0.95rem;
-  --tx-lede: 1.0625rem;
-  --tx-h3: 1.125rem;
-  --tx-h2: clamp(1.5rem, 2.8vw, 2.25rem);
-  --tx-h1: clamp(2rem, 3.6vw, 3rem);
-  --tx-num: clamp(2.25rem, 4vw, 3.5rem);
+  --tx-micro: 10px;
+  --tx-small: 11px;
+  --tx-body: 12px;
+  --tx-strong: 13px;
+  --tx-h3: 13px;
+  --tx-h2: 15px;
+  --tx-h1: 18px;
+  --tx-num: 22px;
 
-  --tr: 180ms cubic-bezier(0.2, 0.6, 0.2, 1);
-  --tr-slow: 320ms cubic-bezier(0.2, 0.6, 0.2, 1);
+  /* ── layout ─────────────────────────────────────────────────────── */
+  --sidebar-w: 240px;
+  --titlebar-h: 28px;
+  --toolbar-h: 32px;
+  --statusbar-h: 24px;
 
-  --sidebar-w: 224px;
+  /* No transitions, no easing curves. The screen updates instantly. */
+  --tr: 0s;
+  --tr-slow: 0s;
 }

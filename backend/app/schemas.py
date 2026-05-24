@@ -233,3 +233,104 @@ class ApiKeyOut(BaseModel):
     created_at: datetime
     last_used_at: datetime | None
     revoked_at: datetime | None
+
+
+# ── edges (Tactile Edge appliances) ──────────────────────────────────
+
+
+class EdgeCreate(BaseModel):
+    id: str = Field(min_length=1, max_length=64, pattern=r"^[A-Za-z0-9_\-]+$")
+    hostname: str = Field(default="", max_length=120)
+    serial: str = Field(default="", max_length=64)
+    model: str = Field(default="jetson-orin-nano-8gb", max_length=80)
+    site: str = Field(default="", max_length=120)
+
+
+class EdgeUpdate(BaseModel):
+    hostname: str | None = Field(default=None, max_length=120)
+    site: str | None = Field(default=None, max_length=120)
+
+
+class EdgeHeartbeat(BaseModel):
+    """Posted by the on-device ``edge_agent`` every ``heartbeat_period_s`` seconds."""
+
+    firmware_version: str = Field(default="", max_length=40)
+    agent_version: str = Field(default="", max_length=40)
+    cpu_pct: float = Field(default=0.0, ge=0.0, le=100.0)
+    gpu_pct: float = Field(default=0.0, ge=0.0, le=100.0)
+    gpu_temp_c: float = Field(default=0.0, ge=-40.0, le=200.0)
+    cpu_temp_c: float = Field(default=0.0, ge=-40.0, le=200.0)
+    ram_used_mb: int = Field(default=0, ge=0, le=1_048_576)
+    ram_total_mb: int = Field(default=0, ge=0, le=1_048_576)
+    power_mw: int = Field(default=0, ge=0, le=1_000_000)
+    inference_p50_ms: float = Field(default=0.0, ge=0.0, le=60_000.0)
+    inference_p99_ms: float = Field(default=0.0, ge=0.0, le=60_000.0)
+    frames_per_second: float = Field(default=0.0, ge=0.0, le=10_000.0)
+
+
+class EdgeOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: str
+    org_id: str
+    hostname: str
+    serial: str
+    model: str
+    site: str
+    firmware_version: str
+    agent_version: str
+    status: str
+    last_seen_at: datetime | None
+    enrolled_at: datetime
+    cpu_pct: float
+    gpu_pct: float
+    gpu_temp_c: float
+    cpu_temp_c: float
+    ram_used_mb: int
+    ram_total_mb: int
+    power_mw: int
+    inference_p50_ms: float
+    inference_p99_ms: float
+    frames_per_second: float
+
+
+# ── mesh segments (installed roll-mesh pieces) ───────────────────────
+
+
+class MeshSegmentCreate(BaseModel):
+    id: str = Field(min_length=1, max_length=64, pattern=r"^[A-Za-z0-9_\-]+$")
+    line_id: str = Field(min_length=1, max_length=64)
+    edge_id: str | None = Field(default=None, max_length=64)
+    roll_lot: str = Field(default="", max_length=64)
+    belt_width_mm: int = Field(default=0, ge=0, le=2_000)
+    length_mm: int = Field(default=0, ge=0, le=10_000)
+    rows: int = Field(gt=0, le=512)
+    cols: int = Field(gt=0, le=512)
+    expected_lifetime_days: int = Field(default=180, ge=1, le=3650)
+    notes: str = Field(default="", max_length=4000)
+
+
+class MeshSegmentUpdate(BaseModel):
+    edge_id: str | None = Field(default=None, max_length=64)
+    health_pct: float | None = Field(default=None, ge=0.0, le=100.0)
+    dead_cells: int | None = Field(default=None, ge=0, le=1_000_000)
+    notes: str | None = Field(default=None, max_length=4000)
+
+
+class MeshSegmentOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: str
+    org_id: str
+    line_id: str
+    edge_id: str | None
+    roll_lot: str
+    belt_width_mm: int
+    length_mm: int
+    rows: int
+    cols: int
+    installed_at: datetime
+    expected_lifetime_days: int
+    health_pct: float
+    dead_cells: int
+    notes: str

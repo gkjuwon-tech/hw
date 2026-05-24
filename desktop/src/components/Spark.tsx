@@ -1,15 +1,17 @@
 export interface SparkProps {
   values: ReadonlyArray<number>;
-  /** Optional threshold line. Drawn dashed in lime. */
+  /** Optional threshold line. Drawn dashed in alarm red. */
   threshold?: number | undefined;
-  /** Ink-on-paper (default) or paper-on-ink. */
+  /** Light field (default) or dark field. */
   variant?: "paper" | "ink";
 }
 
 /**
- * A 96px-tall sparkline. SVG path interpolated from `values`. Threshold
- * is drawn as a horizontal dashed line. Matches the landing page's
- * preference for monochrome line work with a single lime accent.
+ * A 96px-tall sparkline rendered on a graph-paper background.
+ *
+ * No curve smoothing, no point markers. The trace is a 1.5px hard
+ * polyline. If a threshold is supplied it's drawn as a dashed red
+ * horizontal line — same vocabulary as the heatmap's alarm channel.
  */
 export function Spark({ values, threshold, variant = "paper" }: SparkProps): JSX.Element {
   const w = 600;
@@ -43,7 +45,7 @@ export function Spark({ values, threshold, variant = "paper" }: SparkProps): JSX
       ? h - padY - ((threshold - min) / range) * (h - 2 * padY)
       : null;
 
-  const stroke = variant === "ink" ? "#ecebe5" : "#1f2220";
+  const stroke = variant === "ink" ? "#e8e4dc" : "#003c71";
 
   return (
     <div className={inkClass} aria-label="Anomaly score timeline">
@@ -59,12 +61,19 @@ export function Spark({ values, threshold, variant = "paper" }: SparkProps): JSX
             x2={w - padX}
             y1={thresholdY}
             y2={thresholdY}
-            stroke="#b5e853"
+            stroke="#b00020"
             strokeWidth="1"
             strokeDasharray="3 4"
           />
         )}
-        <polyline points={pts} fill="none" stroke={stroke} strokeWidth="1.25" />
+        <polyline
+          points={pts}
+          fill="none"
+          stroke={stroke}
+          strokeWidth="1.5"
+          strokeLinejoin="miter"
+          strokeLinecap="square"
+        />
       </svg>
     </div>
   );

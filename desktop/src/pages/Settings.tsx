@@ -1,17 +1,27 @@
+/**
+ * Settings page.
+ *
+ * Lets the operator configure the local sidecar URL (read-only — set
+ * by the Electron bridge) and the optional bearer token used to
+ * authenticate against Tactile Cloud.
+ */
+
 import { useEffect, useState } from "react";
 import { PageHeader } from "../components/PageHeader";
-import { KV } from "../components/KV";
-import { api, apiBaseUrl } from "../lib/api";
+import { api, getApiToken, setApiToken } from "../lib/api";
 
-export function Settings(): JSX.Element {
-  const [base, setBase] = useState<string>("…");
+export interface SettingsProps {
+  apiBase: string;
+  apiStatus: "ok" | "boot" | "down";
+}
+
+export function Settings({ apiBase, apiStatus }: SettingsProps): JSX.Element {
   const [health, setHealth] = useState<string>("…");
+  const [token, setToken] = useState<string>(() => getApiToken());
+  const [savedAt, setSavedAt] = useState<Date | null>(null);
 
   useEffect(() => {
     let cancelled = false;
-    void apiBaseUrl().then((b) => {
-      if (!cancelled) setBase(b);
-    });
     api
       .health()
       .then((h) => {
@@ -32,48 +42,98 @@ export function Settings(): JSX.Element {
       ? window.conet.platform
       : "browser";
 
+  const saveToken = (): void => {
+    setApiToken(token.trim());
+    setSavedAt(new Date());
+  };
+
   return (
     <div className="page">
       <PageHeader
-        eyebrow="03 — Settings"
-        title="Local sidecar configuration."
-        lede="The desktop binds to a loopback-only Tactile Cloud sidecar. There is no remote network surface to configure here — the only knob is which sidecar URL the renderer talks to."
+        eyebrow="SETTINGS"
+        title="Sidecar configuration"
+        lede="The desktop binds to a loopback-only Tactile Cloud sidecar. Most operational knobs live in the cloud console — this page only configures local credentials and shows the current runtime."
+        actions={
+          <span className="led" data-state={apiStatus === "ok" ? "online" : apiStatus}>
+            <span className="led__dot" aria-hidden="true" />
+            API {apiStatus === "ok" ? "CONNECTED" : apiStatus.toUpperCase()}
+          </span>
+        }
       />
 
-      <div className="grid grid--2" style={{ marginTop: "2rem" }}>
+      <div className="grid grid--2">
         <section className="card">
-          <p className="eyebrow">
-            <span className="eyebrow__dot" aria-hidden="true" />
-            Runtime
-          </p>
-          <h3 className="h3" style={{ marginTop: "0.5rem" }}>
-            Where the bytes are.
-          </h3>
-          <KV
-            rows={[
-              { k: "Sidecar base", v: base },
-              { k: "Sidecar health", v: health },
-              { k: "Host platform", v: platform },
-              { k: "Build channel", v: "evt-dev" },
-            ]}
-          />
+          <header className="card__head">
+            <h3 className="h3">Runtime</h3>
+          </header>
+          <div className="card__body">
+            <dl className="kv">
+              <div>
+                <dt>Sidecar base</dt>
+                <dd>{apiBase}</dd>
+              </div>
+              <div>
+                <dt>Sidecar health</dt>
+                <dd>{health}</dd>
+              </div>
+              <div>
+                <dt>Host platform</dt>
+                <dd>{platform}</dd>
+              </div>
+              <div>
+                <dt>Build channel</dt>
+                <dd>industrial</dd>
+              </div>
+            </dl>
+          </div>
         </section>
 
-        <section className="card card--ink">
-          <p className="eyebrow eyebrow--light">
-            <span className="eyebrow__dot" aria-hidden="true" />
-            Why so few settings?
-          </p>
-          <h3 className="h3" style={{ marginTop: "0.5rem", color: "var(--paper)" }}>
-            The desktop is a thin pane of glass.
-          </h3>
-          <p className="body" style={{ color: "var(--paper-2)", maxWidth: "60ch" }}>
-            All operational knobs — drift thresholds, reject windows, webhook
-            destinations, fleet rules — live in Tactile Cloud and are pushed to
-            the Edge appliance. The desktop renders what the cloud computes; it
-            does not configure the cloud. To change a threshold, use the cloud
-            console.
-          </p>
+        <section className="card">
+          <header className="card__head">
+            <h3 className="h3">Authentication</h3>
+            <span className="mono" style={{ fontSize: 11, color: "var(--muted)" }}>
+              Bearer token
+            </span>
+          </header>
+          <div className="card__body" style={{ display: "grid", gap: 8 }}>
+            <p className="lede">
+              Optional. If set, the desktop attaches{" "}
+              <code className="mono">Authorization: Bearer &lt;token&gt;</code>{" "}
+              to every API call. Stored only in this client&apos;s
+              localStorage — never synced to disk by the sidecar.
+            </p>
+            <label className="field">
+              <span>API TOKEN</span>
+              <input
+                type="password"
+                value={token}
+                onChange={(e) => setToken(e.target.value)}
+                placeholder="(empty for unauthenticated)"
+                autoComplete="off"
+              />
+            </label>
+            <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+              <button type="button" className="btn btn--primary" onClick={saveToken}>
+                Save
+              </button>
+              <button
+                type="button"
+                className="btn"
+                onClick={() => {
+                  setToken("");
+                  setApiToken("");
+                  setSavedAt(new Date());
+                }}
+              >
+                Clear
+              </button>
+              {savedAt ? (
+                <span className="mono" style={{ fontSize: 11, color: "var(--muted)" }}>
+                  saved {savedAt.toLocaleTimeString()}
+                </span>
+              ) : null}
+            </div>
+          </div>
         </section>
       </div>
     </div>

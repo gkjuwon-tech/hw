@@ -1,0 +1,26 @@
+[Unit]
+Description=Conet Tactile — on-device edge agent
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+EnvironmentFile=-/etc/conet/edge.env
+ExecStart=/opt/conet/edge_agent/bin/conet-edge-agent run --log-level INFO
+Restart=on-failure
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+# Hardening — the agent only needs USB tty access + outbound HTTPS.
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/conet
+PrivateTmp=true
+DeviceAllow=/dev/ttyACM0 rw
+DeviceAllow=/dev/ttyACM1 rw
+DeviceAllow=/dev/ttyUSB0 rw
+
+[Install]
+WantedBy=multi-user.target

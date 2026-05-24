@@ -1,3 +1,11 @@
+/**
+ * About page.
+ *
+ * Product reference card. Same content as the landing page in spirit,
+ * but rendered in the industrial register — no hero numbers, no
+ * generated copy.
+ */
+
 import { PageHeader } from "../components/PageHeader";
 
 export function About(): JSX.Element {
@@ -12,58 +20,72 @@ export function About(): JSX.Element {
   return (
     <div className="page">
       <PageHeader
-        eyebrow="04 — About"
-        title="Industrial tactile inspection for production lines."
-        lede="Conet Tactile turns any conveyor into a per-part tactile inspection station. A peel-and-stick pressure mesh, calibrated from five known-good parts, scoring every part the way a trained operator's hand would — for fill, springback, voids, and bondline pressure that no camera can see."
+        eyebrow="ABOUT"
+        title="Conet Tactile · operator client"
+        lede="Industrial tactile inspection for production lines. This client runs against a local Tactile Cloud sidecar and surfaces every enrolled Edge appliance and mesh segment in the org."
       />
 
-      <div className="grid grid--3" style={{ marginTop: "2rem" }}>
+      <div className="grid grid--3">
         <div className="card">
-          <span className="num">5</span>
-          <span className="unit">samples to calibrate</span>
+          <header className="card__head">
+            <h3 className="h3">Samples to calibrate</h3>
+          </header>
+          <div className="card__body">
+            <span className="num">5</span>
+            <span className="unit">parts</span>
+          </div>
         </div>
         <div className="card">
-          <span className="num">&lt; 50 ms</span>
-          <span className="unit">edge inference</span>
+          <header className="card__head">
+            <h3 className="h3">Edge inference</h3>
+          </header>
+          <div className="card__body">
+            <span className="num">&lt;50</span>
+            <span className="unit">ms p99</span>
+          </div>
         </div>
         <div className="card">
-          <span className="num">200–750 mm</span>
-          <span className="unit">belt widths</span>
+          <header className="card__head">
+            <h3 className="h3">Belt widths</h3>
+          </header>
+          <div className="card__body">
+            <span className="num">200-750</span>
+            <span className="unit">mm</span>
+          </div>
         </div>
       </div>
 
-      <div className="card" style={{ marginTop: "2rem" }}>
-        <p className="eyebrow">
-          <span className="eyebrow__dot" aria-hidden="true" />
-          Product lineup
-        </p>
-        <h2 className="h2">Mesh, Edge, Cloud.</h2>
-        <ul className="checks" style={{ maxWidth: "70ch" }}>
-          <li>
-            <b>Tactile Mesh</b> — flexible peel-and-stick pressure-sensing sheet,
-            shipped as a roll, cut to belt width on-site.
-          </li>
-          <li>
-            <b>Tactile Edge</b> — small fanless inference appliance (Jetson Orin
-            Nano class) that reads the mesh and runs anomaly scoring locally.
-          </li>
-          <li>
-            <b>Tactile Cloud</b> — managed AI service that auto-calibrates from
-            five known-good samples and continuously improves with fleet data.
-          </li>
-        </ul>
-      </div>
+      <section className="card">
+        <header className="card__head">
+          <h3 className="h3">Product lineup</h3>
+        </header>
+        <div className="card__body">
+          <ul className="checks">
+            <li>
+              <b>Tactile Mesh</b> — flexible peel-and-stick pressure-sensing
+              sheet, shipped as a roll, cut to belt width on-site.
+            </li>
+            <li>
+              <b>Tactile Edge</b> — fanless inference appliance (Jetson Orin
+              Nano class) that reads the mesh and runs anomaly scoring locally.
+            </li>
+            <li>
+              <b>Tactile Cloud</b> — managed service that auto-calibrates from
+              five known-good samples and continuously improves with fleet data.
+            </li>
+          </ul>
+        </div>
+      </section>
 
-      <p className="lede" style={{ marginTop: "2.5rem" }}>
+      <p className="lede">
         For pilot bookings, integration questions, or fab-grade installation
         support, visit{" "}
         <button
           type="button"
           onClick={() => openExternal("https://conet.studio")}
           style={{
-            color: "var(--ink)",
-            borderBottom: "1px solid var(--ink)",
-            paddingBottom: "1px",
+            color: "var(--link)",
+            textDecoration: "underline",
           }}
         >
           conet.studio
