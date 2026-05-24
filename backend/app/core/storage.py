@@ -13,7 +13,7 @@ from pathlib import Path
 
 import numpy as np
 
-from app.core.anomaly import Baseline
+from app.core.anomaly import Baseline, RollingDriftTracker
 from app.core.config import settings
 
 
@@ -68,3 +68,29 @@ class CalibrationBuffer:
 
 
 calibration_buffer = CalibrationBuffer()
+
+
+class DriftTrackerStore:
+    """In-process drift trackers keyed by ``(org_id, line_id)``.
+
+    Restarting the service drops the rolling window, which is acceptable —
+    the next ~200 inspections rebuild it. For multi-replica deployments the
+    same shape backs onto Redis.
+    """
+
+    def __init__(self) -> None:
+        self._trackers: dict[tuple[str, str], RollingDriftTracker] = {}
+
+    def get(self, org_id: str, line_id: str) -> RollingDriftTracker:
+        key = (org_id, line_id)
+        tracker = self._trackers.get(key)
+        if tracker is None:
+            tracker = RollingDriftTracker(window=settings.drift_window)
+            self._trackers[key] = tracker
+        return tracker
+
+    def reset(self, org_id: str, line_id: str) -> None:
+        self._trackers.pop((org_id, line_id), None)
+
+
+drift_store = DriftTrackerStore()

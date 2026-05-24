@@ -1,0 +1,47 @@
+# Local development stack for the Tactile Cloud backend.
+#
+#   docker compose up --build
+#   # API: http://localhost:8000/docs
+#   # Postgres: localhost:5432  (user: conet, pass: conet, db: conet)
+#
+# The "api" service is wired to Postgres by default; for SQLite-only runs,
+# unset CONET_DATABASE_URL or comment the "db" service out.
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: conet
+      POSTGRES_PASSWORD: conet
+      POSTGRES_DB: conet
+    ports:
+      - "5432:5432"
+    volumes:
+      - conet-pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U conet -d conet"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  api:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      CONET_DATABASE_URL: postgresql+asyncpg://conet:conet@db:5432/conet
+      CONET_ENVIRONMENT: dev
+      CONET_LOG_JSON: "true"
+      CONET_AUTH_REQUIRED: "false"
+      CONET_BOOTSTRAP_ADMIN_TOKEN: "local-dev-admin-token"
+    ports:
+      - "8000:8000"
+    volumes:
+      - conet-data:/var/lib/conet-tactile
+
+volumes:
+  conet-pg:
+  conet-data:

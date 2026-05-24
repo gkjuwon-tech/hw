@@ -1,14 +1,17 @@
 """Service configuration.
 
-Settings are read from environment variables. Defaults are tuned for local
-development; production overrides come from the platform (Fly.io secrets / env).
+Settings are read from environment variables (``CONET_*``). Defaults are tuned
+for local development; production overrides come from the platform (Docker
+secrets, Kubernetes config maps, etc.).
 """
 
 from __future__ import annotations
 
-import os
-from dataclasses import dataclass
+from functools import lru_cache
 from pathlib import Path
+
+from pydantic import Field, field_validator
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 def _default_data_dir() -> Path:
@@ -16,25 +19,106 @@ def _default_data_dir() -> Path:
     return here / "data"
 
 
-@dataclass(frozen=True)
-class Settings:
-    """Process-wide settings."""
+class Settings(BaseSettings):
+    """Process-wide settings.
 
-    database_url: str = os.environ.get(
-        "CONET_DATABASE_URL", "sqlite+aiosqlite:///./conet_tactile.db"
+    Override any field via environment variable, prefix ``CONET_``. Example:
+    ``CONET_DATABASE_URL=postgresql+asyncpg://...``.
+    """
+
+    model_config = SettingsConfigDict(
+        env_prefix="CONET_",
+        env_file=".env",
+        env_file_encoding="utf-8",
+        extra="ignore",
+        case_sensitive=False,
     )
-    data_dir: Path = Path(os.environ.get("CONET_DATA_DIR", str(_default_data_dir())))
+
+    # ── service identity ────────────────────────────────────────────────
+    service_name: str = "conet-tactile-cloud"
+    environment: str = Field(default="dev", description="dev | staging | prod")
+    log_level: str = Field(default="INFO")
+    log_json: bool = Field(default=True, description="Emit logs as JSON (off for local TTY).")
+
+    # ── storage ────────────────────────────────────────────────────────
+    database_url: str = "sqlite+aiosqlite:///./conet_tactile.db"
+    data_dir: Path = Field(default_factory=_default_data_dir)
     """Directory for on-disk numpy baselines and recent-frame buffers."""
 
-    min_calibration_samples: int = int(os.environ.get("CONET_MIN_CALIB", "5"))
-    """Minimum known-good samples required to finalize a baseline."""
+    # ── anomaly detection ──────────────────────────────────────────────
+    min_calibration_samples: int = Field(default=5, ge=1, le=64)
+    anomaly_sigma_threshold: float = Field(default=3.0, ge=0.5, le=10.0)
+    drift_window: int = Field(default=200, ge=10, le=10_000)
+    drift_alert_z: float = Field(default=2.5, ge=0.5, le=10.0)
+    heatmap_max_cells: int = Field(default=4096, ge=64, le=65_536)
 
-    anomaly_sigma_threshold: float = float(os.environ.get("CONET_SIGMA", "3.0"))
-    """Per-cell deviation in standard deviations above which a cell is "hit"."""
+    # ── eventing ───────────────────────────────────────────────────────
+    event_buffer_size: int = Field(default=256, ge=1, le=10_000)
 
-    event_buffer_size: int = int(os.environ.get("CONET_EVENT_BUFFER", "256"))
-    """Per-line ring buffer of recent inspections served over SSE."""
+    # ── auth / security ────────────────────────────────────────────────
+    auth_required: bool = Field(
+        default=False,
+        description=(
+            "If True, every /v1/* request must carry a valid API key. "
+            "Defaults to False for local development; production must set True."
+        ),
+    )
+    api_key_prefix: str = Field(default="ctk", min_length=2, max_length=8)
+    api_key_secret_pepper: str = Field(
+        default="conet-tactile-dev-pepper-change-me",
+        description="Server-side pepper mixed into API-key hashes. Rotate in prod.",
+        min_length=8,
+    )
+    bootstrap_admin_token: str | None = Field(
+        default=None,
+        description=(
+            "Static superuser token for /v1/admin/* operations. If unset, admin "
+            "endpoints are disabled — use the seed CLI instead."
+        ),
+    )
+
+    # ── rate limit ─────────────────────────────────────────────────────
+    rate_limit_enabled: bool = True
+    rate_limit_default_per_minute: int = Field(default=600, ge=1, le=1_000_000)
+    rate_limit_burst: int = Field(default=120, ge=1, le=1_000_000)
+
+    # ── webhooks ───────────────────────────────────────────────────────
+    webhook_max_attempts: int = Field(default=8, ge=1, le=32)
+    webhook_base_backoff_seconds: float = Field(default=2.0, ge=0.1, le=60.0)
+    webhook_max_backoff_seconds: float = Field(default=600.0, ge=1.0, le=86_400.0)
+    webhook_request_timeout_seconds: float = Field(default=10.0, ge=0.5, le=120.0)
+    webhook_signature_header: str = "X-Conet-Signature"
+    webhook_id_header: str = "X-Conet-Webhook-Id"
+    webhook_event_header: str = "X-Conet-Event"
+
+    # ── pricing (in KRW; USD derived at quote time) ────────────────────
+    pricing_usd_per_krw: float = Field(default=1 / 1360.0, gt=0)
+
+    # ── observability ──────────────────────────────────────────────────
+    metrics_enabled: bool = True
+    cors_origins: list[str] = Field(default_factory=lambda: ["*"])
+
+    @field_validator("data_dir")
+    @classmethod
+    def _coerce_data_dir(cls, v: Path | str) -> Path:
+        return Path(v)
 
 
-settings = Settings()
-settings.data_dir.mkdir(parents=True, exist_ok=True)
+@lru_cache(maxsize=1)
+def get_settings() -> Settings:
+    s = Settings()
+    s.data_dir.mkdir(parents=True, exist_ok=True)
+    (s.data_dir / "baselines").mkdir(parents=True, exist_ok=True)
+    return s
+
+
+# Module-level alias for backward compatibility with the v0.1 import style.
+settings = get_settings()
+
+
+def reload_settings() -> Settings:
+    """Drop the cache and re-read the environment. Used in tests."""
+    global settings
+    get_settings.cache_clear()
+    settings = get_settings()
+    return settings
