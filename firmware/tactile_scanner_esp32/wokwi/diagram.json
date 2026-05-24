@@ -1,0 +1,107 @@
+{
+  "version": 1,
+  "author": "Conet Tactile EVT v1",
+  "editor": "wokwi",
+  "parts": [
+    {
+      "type": "board-esp32-s3-devkitc-1",
+      "id": "esp",
+      "top": 0, "left": 0,
+      "attrs": { "psramType": "none", "flashSize": "4" }
+    },
+    {
+      "type": "chip-74hc4067",
+      "id": "row_mux",
+      "top": 300, "left": -250,
+      "attrs": {}
+    },
+    {
+      "type": "chip-74hc4067",
+      "id": "col_mux",
+      "top": 300, "left": 250,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "rpd",
+      "top": 500, "left": 350,
+      "attrs": { "value": "10000" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_0_0",
+      "top": 550, "left": 0,
+      "rotate": 0,
+      "attrs": { "value": "1000" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_0_15",
+      "top": 600, "left": 0,
+      "rotate": 0,
+      "attrs": { "value": "1500" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_15_0",
+      "top": 650, "left": 0,
+      "rotate": 0,
+      "attrs": { "value": "2000" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_15_15",
+      "top": 700, "left": 0,
+      "rotate": 0,
+      "attrs": { "value": "3300" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_7_11",
+      "top": 750, "left": 0,
+      "rotate": 0,
+      "attrs": { "value": "680" }
+    }
+  ],
+  "connections": [
+    [ "esp:GND.1", "row_mux:GND", "black", [] ],
+    [ "esp:GND.1", "col_mux:GND", "black", [] ],
+    [ "esp:3V3.1", "row_mux:VCC", "red", [] ],
+    [ "esp:3V3.1", "col_mux:VCC", "red", [] ],
+    [ "esp:GND.1", "row_mux:EN", "black", [] ],
+    [ "esp:GND.1", "col_mux:EN", "black", [] ],
+
+    [ "esp:3V3.1", "row_mux:SIG", "red", [] ],
+
+    [ "esp:4",  "row_mux:S0", "green",  [] ],
+    [ "esp:5",  "row_mux:S1", "green",  [] ],
+    [ "esp:6",  "row_mux:S2", "green",  [] ],
+    [ "esp:7",  "row_mux:S3", "green",  [] ],
+
+    [ "esp:15", "col_mux:S0", "blue", [] ],
+    [ "esp:16", "col_mux:S1", "blue", [] ],
+    [ "esp:17", "col_mux:S2", "blue", [] ],
+    [ "esp:18", "col_mux:S3", "blue", [] ],
+
+    [ "esp:1",  "col_mux:SIG", "yellow", [] ],
+
+    [ "col_mux:SIG", "rpd:1", "yellow", [] ],
+    [ "rpd:2", "esp:GND.1", "black", [] ],
+
+    [ "row_mux:CH0",  "cell_0_0:1",   "orange", [] ],
+    [ "cell_0_0:2",   "col_mux:CH0",  "orange", [] ],
+
+    [ "row_mux:CH0",  "cell_0_15:1",  "orange", [] ],
+    [ "cell_0_15:2",  "col_mux:CH15", "orange", [] ],
+
+    [ "row_mux:CH15", "cell_15_0:1",  "orange", [] ],
+    [ "cell_15_0:2",  "col_mux:CH0",  "orange", [] ],
+
+    [ "row_mux:CH15", "cell_15_15:1", "orange", [] ],
+    [ "cell_15_15:2", "col_mux:CH15", "orange", [] ],
+
+    [ "row_mux:CH7",  "cell_7_11:1",  "magenta", [] ],
+    [ "cell_7_11:2",  "col_mux:CH11", "magenta", [] ]
+  ],
+  "dependencies": {}
+}

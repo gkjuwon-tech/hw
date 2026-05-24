@@ -203,7 +203,7 @@ COMPONENTS: list[Component] = [
     Component(
         refdes="C8", value="100nF",
         footprint="0402", lcsc="C1525",
-        x=50.5, y=30.0, rotation=0,
+        x=46.0, y=37.5, rotation=0,
         comment="CL05B104KO5NNNC", description="MLCC 100nF 0402 — U3 decouple",
     ),
     Component(
@@ -259,13 +259,13 @@ COMPONENTS: list[Component] = [
     Component(
         refdes="R40", value="10k",
         footprint="0402", lcsc="C25744",
-        x=53.0, y=35.0, rotation=0,
+        x=49.0, y=37.5, rotation=0,
         comment="0402WGF1002TCE", description="Thick-film 10k 1% 0402 — BOOT pull-up",
     ),
     Component(
         refdes="R41", value="10k",
         footprint="0402", lcsc="C25744",
-        x=53.0, y=25.0, rotation=0,
+        x=57.0, y=22.0, rotation=0,
         comment="0402WGF1002TCE", description="Thick-film 10k 1% 0402 — RESET pull-up",
     ),
 
