@@ -12,6 +12,8 @@ This repository contains:
 | `docs/` | Architecture, installation guide, and operational runbook. |
 | `PROJECT_BRIEF.md` | Full product, market, and technology brief. |
 | `BOM.md` | Bill of materials with vendors and target unit cost. |
+| `HOW_IT_WORKS.md` | Korean-language product overview — what it is, where the HW/SW boundary lives. |
+| `HARDWARE_BUILD_GUIDE.md` | Korean-language step-by-step build guide for first prototype unit (shopping links + assembly + firmware + first inspect). |
 
 ## Product lineup
 
