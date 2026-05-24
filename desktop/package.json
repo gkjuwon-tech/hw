@@ -16,6 +16,7 @@
     "dist:linux": "npm run build:sidecar && npm run build && electron-builder --linux AppImage",
     "dist:mac": "npm run build:sidecar && npm run build && electron-builder --mac dmg",
     "dist:win": "npm run build:sidecar && npm run build && electron-builder --win nsis",
+    "artifact:win": "npm run dist:win && powershell -NoProfile -ExecutionPolicy Bypass -File scripts/copy-win-installer.ps1",
     "dist:win:portable": "npm run build:sidecar && npm run build && electron-builder --win portable",
     "lint": "eslint . --ext .ts,.tsx --max-warnings=0",
     "typecheck": "tsc --noEmit && tsc -p tsconfig.electron.json --noEmit"

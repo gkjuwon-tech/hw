@@ -8,7 +8,7 @@
    software (Cognex, Keyence, Halcon, classic SCADA HMIs):
 
      · cool gray chrome (#c0c0c0) instead of paper white
-     · single accent in NAVY (#003c71) — quiet, never decorative
+     · single accent in brand green (#4f7d1f) — matches the product mark
      · status LEDs in classic signal colors (green/amber/red), never
        used to "brand" anything
      · ZERO rounded corners, ZERO gradients on chrome surfaces, ZERO
@@ -62,11 +62,11 @@
   --line-strong: #000000;    /* outer chrome borders */
 
   /* ── accent (chrome) ────────────────────────────────────────────── */
-  --navy: #003c71;           /* Cognex-grade navy, titlebar bg */
-  --navy-deep: #002649;
+  --navy: #4f7d1f;           /* brand green, titlebar bg */
+  --navy-deep: #355414;
   --navy-on: #ffffff;
-  --link: #0033a0;
-  --selection: #002973;      /* selected row in a table / nav */
+  --link: #426d18;
+  --selection: #3f6618;      /* selected row in a table / nav */
   --selection-on: #ffffff;
 
   /* ── signals (LED indicators only — never decorative) ───────────── */
