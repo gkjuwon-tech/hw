@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+env/
+.env
+.env.local
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Data / runtime
+backend/data/
+backend/*.db
+backend/*.sqlite
+backend/baselines/
+*.npz
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Node (if any tooling later)
+node_modules/
+dist/
+.cache/
+
+# Logs
+*.log
