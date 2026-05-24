@@ -47,3 +47,12 @@ firmware/tactile_scanner_esp32/wokwi/firmware.elf
 firmware/tactile_scanner_esp32/wokwi/.wokwi_log_*.bin
 firmware/tactile_scanner_esp32/wokwi/host_sim/scan_one_frame
 firmware/tactile_scanner_esp32/build/
+
+# Desktop app build artifacts (electron-builder + PyInstaller)
+desktop/node_modules/
+desktop/dist/
+desktop/dist-electron/
+desktop/release/
+desktop/python-sidecar/build/
+desktop/python-sidecar/dist/
+desktop/.vite/

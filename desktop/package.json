@@ -1,0 +1,41 @@
+{
+  "name": "conet-tactile-desktop",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Conet Tactile — desktop dashboard (Tactile Cloud line operations)",
+  "author": "Conet Studio <support@conet.studio>",
+  "license": "UNLICENSED",
+  "main": "dist-electron/main.js",
+  "scripts": {
+    "dev": "vite",
+    "dev:electron": "tsc -p tsconfig.electron.json && vite build && electron dist-electron/main.js",
+    "build:renderer": "tsc --noEmit && vite build",
+    "build:electron": "tsc -p tsconfig.electron.json",
+    "build:sidecar": "pyinstaller --noconfirm --clean python-sidecar/sidecar.spec",
+    "build": "npm run build:electron && npm run build:renderer",
+    "dist:linux": "npm run build && electron-builder --linux AppImage",
+    "dist:mac": "npm run build && electron-builder --mac dmg",
+    "dist:win": "npm run build && electron-builder --win nsis",
+    "lint": "eslint . --ext .ts,.tsx --max-warnings=0",
+    "typecheck": "tsc --noEmit && tsc -p tsconfig.electron.json --noEmit"
+  },
+  "dependencies": {
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "20.14.10",
+    "@types/react": "18.3.5",
+    "@types/react-dom": "18.3.0",
+    "@typescript-eslint/eslint-plugin": "8.6.0",
+    "@typescript-eslint/parser": "8.6.0",
+    "@vitejs/plugin-react": "4.3.1",
+    "electron": "33.0.2",
+    "electron-builder": "25.0.5",
+    "eslint": "8.57.1",
+    "eslint-plugin-react": "7.36.1",
+    "eslint-plugin-react-hooks": "4.6.2",
+    "typescript": "5.5.4",
+    "vite": "5.4.10"
+  }
+}
