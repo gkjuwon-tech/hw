@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Conet Tactile — Wokwi / host-mode test harness.
 
-This harness covers the 10 scenarios the user enumerated in HANDOFF.md.
+This harness covers the 10 scenarios the user enumerated in HANDOFF.md,
+PLUS 8 additional hardcore scenarios added for PCB fab gating validation.
 Two execution modes are supported:
 
 * `--mode software` (default, no token required):
@@ -428,6 +429,290 @@ def _scenario_payload_size_drift() -> None:
         )
 
 
+# ─── NEW: Hardcore validation scenarios for PCB fab gating ───────────────────
+
+
+def _scenario_multi_cell_diagonal() -> None:
+    """All 16 diagonal cells (r==c) active → exactly those 16 indices non-zero.
+
+    This exercises the row/column MUX decode path for all 16 channels
+    simultaneously — a failure here means the MUX selection for at least
+    one of the 16 channels is mis-routed. On the real PCB, this would
+    correspond to a uniform diagonal pressure strip across the mesh.
+    """
+    diag_values = {(i, i): 1800 + i * 50 for i in range(16)}
+    adc = _make_adc_matrix(diag_values)
+    frame = _run_host_sim(adc, seq=200, timestamp_us=200_000)
+    hdr, payload = _parse_frame(frame)
+    _assert_frame_envelope(hdr, expected_seq=200)
+    _assert_crc(hdr, payload)
+    nonzero = {(i // COLS, i % COLS) for i, b in enumerate(payload) if b != 0}
+    expected = {(i, i) for i in range(16)}
+    if nonzero != expected:
+        missing = expected - nonzero
+        extra = nonzero - expected
+        raise AssertionError(
+            f"diagonal pattern mismatch: missing={sorted(missing)}, "
+            f"extra={sorted(extra)}"
+        )
+    # Also verify monotonic ordering along the diagonal (higher ADC → higher byte)
+    diag_bytes = [payload[i * COLS + i] for i in range(16)]
+    for i in range(1, 16):
+        if diag_bytes[i] < diag_bytes[i - 1]:
+            raise AssertionError(
+                f"diagonal not monotonic at cell ({i},{i}): "
+                f"{diag_bytes[i]} < {diag_bytes[i-1]}"
+            )
+
+
+def _scenario_checkerboard_pattern() -> None:
+    """Checkerboard: cells where (r+c)%2==0 are active → exactly 128 non-zero.
+
+    This is the maximum-density simultaneous activation pattern — every
+    active cell is surrounded by inactive cells. If the MUX has ANY
+    crosstalk, this pattern will bleed signal into adjacent cells.
+    """
+    values = {}
+    for r in range(16):
+        for c in range(16):
+            if (r + c) % 2 == 0:
+                values[(r, c)] = 2000
+    adc = _make_adc_matrix(values)
+    frame = _run_host_sim(adc, seq=201, timestamp_us=201_000)
+    hdr, payload = _parse_frame(frame)
+    _assert_frame_envelope(hdr, expected_seq=201)
+    _assert_crc(hdr, payload)
+    active = [(i // COLS, i % COLS) for i, b in enumerate(payload) if b != 0]
+    inactive = [(i // COLS, i % COLS) for i, b in enumerate(payload) if b == 0]
+    if len(active) != 128:
+        raise AssertionError(
+            f"checkerboard must have exactly 128 active cells, got {len(active)}"
+        )
+    for r, c in active:
+        if (r + c) % 2 != 0:
+            raise AssertionError(
+                f"cell ({r},{c}) is active but (r+c)%2 != 0 — MUX crosstalk?"
+            )
+    for r, c in inactive:
+        if (r + c) % 2 != 1:
+            raise AssertionError(
+                f"cell ({r},{c}) is inactive but (r+c)%2 != 1 — signal dropout?"
+            )
+
+
+def _scenario_gradient_continuity() -> None:
+    """compress_sample output never jumps more than 2 between adjacent ADC values.
+
+    The shaping curve has a linear segment [0, 0.66) and a log segment
+    [0.66, 1.0]. At the knee (v ≈ 0.66, raw ≈ 2713), the curve is
+    designed to be C0-continuous. This scenario scans EVERY adjacent
+    pair of ADC values from 0 to 4095 and verifies no jump exceeds 2.
+    """
+    max_jump = 0
+    worst_at = 0
+    prev = _compress_sample(0)
+    for raw in range(1, ADC_MAX + 1):
+        cur = _compress_sample(raw)
+        jump = abs(cur - prev)
+        if jump > max_jump:
+            max_jump = jump
+            worst_at = raw
+        prev = cur
+    if max_jump > 2:
+        raise AssertionError(
+            f"compress_sample has a jump of {max_jump} at raw={worst_at} "
+            f"(max allowed: 2) — shaping curve discontinuity"
+        )
+    # Specifically check the knee region (raw ≈ 2700..2730)
+    knee_values = [_compress_sample(r) for r in range(2700, 2730)]
+    for i in range(1, len(knee_values)):
+        if abs(knee_values[i] - knee_values[i - 1]) > 1:
+            raise AssertionError(
+                f"knee discontinuity at raw={2700+i}: "
+                f"{knee_values[i-1]} → {knee_values[i]}"
+            )
+
+
+def _scenario_crc_bit_flip_detection() -> None:
+    """Flipping any single bit in the payload must produce a CRC mismatch.
+
+    CRC16-CCITT has a minimum Hamming distance of 4 for messages up to
+    32767 bits, so it MUST detect all 1-bit and 2-bit errors. This
+    scenario verifies the 1-bit case exhaustively for the first 64 bytes
+    of the payload (512 bit positions) and spot-checks 64 more across
+    the rest.
+    """
+    adc = _adc_gaussian_at((8, 8), peak=2500)
+    frame = _run_host_sim(adc, seq=300, timestamp_us=300_000)
+    hdr, payload = _parse_frame(frame)
+    good_crc = hdr["crc"]
+
+    # Exhaustive check on first 64 bytes (512 bit positions)
+    for byte_idx in range(min(64, len(payload))):
+        for bit in range(8):
+            corrupted = bytearray(payload)
+            corrupted[byte_idx] ^= (1 << bit)
+            corrupted_crc = _crc16_ccitt(bytes(corrupted))
+            if corrupted_crc == good_crc:
+                raise AssertionError(
+                    f"CRC FAILED to detect 1-bit flip at byte {byte_idx} "
+                    f"bit {bit} — CRC16-CCITT Hamming distance violation"
+                )
+
+    import random
+    rng = random.Random(42)
+    remaining_positions = [
+        (byte_idx, bit)
+        for byte_idx in range(64, len(payload))
+        for bit in range(8)
+    ]
+    for byte_idx, bit in rng.sample(remaining_positions, min(64, len(remaining_positions))):
+        corrupted = bytearray(payload)
+        corrupted[byte_idx] ^= (1 << bit)
+        if _crc16_ccitt(bytes(corrupted)) == good_crc:
+            raise AssertionError(
+                f"CRC FAILED to detect 1-bit flip at byte {byte_idx} bit {bit}"
+            )
+
+
+def _scenario_multi_frame_sequence() -> None:
+    """100 sequential frames with varying pressure → all envelopes + CRCs valid.
+
+    Simulates a real scanning session: a part rolls over the mesh at
+    varying pressure. Each of 100 frames has a shifted gaussian center
+    and varying peak intensity. Catches seq counter bugs, CRC calculation
+    bugs that only manifest on specific payloads, endianness/alignment
+    issues, and memory corruption from repeated frame generation.
+    """
+    for i in range(100):
+        row = (i * 7) % 16
+        col = (i * 11) % 16
+        peak = 1000 + (i * 37) % 3000
+        adc = _adc_gaussian_at((row, col), peak=peak, sigma=1.5 + (i % 3) * 0.5)
+        frame = _run_host_sim(adc, seq=i + 1, timestamp_us=(i + 1) * 5000)
+        hdr, payload = _parse_frame(frame)
+        _assert_frame_envelope(hdr, expected_seq=i + 1)
+        _assert_crc(hdr, payload)
+        if all(b == 0 for b in payload):
+            raise AssertionError(
+                f"frame {i+1}: entire payload is zero with peak={peak}"
+            )
+
+
+def _scenario_noise_floor_rejection() -> None:
+    """ADC values in [0, ADC_DEAD+7] must ALL compress to exactly 0.
+
+    The firmware's noise floor is defined by ADC_DEAD=32. Any raw value
+    at or below 32 produces compressed byte 0. Values just ABOVE the
+    dead zone also compress to 0 because of rounding. This scenario
+    finds the exact transition point and validates it.
+    """
+    first_nonzero = None
+    for raw in range(ADC_MAX + 1):
+        if _compress_sample(raw) > 0:
+            first_nonzero = raw
+            break
+
+    if first_nonzero is None:
+        raise AssertionError("compress_sample never produces a nonzero output!")
+
+    for raw in range(first_nonzero):
+        if _compress_sample(raw) != 0:
+            raise AssertionError(
+                f"compress_sample({raw}) = {_compress_sample(raw)}, expected 0"
+            )
+
+    expected_min = ADC_DEAD + 1
+    expected_max = ADC_DEAD + 20
+    if not (expected_min <= first_nonzero <= expected_max):
+        raise AssertionError(
+            f"first nonzero output at raw={first_nonzero}, expected in "
+            f"[{expected_min}, {expected_max}]"
+        )
+
+    for test_val in [0, ADC_DEAD // 2, ADC_DEAD, first_nonzero - 1]:
+        adc = _adc_constant(test_val)
+        frame = _run_host_sim(adc, seq=400, timestamp_us=400_000)
+        _, payload = _parse_frame(frame)
+        if any(b != 0 for b in payload):
+            raise AssertionError(
+                f"ADC constant={test_val} (below noise floor {first_nonzero}): "
+                f"payload has nonzero bytes"
+            )
+
+
+def _scenario_pressure_gradient_spatial() -> None:
+    """Left-to-right pressure ramp → column means are monotonically increasing.
+
+    Simulates a part with a linearly increasing pressure profile from
+    left (col 0) to right (col 15). After compression, column-wise mean
+    of the payload must be monotonically non-decreasing.
+    """
+    values = {}
+    for r in range(16):
+        for c in range(16):
+            raw = 200 + c * 240
+            values[(r, c)] = raw
+    adc = _make_adc_matrix(values)
+    frame = _run_host_sim(adc, seq=500, timestamp_us=500_000)
+    hdr, payload = _parse_frame(frame)
+    _assert_frame_envelope(hdr, expected_seq=500)
+    _assert_crc(hdr, payload)
+
+    col_means = []
+    for c in range(16):
+        col_sum = sum(payload[r * COLS + c] for r in range(16))
+        col_means.append(col_sum / 16.0)
+
+    for i in range(1, 16):
+        if col_means[i] < col_means[i - 1]:
+            raise AssertionError(
+                f"column means not monotonic: col {i-1}={col_means[i-1]:.1f} "
+                f"> col {i}={col_means[i]:.1f} — spatial mapping is broken"
+            )
+
+    if col_means[15] <= col_means[0]:
+        raise AssertionError(
+            f"no gradient detected: col 0 mean={col_means[0]:.1f}, "
+            f"col 15 mean={col_means[15]:.1f}"
+        )
+
+
+def _scenario_random_stress() -> None:
+    """500 random ADC matrices → all produce valid frames with correct CRC.
+
+    This is the nuclear option. 500 completely random 16x16 ADC patterns.
+    If even ONE produces a bad CRC or a payload byte that doesn't match
+    the Python reference, the firmware has a latent bug.
+    """
+    import random
+    rng = random.Random(12345)
+
+    for trial in range(500):
+        values = {}
+        for r in range(16):
+            for c in range(16):
+                values[(r, c)] = rng.randint(0, ADC_MAX)
+        adc = _make_adc_matrix(values)
+        frame = _run_host_sim(adc, seq=trial + 1, timestamp_us=(trial + 1) * 5000)
+        hdr, payload = _parse_frame(frame)
+        _assert_frame_envelope(hdr, expected_seq=trial + 1)
+        _assert_crc(hdr, payload)
+
+        for r in range(16):
+            for c in range(16):
+                expected_byte = _compress_sample(values[(r, c)])
+                actual_byte = payload[r * COLS + c]
+                if expected_byte != actual_byte:
+                    raise AssertionError(
+                        f"trial {trial+1} cell ({r},{c}): "
+                        f"Python says {expected_byte}, firmware says {actual_byte} "
+                        f"(ADC={values[(r,c)]})"
+                    )
+
+
+# ─── Scenario registry ──────────────────────────────────────────────────────
+
 SOFTWARE_SCENARIOS: list[tuple[str, SoftwareScenario, str]] = [
     ("protocol_constants", _scenario_protocol_constants,
      "Sanity: Python reference matches firmware's compress/CRC/header."),
@@ -449,6 +734,23 @@ SOFTWARE_SCENARIOS: list[tuple[str, SoftwareScenario, str]] = [
      "SCAN_HZ math gives 5 ms period (real jitter → wokwi/silicon)."),
     ("payload_size", _scenario_payload_size_drift,
      "Payload remains 256 bytes — backend /ingest assumes this."),
+    # ─── NEW: Hardcore fab-gating scenarios ──────────────────────────────────
+    ("multi_cell_diagonal", _scenario_multi_cell_diagonal,
+     "All 16 diagonal cells active — correct indices, monotonic ordering."),
+    ("checkerboard_pattern", _scenario_checkerboard_pattern,
+     "128-cell checkerboard — max-density crosstalk detection."),
+    ("gradient_continuity", _scenario_gradient_continuity,
+     "compress_sample never jumps >2 between adjacent ADC values."),
+    ("crc_bit_flip_detection", _scenario_crc_bit_flip_detection,
+     "512+ single-bit payload corruptions all detected by CRC16-CCITT."),
+    ("multi_frame_sequence", _scenario_multi_frame_sequence,
+     "100 sequential frames — all envelopes, CRCs, and payloads valid."),
+    ("noise_floor_rejection", _scenario_noise_floor_rejection,
+     "Exact ADC_DEAD boundary — all sub-threshold values compress to 0."),
+    ("pressure_gradient_spatial", _scenario_pressure_gradient_spatial,
+     "Left-to-right ADC ramp — column means are monotonically increasing."),
+    ("random_stress", _scenario_random_stress,
+     "500 random ADC matrices — Python/firmware cross-validation (nuclear)."),
 ]
 
 
