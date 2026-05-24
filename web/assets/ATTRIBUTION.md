@@ -19,6 +19,7 @@ Attribution is provided here as a courtesy.
 | `industry-semicon.jpg` | `1672307613484-3254a04651fd` | Maxence Pira |
 | `industry-meat.jpg` | `1558618666-fcd25c85cd64` | Unsplash |
 | `quote-machine.jpg` | `1485827404703-89b55fcc595e` | Unsplash |
+| `pricing-shipping.jpg` | `1553413077-190dd305871c` | Unsplash |
 | `company-floor.jpg` | `1532187863486-abf9dbad1b69` | Unsplash |
 
 `_fetch.sh` is the reference script used to populate this directory; it pulls
