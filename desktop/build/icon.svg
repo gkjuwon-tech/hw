@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" fill="#0b0c0a"/>
+  <g transform="translate(64 64)">
+    <rect width="384" height="384" fill="none" stroke="#1f2220" stroke-width="2"/>
+    <g fill="#b5e853">
+      <rect x="0"   y="0"   width="48" height="48"/>
+      <rect x="96"  y="0"   width="48" height="48" opacity="0.55"/>
+      <rect x="0"   y="96"  width="48" height="48" opacity="0.55"/>
+      <rect x="96"  y="96"  width="48" height="48"/>
+      <rect x="192" y="96"  width="48" height="48" opacity="0.4"/>
+      <rect x="192" y="192" width="48" height="48"/>
+      <rect x="288" y="192" width="48" height="48" opacity="0.7"/>
+      <rect x="96"  y="288" width="48" height="48" opacity="0.4"/>
+      <rect x="288" y="288" width="48" height="48"/>
+      <rect x="288" y="0"   width="48" height="48" opacity="0.6"/>
+      <rect x="0"   y="288" width="48" height="48"/>
+      <rect x="192" y="0"   width="48" height="48"/>
+      <rect x="0"   y="192" width="48" height="48" opacity="0.45"/>
+      <rect x="288" y="96"  width="48" height="48" opacity="0.3"/>
+      <rect x="96"  y="192" width="48" height="48" opacity="0.8"/>
+      <rect x="192" y="288" width="48" height="48" opacity="0.5"/>
+    </g>
+  </g>
+</svg>
