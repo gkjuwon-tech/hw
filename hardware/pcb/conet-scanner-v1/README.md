@@ -39,7 +39,7 @@ This directory is the manufacturing source-of-truth for the first prototype boar
 | U1 | ESP32-S3-WROOM-1-N8R8 | SMD module | C2913201 | 8 MB flash + 8 MB PSRAM, native USB, Wi-Fi/BT5. |
 | U2 | CD74HC4067SM96 (row MUX) | SOIC-24 | C5183 | 16:1 analog mux, drives mesh row buses. |
 | U3 | CD74HC4067SM96 (col MUX) | SOIC-24 | C5183 | Identical to U2, drives mesh column buses. |
-| U4 | ADS1115IDGSR | MSOP-10 | C37593 | 16-bit ΔΣ ADC, I²C, PGA up to ±0.256 V. |
+| U4 | ADS1115IDGSR | MSOP-10 | C37593 | 16-bit ΔΣ ADC, I²C. **DNP by default.** Firmware must set PGA to gain=1 (FS=±4.096 V) before the first read; the chip's power-on default is gain=2 (FS=±2.048 V), which saturates the 0..3.3 V mux-SIG swing at ~62% of full pressure. The minimum-gain mode (FS=±0.256 V) is the *opposite* extreme of the PGA table and would saturate immediately. |
 | U5 | TLV1117LV33DCYR | SOT-223 | C155591 | 3.3 V LDO from USB-C 5 V rail. |
 | J3 | TYPE-C-31-M-12 | USB-C receptacle | C165948 | 5 V/3 A input + native USB to ESP32-S3. |
 | J1 | FH12-16S-1SH | 16-pin FFC ZIF | C72669 | ROW connector, 1.0 mm pitch, top contacts. |

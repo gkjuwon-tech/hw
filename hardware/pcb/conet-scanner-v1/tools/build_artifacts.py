@@ -240,12 +240,17 @@ def build_copper_bottom() -> GerberLayer:
             layer.select(code)
             layer.flash(comp.x + dx, comp.y + dy)
 
-    # A small placeholder trace so the layer is not empty (some online
-    # viewers complain when a copper layer has no draws). The trace below
-    # is purely cosmetic — a 1mm dash near the bottom-left mounting hole.
-    trace = pool.get_trace(0.25)
-    layer.select(trace)
-    layer.line(2.5, 2.5, 5.5, 2.5)
+    # Solid GND pour. Without this, USB D+/D- on the top layer have no
+    # adjacent reference plane on the back side of the board (the In1 GND
+    # pour is two dielectric layers away), so high-speed return currents
+    # find any nearby copper -- digital aggressor traces, the antenna
+    # keep-out -- and the resulting USB eye gets ugly. JLCPCB's free 4-
+    # layer service builds the stackup as Top / In1 / In2 / Bot with the
+    # outer two being signal layers; if we tape out with an empty Bot we
+    # lose half the impedance-control headroom for nothing. Use the same
+    # punch-out pattern as the inner planes so the via stitching from the
+    # GND pour up to GND-net SMD pads stays sane.
+    _inner_pour(layer, label_offset=(2.0, 2.0))
 
     return layer
 
@@ -826,17 +831,23 @@ def write_cpl(path: Path) -> None:
 
     Columns: Designator, Mid X, Mid Y, Layer, Rotation
     Mid X / Mid Y are in mm with 4 decimal places, sign included.
-    Rotation is in degrees (0–360). DNP components are still listed so the
-    EDA tool round-trip stays consistent — JLCPCB filters them via the BOM.
+    Rotation is in degrees (0–360).
+
+    DNP / ``populate=False`` components are intentionally omitted: the
+    JLCPCB SMT uploader rejects the order ("The below parts won't be
+    assembled due to data missing. <refdes> designators don't exist in
+    the BOM file.") if the CPL lists refdeses for which the BOM has no
+    matching part. Footprints for those parts are still etched onto the
+    PCB by the gerber generator — they're just empty pads waiting for
+    hand-soldered bodges, which is exactly what ``populate=False`` is
+    for.
     """
     with path.open("w", newline="", encoding="utf-8") as f:
         w = csv.writer(f, lineterminator="\n")
         w.writerow(["Designator", "Mid X", "Mid Y", "Layer", "Rotation"])
         for comp in sorted(COMPONENTS, key=lambda c: _refdes_sort_key(c.refdes)):
             if not comp.populate:
-                # JLCPCB ignores rows missing from the BOM but having them
-                # in the CPL is harmless and helpful for future iterations.
-                pass
+                continue
             layer = "Top" if comp.layer == "top" else "Bottom"
             w.writerow([
                 comp.refdes,

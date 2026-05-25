@@ -6,7 +6,7 @@ Three scenarios:
   A. "no_press"  -- every cell un-pressed (R_cell=30 kohm) => ADC near 1000
                     after the divider with R_mux=320 ohm clone-typ.
                     Payload should be mostly zeros after `compress_sample`
-                    (because raw ~1000 minus kAdcDead=32 then normalised).
+                    (because raw ~1000 minus kAdcDead=1024 returns 0).
 
   B. "centre_press" -- Gaussian bump centred at (7, 9) with peak R_cell=2k.
                        Should produce a high-amplitude blob in the payload
@@ -211,10 +211,12 @@ def analyse(repo_root: Path) -> tuple[list[dict], list[Finding]]:
                     "With every cell at the un-pressed value (~R_cell=30 kohm), the "
                     "compressed payload should be near-zero everywhere. Seeing "
                     f"{nonzero} non-zero cells means the noise floor / kAdcDead "
-                    "threshold (32 counts) is too low for the real divider output "
+                    "threshold is too low for the real divider output "
                     "(~1000 counts with R_mux=320 ohm). The firmware will report "
                     "phantom touches on an unloaded mesh. **Recommend raising "
-                    "kAdcDead to ~80 counts or adding a per-cell baseline.**"
+                    "kAdcDead to ~1024 counts (which fully zeroes out the "
+                    "no-press baseline) or, for v2, switching to a runtime "
+                    "per-cell baseline subtracted on the first scan.**"
                 ),
                 refs=["scanner_frame.h"],
             ))

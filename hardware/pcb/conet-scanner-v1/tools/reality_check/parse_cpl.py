@@ -63,16 +63,23 @@ def parse(cpl_path: Path, bom_refdes: set[str]) -> tuple[list[dict], list[Findin
             layer = raw["Layer"].strip()
             rows.append(dict(refdes=refdes, x=mid_x, y=mid_y, rotation=rotation, layer=layer))
 
-            if refdes not in bom_refdes and refdes not in {"R31", "C30", "SJ1", "C9", "U4"}:
+            if refdes not in bom_refdes:
                 findings.append(Finding(
                     module="parse_cpl",
                     code="CPL-REFDES-NOT-IN-BOM",
                     title=f"`{refdes}` placed on the PCB but absent from the BOM",
-                    severity=3,
+                    severity=5,
                     detail=(
                         f"The pick-and-place file places `{refdes}` at "
                         f"({mid_x:.2f}, {mid_y:.2f}) mm but no BOM row supplies a part for it. "
-                        "JLCPCB will skip the pad."
+                        "JLCPCB's SMT uploader **rejects the order outright** with: "
+                        f"*'The below parts won't be assembled due to data missing. "
+                        f"{refdes} designators don't exist in the BOM file.'* "
+                        "If the part is intentionally DNP, drop the refdes from `cpl.csv` too — "
+                        "the footprint still gets etched onto the PCB by the gerber generator, "
+                        "the SMT line just won't try to pick anything for it. The "
+                        "`populate=False` flag on `tools/components.py` is the source-of-truth "
+                        "knob; `tools/build_artifacts.py::write_cpl` skips DNP rows automatically."
                     ),
                     refs=[refdes],
                 ))

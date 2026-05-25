@@ -55,7 +55,12 @@ HOST_SIM_BIN = HOST_SIM_DIR / "scan_one_frame"
 ROWS = 16
 COLS = 16
 ADC_MAX = 4095
-ADC_DEAD = 32
+# Mirror firmware/scanner_frame.h::kAdcDead. The v1 divider rests at
+# ~1000-1050 counts on every unpressed cell across the silicon variance
+# band, so the noise floor must be above the un-pressed baseline rather
+# than just the ADC noise floor. Bumping this without re-bumping the
+# constant in scanner_frame.h would break the cross-validation tests.
+ADC_DEAD = 1100
 SCAN_HZ = 200
 FRAME_MAGIC = 0x434F4E54  # 'CONT'
 FRAME_HDR_FMT = "<IHHIIHH"  # magic, rows, cols, seq, ts_us, crc, _pad
@@ -587,7 +592,12 @@ def _scenario_multi_frame_sequence() -> None:
     for i in range(100):
         row = (i * 7) % 16
         col = (i * 11) % 16
-        peak = 1000 + (i * 37) % 3000
+        # Peaks must be above the kAdcDead = 1100 noise floor or the
+        # frame would correctly compress to all-zero -- which is the
+        # firmware doing its job, not a bug. Start at 1200 so every
+        # synthetic touch generates at least one non-zero byte; the
+        # range still covers the full dynamic span of the divider.
+        peak = 1200 + (i * 29) % 2800
         adc = _adc_gaussian_at((row, col), peak=peak, sigma=1.5 + (i % 3) * 0.5)
         frame = _run_host_sim(adc, seq=i + 1, timestamp_us=(i + 1) * 5000)
         hdr, payload = _parse_frame(frame)

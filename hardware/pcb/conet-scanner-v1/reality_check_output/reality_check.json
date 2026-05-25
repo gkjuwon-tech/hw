@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-05-25T02:16:07+00:00",
-  "verdict": "**\u26a0\ufe0f  Borderline. Order if you accept a v1 with caveats.**\n\nNo fire-level issues, but **9** MAJOR issues need manual review on the first article.\n\nSeverity counts:\n\n| Severity | Count |\n|---------:|------:|\n| FIRE (5) | 0 |\n| CRITICAL (4) | 0 |\n| MAJOR (3) | 9 |\n| WARNING (2) | 8 |\n| ADVISORY (1) | 1 |\n| INFO (0) | 1 |",
+  "generated_at": "2026-05-25T08:35:02+00:00",
+  "verdict": "**\u26a0\ufe0f  Borderline. Order if you accept a v1 with caveats.**\n\nNo fire-level issues, but **6** MAJOR issues need manual review on the first article.\n\nSeverity counts:\n\n| Severity | Count |\n|---------:|------:|\n| FIRE (5) | 0 |\n| CRITICAL (4) | 0 |\n| MAJOR (3) | 6 |\n| WARNING (2) | 6 |\n| ADVISORY (1) | 1 |\n| INFO (0) | 1 |",
   "findings": [
     {
       "module": "parse_bom",
@@ -100,17 +100,6 @@
         "rotation": 0,
         "jlcpcb_offset": 180
       }
-    },
-    {
-      "module": "parse_gerber",
-      "code": "GBR-LAYER-EMPTY",
-      "title": "Outer copper layer `conet-scanner-v1-B_Cu.gbr` is essentially empty (364 B, 1 traces)",
-      "severity": 3,
-      "detail": "`conet-scanner-v1-B_Cu.gbr` is 364 bytes with **1** drawn copper segments. For a 4-layer board this means there is no return path / pour on this outer layer. Signal integrity for any trace that depends on this layer as its reference plane (and microstrip impedance control) is compromised.\n\nIf this is `B_Cu`, USB D+/D- and digital I/O on the top layer have no controlled-impedance return; USB 12 Mbps still works but EMI and ESD margins are reduced. Add a solid GND pour on B_Cu before final tape-out.",
-      "refs": [
-        "conet-scanner-v1-B_Cu.gbr"
-      ],
-      "data": {}
     },
     {
       "module": "power_budget",
@@ -333,58 +322,12 @@
     },
     {
       "module": "topology_check",
-      "code": "TOPO-WOKWI-MIRRORED",
-      "title": "Wokwi diagram and schematic disagree on which MUX feeds the ADC",
-      "severity": 3,
-      "detail": "Wokwi `diagram.json`:\n* `row_mux:SIG` <-> `esp:3V3.1`      (row side = current source)\n* `col_mux:SIG` <-> `esp:1`           (col side = ADC)\n* `col_mux:SIG` <-> 10k <-> GND       (pull-down on col side)\n\nSchematic prose:\n* `U2 SIG` -> `ADC_IN` -> `GPIO 1`    (row side = ADC, per the netlist)\n* `U3 SIG` -> R30 10k -> GND          (col side pulled down)\n\nThe two describe **mirror-image** circuits. The math (and the firmware) doesn't care which side is the source and which side is the ADC -- the divider produces the same V_ADC either way. But:\n\n1. The PCB copper has to match *one* of them. If the layout follows the    schematic, the simulator is testing a circuit that doesn't exist on    silicon.\n2. The firmware reads `GPIO 1 (ADC1_CH0) = ADC_IN`. In the schematic    wiring this is U2.SIG (row side); in the Wokwi wiring it is U3.SIG    (col side). The MUX row/col select code in `.ino` assumes the **row    side is the constant +3V3 source** (one MUX always drives, the other    always samples) -- this matches Wokwi, not schematic prose.\n\nConclusion: **the schematic prose is wrong; the Wokwi diagram is right**. Update `schematic.md` so the netlist matches the silicon. The PCB Gerbers should be re-inspected to confirm copper actually routes `+3V3` to `U2.SIG` and not the other way around.",
-      "refs": [
-        "schematic.md",
-        "diagram.json"
-      ],
-      "data": {}
-    },
-    {
-      "module": "topology_check",
-      "code": "TOPO-FIRMWARE-INA826",
-      "title": "firmware comment claims INA826 differential amp; BOM does not include one",
-      "severity": 2,
-      "detail": "`tactile_scanner_esp32.ino` top-of-file comment:\n\n> ... samples one piezo-resistive cell at a time through an **INA826 differential amplifier** connected to ADC1.\n\nThe BOM has no INA826. The `analogRead(ADC_PIN)` in the actual loop reads the MUX SIG node directly with no front-end amplification.\n\nEither:\n* The comment is stale and should be removed -- silicon doesn't have   an INA826; the divider math runs unbuffered.\n* Or path B (ADS1115) was supposed to be the differential path and the   INA826 mention is a leftover from an earlier revision.\n\nCosmetic but misleading; flag for whoever brings up the first article.",
-      "refs": [
-        "tactile_scanner_esp32.ino"
-      ],
-      "data": {}
-    },
-    {
-      "module": "topology_check",
-      "code": "TOPO-WOKWI-BOARD-MISMATCH",
-      "title": "Wokwi board attrs do not match the WROOM-1-N8R8 part on the BOM",
-      "severity": 3,
-      "detail": "`psramType` = `none`, but real module is WROOM-1-**N8R8** (8 MB octal PSRAM). Any firmware code that uses PSRAM (`ESP.getPsramSize() > 0`) passes the wokwi test silently and fails on silicon.\n\n`flashSize` = `4` MB, but real module is **N8** (8 MB). Partition tables that overflow the simulator's 4 MB image will be silently truncated by wokwi and crash on silicon.",
-      "refs": [
-        "diagram.json",
-        "U1"
-      ],
-      "data": {}
-    },
-    {
-      "module": "topology_check",
       "code": "TOPO-WOKWI-CELL-COVERAGE",
       "title": "Wokwi diagram only models 5 cells out of 256",
       "severity": 1,
       "detail": "The 16x16 mesh has 256 cells. The Wokwi diagram instantiates only **5** of them as wokwi-resistor parts. The remaining 251 cells appear as open circuits to the simulator. The scan loop will read those positions as 0 mV (good baseline) but the MUX cross-talk and leakage through unmodelled cells is invisible to the test. Test coverage is happy-path only.",
       "refs": [
         "diagram.json"
-      ],
-      "data": {}
-    },
-    {
-      "module": "software_sim",
-      "code": "SIM-FALSE-POSITIVE",
-      "title": "`no_press` matrix yielded 256 non-zero cells",
-      "severity": 2,
-      "detail": "With every cell at the un-pressed value (~R_cell=30 kohm), the compressed payload should be near-zero everywhere. Seeing 256 non-zero cells means the noise floor / kAdcDead threshold (32 counts) is too low for the real divider output (~1000 counts with R_mux=320 ohm). The firmware will report phantom touches on an unloaded mesh. **Recommend raising kAdcDead to ~80 counts or adding a per-cell baseline.**",
-      "refs": [
-        "scanner_frame.h"
       ],
       "data": {}
     }
@@ -651,15 +594,15 @@
     "layers": [
       {
         "name": "conet-scanner-v1-B_Cu.gbr",
-        "bytes": 364,
-        "n_traces": 1,
-        "min_aperture_mm": 0.25,
-        "n_apertures": 1,
+        "bytes": 1551,
+        "n_traces": 45,
+        "min_aperture_mm": 0.0,
+        "n_apertures": 3,
         "bbox": [
-          2.5,
-          2.5,
-          5.5,
-          2.5
+          0.3,
+          0.3,
+          59.699999999999996,
+          39.699999999999996
         ]
       },
       {

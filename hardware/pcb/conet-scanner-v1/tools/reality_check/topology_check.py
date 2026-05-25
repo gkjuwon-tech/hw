@@ -90,8 +90,26 @@ def analyse(repo_root: Path) -> list[Finding]:
         for entry in conns
         for a, b in [(entry[0], entry[1])]
     )
-    schem_says_row_to_adc = "U2 SIG" in schem and "ADC_IN" in schem
-    if wokwi_row_sig_to_v and wokwi_col_sig_to_adc and schem_says_row_to_adc:
+    # Look for a netlist row that points U2.SIG at ADC_IN specifically.
+    # The schematic uses lines like ``| U2 SIG | +3V3 |`` and
+    # ``| U3 SIG | ADC_IN ... |`` -- those are the rows we want to parse,
+    # not just "are the strings present somewhere in the file".
+    row_to_adc_re = re.compile(
+        r"U2[\s_]*SIG[^\n]{0,80}?(?:ADC_IN|GPIO\s*1\b)",
+        re.IGNORECASE,
+    )
+    col_to_adc_re = re.compile(
+        r"U3[\s_]*SIG[^\n]{0,80}?(?:ADC_IN|GPIO\s*1\b)",
+        re.IGNORECASE,
+    )
+    schem_says_row_to_adc = bool(row_to_adc_re.search(schem))
+    schem_says_col_to_adc = bool(col_to_adc_re.search(schem))
+    # Only flag the mirror if the schematic genuinely points the row MUX at
+    # the ADC AND does not also point the col MUX there -- i.e. the prose
+    # describes the opposite topology from the Wokwi diagram. If the
+    # schematic agrees with Wokwi (col->ADC, row->+3V3) we stay silent.
+    if (wokwi_row_sig_to_v and wokwi_col_sig_to_adc
+            and schem_says_row_to_adc and not schem_says_col_to_adc):
         findings.append(Finding(
             module="topology_check",
             code="TOPO-WOKWI-MIRRORED",

@@ -1,8 +1,14 @@
 // Conet Tactile — reference scanner sketch (ESP32-S3, 16x16 grid).
 //
-// Drives two 74HC4067 multiplexers (rows and columns) and samples one
-// piezo-resistive cell at a time through an INA826 differential amplifier
-// connected to ADC1. Frames are emitted over USB-CDC at SCAN_HZ.
+// Drives two 74HC4067 multiplexers (row select + col select) and samples
+// one piezo-resistive cell at a time through the ESP32-S3 internal 12-bit
+// ADC (GPIO1 / ADC1_CH0) reading the column MUX SIG node. The row MUX SIG
+// node is statically tied to +3V3 so the (selected row, selected col) cell
+// forms the upper leg of a divider against R30 (10 kohm pull-down on the
+// col side). No external differential amplifier is in the analog path on
+// v1 silicon; the optional ADS1115 16-bit path (U4, DNP) reads the same
+// col MUX SIG node through solder jumper SJ1. Frames are emitted over
+// USB-CDC at SCAN_HZ.
 //
 // This is a reference for the development kit. Production boards use STM32G4
 // with parallel mux drive and a dedicated 24-bit delta-sigma ADC; the wire
