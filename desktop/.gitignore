@@ -1,0 +1,12 @@
+node_modules/
+dist/
+dist-electron/
+release/
+
+python-sidecar/build/
+python-sidecar/dist/
+python-sidecar/__pycache__/
+*.pyc
+
+.eslintcache
+.vite/

@@ -1,0 +1,120 @@
+/* =====================================================================
+   Conet Tactile — DESKTOP design tokens.
+
+   This file is the *only* divergence between the marketing site (web/)
+   and the desktop client (desktop/). The desktop sits in front of an
+   operator on a factory floor — not a press release — so the visual
+   language is the language of mid-2000s industrial machine-vision
+   software (Cognex, Keyence, Halcon, classic SCADA HMIs):
+
+     · cool gray chrome (#c0c0c0) instead of paper white
+     · single accent in brand green (#4f7d1f) — matches the product mark
+     · status LEDs in classic signal colors (green/amber/red), never
+       used to "brand" anything
+     · ZERO rounded corners, ZERO gradients on chrome surfaces, ZERO
+       motion / hover ease
+     · system fonts (Segoe UI/Tahoma), never a webfont — the operator's
+       PC doesn't always have Inter, and we don't want a flash of
+       fallback on a 30+ second cold boot
+
+   The marketing site continues to import web/styles.css unchanged.
+   ===================================================================== */
+
+:root {
+  /* ── chrome ─────────────────────────────────────────────────────── */
+  --surface: #d4d0c8;        /* classic Windows panel gray */
+  --surface-2: #c0bcb4;      /* one click darker — used for selection */
+  --surface-3: #e8e4dc;      /* one click lighter — list rows, fields */
+  --field: #ffffff;          /* white inputs, tables, heatmap bg */
+  --field-2: #f4f3ee;        /* striped table row */
+
+  /* ── bevels (Windows 3.x / 95 raised/inset look) ────────────────── *
+   *   Two-tone for the highlight and a separate mid-gray "shadow"
+   *   stop so the bevel reads as a *3-step* ramp (white → surface →
+   *   mid-gray → black), which is what real 4-bit/8-bit chrome did.  */
+  --bevel-hi: #ffffff;
+  --bevel-hi-2: #dcd8d0;
+  --bevel-lo: #404040;
+  --bevel-shadow: #808080;
+  --bevel-w: 2px;
+
+  /* ── dither / stipple chrome overlay ────────────────────────────── *
+   *   A 2×2 checkerboard at low opacity, baked into chrome surfaces
+   *   to make them read as 4-bit dithered fills (Win 3.x / VGA era)
+   *   instead of clean modern flat panels.                             */
+  --dither-ink: rgba(0, 0, 0, 0.07);
+  --dither-light: rgba(255, 255, 255, 0.12);
+
+  /* ── CRT scanline overlay (titlebar) ────────────────────────────── */
+  --scanline: rgba(0, 0, 0, 0.18);
+
+  /* ── text ───────────────────────────────────────────────────────── */
+  --ink: #000000;
+  --ink-soft: #1a1a1a;
+  --muted: #4a4a4a;
+  --muted-2: #6e6e6e;
+  --muted-3: #8a8a8a;
+  --disabled: #8a8a8a;
+
+  /* ── lines / dividers ───────────────────────────────────────────── */
+  --line: #6e6e6e;           /* 1px hard rules */
+  --line-soft: #9a9a9a;      /* secondary rules inside a panel */
+  --line-strong: #000000;    /* outer chrome borders */
+
+  /* ── accent (chrome) ────────────────────────────────────────────── */
+  --lime: #4f7d1f;           /* brand green, titlebar bg */
+  --lime-deep: #355414;
+  --lime-on: #ffffff;
+  --link: #426d18;
+  --selection: #3f6618;      /* selected row in a table / nav */
+  --selection-on: #ffffff;
+
+  /* ── signals (LED indicators only — never decorative) ───────────── */
+  --signal-good: #008000;
+  --signal-good-glow: #66c266;
+  --signal-warn: #c87a00;
+  --signal-warn-glow: #f0c060;
+  --signal-bad: #b00020;
+  --signal-bad-glow: #ff5050;
+  --signal-off: #5a5a5a;
+
+  /* ── heatmap LUT ────────────────────────────────────────────────── *
+   *   Anomaly heatmap is rendered as cool-gray for normal cells with a
+   *   red ramp for hits. Pure grayscale below 0.4 (so a normal mesh
+   *   looks like a printout, not a Mondrian); red ramps above.        */
+  --heat-cold: #1a1a1a;
+  --heat-mid: #8a8a8a;
+  --heat-hot: #d40000;
+
+  /* ── type ───────────────────────────────────────────────────────── */
+  /* Bitmap-era system fonts FIRST so machines that still ship MS Sans
+     Serif / System (Win 3.x → 7) render with their pixel-perfect
+     bitmap face. Modern boxes fall through to Tahoma/Segoe UI. No
+     webfonts, ever. */
+  --font:
+    "MS Sans Serif", "Microsoft Sans Serif", "System", Tahoma,
+    "Segoe UI", "Trebuchet MS", "MS Shell Dlg 2", "DejaVu Sans",
+    Verdana, sans-serif;
+  --font-mono:
+    "Terminal", "Fixedsys", "Lucida Console", "Courier New",
+    "Cascadia Mono", Consolas, "DejaVu Sans Mono", monospace;
+
+  --tx-micro: 10px;
+  --tx-small: 11px;
+  --tx-body: 12px;
+  --tx-strong: 13px;
+  --tx-h3: 13px;
+  --tx-h2: 15px;
+  --tx-h1: 18px;
+  --tx-num: 22px;
+
+  /* ── layout ─────────────────────────────────────────────────────── */
+  --sidebar-w: 240px;
+  --titlebar-h: 28px;
+  --toolbar-h: 32px;
+  --statusbar-h: 24px;
+
+  /* No transitions, no easing curves. The screen updates instantly. */
+  --tr: 0s;
+  --tr-slow: 0s;
+}

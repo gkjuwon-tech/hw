@@ -1,0 +1,954 @@
+/* =====================================================================
+   Conet Tactile desktop — application shell (industrial HMI register).
+
+   Layout:
+
+       ┌── titlebar (lime) ────────────────────────────────────────────┐
+       │                                                               │
+       ├──────────┬────────────────────────────────────────────────────┤
+       │ device   │  toolbar (gray, button strip)                      │
+       │ tree     ├────────────────────────────────────────────────────┤
+       │ (sidebar)│  page region (white field on gray chrome)          │
+       │          │                                                    │
+       ├──────────┴────────────────────────────────────────────────────┤
+       │ statusbar (LEDs + readouts, fixed height)                     │
+       └───────────────────────────────────────────────────────────────┘
+
+   ===================================================================== */
+
+/* ---------- root layout ---------- */
+.app {
+  display: grid;
+  grid-template-rows: var(--titlebar-h) 1fr var(--statusbar-h);
+  grid-template-columns: 100%;
+  height: 100vh;
+  width: 100vw;
+  background: var(--surface);
+  color: var(--ink);
+  border: 1px solid var(--line-strong);
+}
+
+.app__body {
+  display: grid;
+  grid-template-columns: var(--sidebar-w) 1fr;
+  min-height: 0;
+  border-top: 1px solid var(--line-strong);
+  border-bottom: 1px solid var(--line-strong);
+}
+
+/* ---------- titlebar (lime header with build/uptime) ---------- */
+.titlebar {
+  position: relative;
+  background: var(--lime);
+  color: var(--lime-on);
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 0 8px;
+  font-size: var(--tx-small);
+  letter-spacing: 0.04em;
+  -webkit-app-region: drag;
+  /* Banded two-tone fill + 1px CRT scanlines. The repeating-linear-
+     gradient renders as one black scanline per two pixels and gives
+     the lime bar a real "glowing CRT" presence instead of a flat
+     web-2.0 hero block. */
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      transparent 0,
+      transparent 1px,
+      var(--scanline) 1px,
+      var(--scanline) 2px
+    ),
+    linear-gradient(
+      90deg,
+      var(--lime-deep) 0,
+      var(--lime-deep) 12px,
+      var(--lime) 12px,
+      var(--lime) 100%
+    );
+  /* Hard 1px highlight along the very top edge — classic CDE/Win95
+     "window has a light source above" cue. */
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25),
+              inset 0 -1px 0 rgba(0, 0, 0, 0.4);
+}
+.titlebar__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.titlebar__mark {
+  width: 12px;
+  height: 12px;
+  display: inline-block;
+  background: #ffffff;
+  position: relative;
+}
+.titlebar__mark::after {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  background: var(--lime);
+}
+.titlebar__meta {
+  font-family: var(--font-mono);
+  font-size: var(--tx-small);
+  color: rgba(255, 255, 255, 0.85);
+  display: inline-flex;
+  align-items: center;
+  gap: 18px;
+  -webkit-app-region: no-drag;
+}
+.titlebar__meta span b {
+  color: #ffffff;
+  font-weight: 700;
+}
+.titlebar__chrome {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  -webkit-app-region: no-drag;
+}
+
+/* ---------- toolbar (raised button strip across the top of content) ---------- */
+.toolbar {
+  height: var(--toolbar-h);
+  background: var(--surface);
+  /* 2x2 dithered chrome — barely visible, but it kills the "flat
+     modern panel" tell and reads as a 4-bit dithered fill. */
+  background-image:
+    linear-gradient(
+      45deg,
+      var(--dither-ink) 25%,
+      transparent 25%,
+      transparent 75%,
+      var(--dither-ink) 75%
+    ),
+    linear-gradient(
+      45deg,
+      var(--dither-light) 25%,
+      transparent 25%,
+      transparent 75%,
+      var(--dither-light) 75%
+    );
+  background-size: 2px 2px;
+  background-position: 0 0, 1px 1px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 8px;
+  border-bottom: 1px solid var(--line-strong);
+  box-shadow:
+    inset 0 1px 0 var(--bevel-hi),
+    inset 0 -2px 0 var(--bevel-shadow);
+}
+.toolbar__crumb {
+  margin-left: auto;
+  font-size: var(--tx-small);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 700;
+}
+.toolbar__crumb b {
+  color: var(--ink);
+}
+
+/* ---------- buttons (Windows-3.x chunky chiclet bevel) ---------- */
+/* Two-pixel raised bevel: outer white highlight + inner light
+   surface; outer black shadow + inner mid-gray shadow. This is the
+   "4-step" bevel from Win 3.x / Motif, much chunkier than the 1px
+   Cognex bevel we shipped first. */
+.btn {
+  font-family: var(--font);
+  font-size: var(--tx-small);
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  padding: 3px 12px;
+  min-height: 24px;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  box-shadow:
+    inset 1px 1px 0 var(--bevel-hi),
+    inset 2px 2px 0 var(--bevel-hi-2),
+    inset -1px -1px 0 var(--bevel-lo),
+    inset -2px -2px 0 var(--bevel-shadow);
+  cursor: default;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+.btn:focus-visible {
+  outline: 1px dotted var(--ink);
+  outline-offset: -4px;
+}
+.btn:active,
+.btn[aria-pressed="true"] {
+  background: var(--surface-2);
+  /* When pressed, the bevel inverts AND the text shifts one pixel
+     down-right, exactly like every Win 3.x dialog button. */
+  box-shadow:
+    inset 1px 1px 0 var(--bevel-lo),
+    inset 2px 2px 0 var(--bevel-shadow),
+    inset -1px -1px 0 var(--bevel-hi-2),
+    inset -2px -2px 0 var(--bevel-hi);
+  padding: 4px 11px 2px 13px;
+}
+.btn:disabled,
+.btn[aria-disabled="true"] {
+  color: var(--disabled);
+  text-shadow: 1px 1px 0 var(--bevel-hi);
+}
+.btn--primary {
+  background: var(--lime);
+  color: var(--lime-on);
+  border-color: var(--lime-deep);
+}
+.btn--primary:active {
+  background: var(--lime-deep);
+}
+.btn--danger {
+  color: #ffffff;
+  background: var(--signal-bad);
+  border-color: var(--signal-bad);
+}
+.btn--ghost {
+  background: transparent;
+  box-shadow: none;
+  border-color: transparent;
+}
+.btn--ghost:hover {
+  text-decoration: underline;
+}
+.btn .kbd {
+  font-family: var(--font-mono);
+  font-size: var(--tx-micro);
+  color: var(--muted);
+  border: 1px solid var(--line-soft);
+  padding: 0 4px;
+  margin-left: 4px;
+  background: var(--surface-3);
+}
+
+/* ---------- sidebar (device tree) ---------- */
+.sidebar {
+  background: var(--surface);
+  color: var(--ink);
+  display: grid;
+  grid-template-rows: var(--toolbar-h) 1fr auto;
+  border-right: 1px solid var(--line-strong);
+  min-width: 0;
+  overflow: hidden;
+}
+.sidebar__bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 8px;
+  border-bottom: 1px solid var(--line-strong);
+  background-color: var(--surface-3);
+  /* Subtle dither — same checker as the toolbar so chrome reads as
+     one continuous panel. */
+  background-image:
+    linear-gradient(
+      45deg,
+      var(--dither-ink) 25%,
+      transparent 25%,
+      transparent 75%,
+      var(--dither-ink) 75%
+    );
+  background-size: 2px 2px;
+  box-shadow:
+    inset 0 1px 0 var(--bevel-hi),
+    inset 0 -2px 0 var(--bevel-shadow);
+}
+.sidebar__bar .h3 {
+  font-size: var(--tx-small);
+  letter-spacing: 0.08em;
+}
+
+.devicetree {
+  overflow: auto;
+  font-size: var(--tx-small);
+  font-family: var(--font);
+  background: var(--field);
+  border-right: 1px solid var(--line-strong);
+}
+.devicetree__group {
+  border-bottom: 1px solid var(--line-soft);
+}
+.devicetree__grouphead {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  width: 100%;
+  background: var(--surface-3);
+  border-bottom: 1px solid var(--line-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+  font-size: var(--tx-micro);
+  color: var(--muted);
+}
+.devicetree__grouphead .twirl {
+  display: inline-block;
+  width: 8px;
+  font-family: var(--font-mono);
+  color: var(--muted-2);
+}
+.devicetree__grouphead .count {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-weight: 400;
+  color: var(--muted);
+}
+.devicetree__row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 8px 3px 20px;
+  width: 100%;
+  text-align: left;
+  font-family: var(--font-mono);
+  font-size: var(--tx-small);
+  color: var(--ink);
+  border-bottom: 1px solid transparent;
+}
+.devicetree__row:hover {
+  background: var(--surface-3);
+}
+.devicetree__row[aria-current="page"],
+.devicetree__row[aria-current="true"] {
+  background: var(--selection);
+  color: var(--selection-on);
+}
+.devicetree__row .label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.devicetree__row .badge {
+  font-family: var(--font);
+  font-size: var(--tx-micro);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted-2);
+}
+.devicetree__row[aria-current="true"] .badge {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.sidebar__foot {
+  font-size: var(--tx-micro);
+  padding: 4px 8px;
+  border-top: 1px solid var(--line-strong);
+  background: var(--surface);
+  box-shadow: inset 0 1px 0 var(--bevel-hi);
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+.sidebar__foot .build {
+  font-family: var(--font-mono);
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--ink);
+}
+
+/* ---------- status LEDs (chunky pixel block + diagonal hi-light) ---------- */
+.led {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font);
+  font-size: var(--tx-micro);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.led__dot {
+  width: 10px;
+  height: 10px;
+  background: var(--signal-off);
+  display: inline-block;
+  border: 1px solid var(--line-strong);
+  /* Inner 2px white highlight on the top-left and 2px black shadow
+     on the bottom-right — gives the LED a real "surface mount"
+     pixel-block feel instead of a flat dot. */
+  box-shadow:
+    inset 2px 2px 0 rgba(255, 255, 255, 0.55),
+    inset -2px -2px 0 rgba(0, 0, 0, 0.45);
+  image-rendering: pixelated;
+}
+.led[data-state="good"] .led__dot,
+.led[data-state="online"] .led__dot,
+.led[data-state="pass"] .led__dot,
+.led[data-state="ok"] .led__dot {
+  background: var(--signal-good);
+  box-shadow: inset 1px 1px 0 var(--signal-good-glow);
+}
+.led[data-state="warn"] .led__dot,
+.led[data-state="degraded"] .led__dot,
+.led[data-state="awaiting_calibration"] .led__dot,
+.led[data-state="boot"] .led__dot {
+  background: var(--signal-warn);
+  box-shadow: inset 1px 1px 0 var(--signal-warn-glow);
+}
+.led[data-state="bad"] .led__dot,
+.led[data-state="offline"] .led__dot,
+.led[data-state="fail"] .led__dot,
+.led[data-state="down"] .led__dot,
+.led[data-state="error"] .led__dot {
+  background: var(--signal-bad);
+  box-shadow: inset 1px 1px 0 var(--signal-bad-glow);
+}
+.led[data-state="good"],
+.led[data-state="online"],
+.led[data-state="pass"],
+.led[data-state="ok"] {
+  color: var(--signal-good);
+}
+.led[data-state="warn"],
+.led[data-state="degraded"],
+.led[data-state="awaiting_calibration"],
+.led[data-state="boot"] {
+  color: var(--signal-warn);
+}
+.led[data-state="bad"],
+.led[data-state="offline"],
+.led[data-state="fail"],
+.led[data-state="down"],
+.led[data-state="error"] {
+  color: var(--signal-bad);
+}
+
+/* ---------- statusbar (very bottom) ---------- */
+.statusbar {
+  height: var(--statusbar-h);
+  background-color: var(--surface);
+  background-image:
+    linear-gradient(
+      45deg,
+      var(--dither-ink) 25%,
+      transparent 25%,
+      transparent 75%,
+      var(--dither-ink) 75%
+    ),
+    linear-gradient(
+      45deg,
+      var(--dither-light) 25%,
+      transparent 25%,
+      transparent 75%,
+      var(--dither-light) 75%
+    );
+  background-size: 2px 2px;
+  background-position: 0 0, 1px 1px;
+  display: grid;
+  grid-template-columns: 1fr auto auto auto auto auto auto;
+  align-items: center;
+  gap: 12px;
+  padding: 0 8px;
+  border-top: 1px solid var(--line-strong);
+  box-shadow:
+    inset 0 2px 0 var(--bevel-hi),
+    inset 0 -1px 0 var(--bevel-shadow);
+  font-family: var(--font-mono);
+  font-size: var(--tx-small);
+}
+.statusbar__pair {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border-left: 1px solid var(--line-soft);
+  padding-left: 12px;
+  white-space: nowrap;
+}
+.statusbar__pair:first-of-type {
+  border-left: 0;
+  padding-left: 0;
+}
+.statusbar__pair label {
+  font-family: var(--font);
+  font-size: var(--tx-micro);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ---------- content shell ---------- */
+.content {
+  display: grid;
+  grid-template-rows: var(--toolbar-h) 1fr;
+  overflow: hidden;
+  min-width: 0;
+  background: var(--surface);
+}
+
+/* ---------- pages ---------- */
+.page {
+  padding: 12px 12px 12px;
+  overflow: auto;
+  display: grid;
+  align-content: start;
+  gap: 10px;
+}
+.page__head {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  gap: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--line-soft);
+}
+.page__head .actions {
+  display: inline-flex;
+  gap: 4px;
+}
+
+/* ---------- cards / panels (inset white field on gray chrome) ---------- */
+.card {
+  background: var(--field);
+  border: 1px solid var(--line-strong);
+  box-shadow:
+    inset 1px 1px 0 var(--bevel-hi),
+    1px 1px 0 var(--bevel-shadow);
+  padding: 0;
+  display: grid;
+  grid-template-rows: auto 1fr;
+}
+.card__head {
+  background-color: var(--surface-3);
+  /* Card titles get the same dither so they read as raised metal
+     plates with a screen-printed label. */
+  background-image:
+    linear-gradient(
+      45deg,
+      var(--dither-ink) 25%,
+      transparent 25%,
+      transparent 75%,
+      var(--dither-ink) 75%
+    );
+  background-size: 2px 2px;
+  border-bottom: 1px solid var(--line-strong);
+  padding: 4px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  box-shadow:
+    inset 0 1px 0 var(--bevel-hi),
+    inset 0 -1px 0 var(--bevel-shadow);
+}
+.card__head .h3 {
+  font-size: var(--tx-small);
+  letter-spacing: 0.08em;
+}
+.card__body {
+  padding: 8px;
+  min-height: 0;
+}
+.card--bare {
+  background: var(--field);
+  box-shadow: none;
+  border: 1px solid var(--line-strong);
+}
+.card--ink {
+  background: #0a0a0a;
+  color: #f4f3ee;
+}
+.card--ink .card__head {
+  background: #1a1a1a;
+  color: #ffffff;
+  border-bottom-color: #2a2a2a;
+}
+.card--ink .h3 {
+  color: #ffffff;
+}
+
+/* ---------- grids ---------- */
+.grid {
+  display: grid;
+  gap: 8px;
+}
+.grid--3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.grid--2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.grid--detail {
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+}
+@media (max-width: 1100px) {
+  .grid--3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .grid--detail { grid-template-columns: 1fr; }
+}
+@media (max-width: 760px) {
+  .grid--3, .grid--2 { grid-template-columns: 1fr; }
+}
+
+/* ---------- meter bars (CPU/GPU/RAM/Temp readouts) ---------- */
+.meter {
+  display: grid;
+  grid-template-columns: 80px 1fr auto;
+  align-items: center;
+  gap: 8px;
+  padding: 2px 0;
+  font-family: var(--font-mono);
+  font-size: var(--tx-small);
+}
+.meter__label {
+  font-family: var(--font);
+  font-size: var(--tx-micro);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.meter__track {
+  position: relative;
+  height: 10px;
+  background: var(--field);
+  border: 1px solid var(--line);
+  box-shadow: inset 1px 1px 0 var(--bevel-shadow);
+}
+.meter__fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: var(--signal-good);
+}
+.meter[data-state="warn"] .meter__fill {
+  background: var(--signal-warn);
+}
+.meter[data-state="bad"] .meter__fill {
+  background: var(--signal-bad);
+}
+.meter__value {
+  font-variant-numeric: tabular-nums;
+  min-width: 60px;
+  text-align: right;
+  color: var(--ink);
+}
+
+/* ---------- data grid (dense table) ---------- */
+.datagrid {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: var(--tx-small);
+  background: var(--field);
+  border: 1px solid var(--line-strong);
+}
+.datagrid thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  text-align: left;
+  font-size: var(--tx-micro);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink);
+  font-weight: 700;
+  padding: 4px 8px;
+  background: var(--surface-3);
+  border-bottom: 1px solid var(--line-strong);
+  border-right: 1px solid var(--line-soft);
+}
+.datagrid thead th:last-child {
+  border-right: 0;
+}
+.datagrid td {
+  padding: 4px 8px;
+  border-bottom: 1px solid var(--line-soft);
+  border-right: 1px solid var(--line-soft);
+  font-variant-numeric: tabular-nums;
+  font-family: var(--font-mono);
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.datagrid td:last-child {
+  border-right: 0;
+}
+.datagrid tbody tr:nth-child(odd) td {
+  background: var(--field-2);
+}
+.datagrid tbody tr {
+  cursor: default;
+}
+.datagrid tbody tr.is-clickable {
+  cursor: default;
+}
+.datagrid tbody tr.is-clickable:hover td {
+  background: var(--surface-3);
+}
+.datagrid tbody tr[aria-selected="true"] td {
+  background: var(--selection);
+  color: var(--selection-on);
+}
+.datagrid td.id {
+  font-family: var(--font-mono);
+  font-weight: 700;
+}
+.datagrid td.num {
+  font-size: var(--tx-small);
+  font-weight: 400;
+}
+.datagrid td.right {
+  text-align: right;
+}
+.datagrid td.center {
+  text-align: center;
+}
+
+/* ---------- heatmap (line detail) ---------- */
+.heatmap-card {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+.heatmap-card .card__body {
+  background: #000000;
+  padding: 0;
+}
+.heatmap {
+  display: grid;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  gap: 1px;
+  padding: 1px;
+  background: #000000;
+  /* Force the painted grid of cells to stay on the pixel grid even
+     if the container scales fractionally — the heatmap should look
+     like a memory dump of pressure values, not a smooth photograph. */
+  image-rendering: pixelated;
+}
+.heatmap__cell {
+  background: #1a1a1a;
+  image-rendering: pixelated;
+}
+.heatmap-card .meta {
+  font-family: var(--font-mono);
+  font-size: var(--tx-small);
+  display: flex;
+  gap: 14px;
+  padding: 4px 8px;
+  background: var(--surface-3);
+  border-top: 1px solid var(--line-soft);
+  color: var(--ink);
+}
+.heatmap-card .meta b {
+  font-weight: 700;
+}
+
+/* ---------- spark / score timeline ---------- */
+.spark {
+  width: 100%;
+  height: 96px;
+  background: var(--field);
+  border: 1px solid var(--line);
+  /* Denser 8-pixel graph paper — reads as a real plotter chart. */
+  background-image:
+    linear-gradient(to right, rgba(0, 0, 0, 0.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.07) 1px, transparent 1px),
+    linear-gradient(to right, rgba(0, 0, 0, 0.13) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.13) 1px, transparent 1px);
+  background-size: 8px 8px, 8px 8px, 32px 32px, 32px 32px;
+  box-shadow:
+    inset 2px 2px 0 var(--bevel-shadow),
+    inset -1px -1px 0 var(--bevel-hi);
+}
+.spark--ink {
+  background: #0a0a0a;
+  border-color: var(--line-strong);
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(to right, rgba(255, 255, 255, 0.12) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.12) 1px, transparent 1px);
+  background-size: 8px 8px, 8px 8px, 32px 32px, 32px 32px;
+}
+
+/* ---------- numbered steps (calibration wizard) ---------- */
+.steps {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border: 1px solid var(--line-strong);
+  background: var(--field);
+}
+@media (max-width: 1100px) {
+  .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 640px) {
+  .steps { grid-template-columns: 1fr; }
+}
+.step {
+  padding: 10px 12px;
+  border-right: 1px solid var(--line-soft);
+  border-bottom: 1px solid var(--line-soft);
+  display: grid;
+  align-content: start;
+  gap: 6px;
+  background: var(--field);
+  min-height: 110px;
+}
+.step:last-child {
+  border-right: none;
+}
+.step__num {
+  font-family: var(--font-mono);
+  font-size: var(--tx-small);
+  letter-spacing: 0;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+.step__title {
+  font-size: var(--tx-strong);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--ink);
+  text-transform: uppercase;
+}
+.step__body {
+  color: var(--muted);
+  font-size: var(--tx-small);
+}
+.step[data-state="active"] {
+  background: var(--surface-3);
+}
+.step[data-state="active"] .step__num {
+  color: var(--lime);
+  font-weight: 700;
+}
+.step[data-state="done"] .step__num::before {
+  content: "[OK] ";
+  color: var(--signal-good);
+  font-weight: 700;
+}
+
+/* ---------- callout / empty state ---------- */
+.empty {
+  padding: 24px 16px;
+  text-align: center;
+  border: 1px dashed var(--line);
+  color: var(--muted);
+  background: var(--field);
+}
+
+/* ---------- field / form input ---------- */
+.field {
+  display: grid;
+  gap: 4px;
+}
+.field > label {
+  font-size: var(--tx-micro);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--muted);
+}
+.field input,
+.field select,
+.field textarea {
+  font-family: var(--font);
+  font-size: var(--tx-body);
+  padding: 4px 6px;
+  background: var(--field);
+  color: var(--ink);
+  border: 1px solid var(--line-strong);
+  /* 2px sunken bevel — text inputs press *into* the panel like a
+     real Win 3.x edit field. */
+  box-shadow:
+    inset 1px 1px 0 var(--bevel-lo),
+    inset 2px 2px 0 var(--bevel-shadow),
+    inset -1px -1px 0 var(--bevel-hi),
+    inset -2px -2px 0 var(--bevel-hi-2);
+}
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  outline: 1px dotted var(--lime);
+  outline-offset: -3px;
+}
+.field input:disabled {
+  background: var(--surface-3);
+  color: var(--disabled);
+}
+
+.toolbar-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 6px;
+  border-left: 1px solid var(--line-soft);
+}
+.toolbar-group:first-child {
+  border-left: 0;
+}
+
+/* ---------- error / alert banner ---------- */
+.banner {
+  border: 1px solid var(--signal-bad);
+  background: #ffefef;
+  color: #5a0010;
+  padding: 6px 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--tx-small);
+}
+.banner--warn {
+  border-color: var(--signal-warn);
+  background: #fff6e0;
+  color: #4a2900;
+}
+
+/* ---------- scrollbar polish ---------- */
+*::-webkit-scrollbar { width: 14px; height: 14px; }
+*::-webkit-scrollbar-track {
+  background: var(--surface);
+  border: 1px solid var(--line-soft);
+}
+*::-webkit-scrollbar-thumb {
+  background: var(--surface-2);
+  border: 1px solid var(--line-strong);
+  box-shadow:
+    inset 1px 1px 0 var(--bevel-hi),
+    inset -1px -1px 0 var(--bevel-lo);
+}
+*::-webkit-scrollbar-button {
+  width: 14px;
+  height: 14px;
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  box-shadow:
+    inset 1px 1px 0 var(--bevel-hi),
+    inset -1px -1px 0 var(--bevel-lo);
+}
+
+/* ---------- focus ---------- */
+:focus-visible {
+  outline: 1px dotted var(--lime);
+  outline-offset: -2px;
+}
+
+/* Selection (text highlight). */
+::selection {
+  background: var(--selection);
+  color: var(--selection-on);
+}
