@@ -24,6 +24,12 @@ This repository contains:
 
 ## Quick start
 
+### Desktop App (Windows)
+
+> [!WARNING]
+> Do NOT use GitHub's "Download ZIP" button to download the .exe files. GitHub ZIP downloads do not support Git LFS, so the executables will be broken 1KB pointer files.
+> **To download the Windows App:** Go to [GitHub Actions (CI)](https://github.com/gkjuwon-tech/hw/actions/workflows/ci.yml) -> Click the latest successful run -> Scroll down to **Artifacts** -> Download Conet-Tactile-Windows-Setup.
+
 ### Landing page
 
 ```bash
