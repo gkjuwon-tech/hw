@@ -1,0 +1,9944 @@
+{
+  "version": 1,
+  "author": "Conet Tactile EVT v1 - reality-adjusted",
+  "editor": "wokwi",
+  "_generator": "tools/reality_check/wokwi_reality.py",
+  "_notes": "256-cell, R_mux=320 ohm clone-typ, PSRAM+8MB flash, DC-bias-derated decoupling. Use for CI burn-in only; the editor will lag.",
+  "parts": [
+    {
+      "type": "board-esp32-s3-devkitc-1",
+      "id": "esp",
+      "top": 0,
+      "left": 0,
+      "attrs": {
+        "psramType": "opi",
+        "flashSize": "8"
+      }
+    },
+    {
+      "type": "chip-74hc4067",
+      "id": "row_mux",
+      "top": 300,
+      "left": -800,
+      "attrs": {}
+    },
+    {
+      "type": "chip-74hc4067",
+      "id": "col_mux",
+      "top": 300,
+      "left": 800,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "rpd",
+      "top": 500,
+      "left": 1000,
+      "attrs": {
+        "value": "10000"
+      }
+    },
+    {
+      "type": "wokwi-capacitor",
+      "id": "c_dec_row",
+      "top": 200,
+      "left": -800,
+      "attrs": {
+        "value": "0.07u"
+      }
+    },
+    {
+      "type": "wokwi-capacitor",
+      "id": "c_dec_col",
+      "top": 200,
+      "left": 800,
+      "attrs": {
+        "value": "0.07u"
+      }
+    },
+    {
+      "type": "wokwi-capacitor",
+      "id": "c_bulk",
+      "top": 100,
+      "left": 0,
+      "attrs": {
+        "value": "5u"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_0_0",
+      "top": 600,
+      "left": -200,
+      "rotate": 0,
+      "attrs": {
+        "value": "28907"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_0_0",
+      "top": 600,
+      "left": -100,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_0_1",
+      "top": 600,
+      "left": -176,
+      "rotate": 0,
+      "attrs": {
+        "value": "29970"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_0_1",
+      "top": 600,
+      "left": -76,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_0_2",
+      "top": 600,
+      "left": -152,
+      "rotate": 0,
+      "attrs": {
+        "value": "30151"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_0_2",
+      "top": 600,
+      "left": -52,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_0_3",
+      "top": 600,
+      "left": -128,
+      "rotate": 0,
+      "attrs": {
+        "value": "31041"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_0_3",
+      "top": 600,
+      "left": -28,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_0_4",
+      "top": 600,
+      "left": -104,
+      "rotate": 0,
+      "attrs": {
+        "value": "31272"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_0_4",
+      "top": 600,
+      "left": -4,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_0_5",
+      "top": 600,
+      "left": -80,
+      "rotate": 0,
+      "attrs": {
+        "value": "30501"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_0_5",
+      "top": 600,
+      "left": 20,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_0_6",
+      "top": 600,
+      "left": -56,
+      "rotate": 0,
+      "attrs": {
+        "value": "30817"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_0_6",
+      "top": 600,
+      "left": 44,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_0_7",
+      "top": 600,
+      "left": -32,
+      "rotate": 0,
+      "attrs": {
+        "value": "29389"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_0_7",
+      "top": 600,
+      "left": 68,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_0_8",
+      "top": 600,
+      "left": -8,
+      "rotate": 0,
+      "attrs": {
+        "value": "29769"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_0_8",
+      "top": 600,
+      "left": 92,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_0_9",
+      "top": 600,
+      "left": 16,
+      "rotate": 0,
+      "attrs": {
+        "value": "30539"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_0_9",
+      "top": 600,
+      "left": 116,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_0_10",
+      "top": 600,
+      "left": 40,
+      "rotate": 0,
+      "attrs": {
+        "value": "29474"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_0_10",
+      "top": 600,
+      "left": 140,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_0_11",
+      "top": 600,
+      "left": 64,
+      "rotate": 0,
+      "attrs": {
+        "value": "30656"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_0_11",
+      "top": 600,
+      "left": 164,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_0_12",
+      "top": 600,
+      "left": 88,
+      "rotate": 0,
+      "attrs": {
+        "value": "30593"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_0_12",
+      "top": 600,
+      "left": 188,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_0_13",
+      "top": 600,
+      "left": 112,
+      "rotate": 0,
+      "attrs": {
+        "value": "29418"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_0_13",
+      "top": 600,
+      "left": 212,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_0_14",
+      "top": 600,
+      "left": 136,
+      "rotate": 0,
+      "attrs": {
+        "value": "30602"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_0_14",
+      "top": 600,
+      "left": 236,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_0_15",
+      "top": 600,
+      "left": 160,
+      "rotate": 0,
+      "attrs": {
+        "value": "28608"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_0_15",
+      "top": 600,
+      "left": 260,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_1_0",
+      "top": 624,
+      "left": -200,
+      "rotate": 0,
+      "attrs": {
+        "value": "31178"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_1_0",
+      "top": 624,
+      "left": -100,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_1_1",
+      "top": 624,
+      "left": -176,
+      "rotate": 0,
+      "attrs": {
+        "value": "30015"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_1_1",
+      "top": 624,
+      "left": -76,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_1_2",
+      "top": 624,
+      "left": -152,
+      "rotate": 0,
+      "attrs": {
+        "value": "29055"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_1_2",
+      "top": 624,
+      "left": -52,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_1_3",
+      "top": 624,
+      "left": -128,
+      "rotate": 0,
+      "attrs": {
+        "value": "30365"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_1_3",
+      "top": 624,
+      "left": -28,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_1_4",
+      "top": 624,
+      "left": -104,
+      "rotate": 0,
+      "attrs": {
+        "value": "29180"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_1_4",
+      "top": 624,
+      "left": -4,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_1_5",
+      "top": 624,
+      "left": -80,
+      "rotate": 0,
+      "attrs": {
+        "value": "30943"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_1_5",
+      "top": 624,
+      "left": 20,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_1_6",
+      "top": 624,
+      "left": -56,
+      "rotate": 0,
+      "attrs": {
+        "value": "31321"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_1_6",
+      "top": 624,
+      "left": 44,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_1_7",
+      "top": 624,
+      "left": -32,
+      "rotate": 0,
+      "attrs": {
+        "value": "30766"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_1_7",
+      "top": 624,
+      "left": 68,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_1_8",
+      "top": 624,
+      "left": -8,
+      "rotate": 0,
+      "attrs": {
+        "value": "28780"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_1_8",
+      "top": 624,
+      "left": 92,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_1_9",
+      "top": 624,
+      "left": 16,
+      "rotate": 0,
+      "attrs": {
+        "value": "30328"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_1_9",
+      "top": 624,
+      "left": 116,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_1_10",
+      "top": 624,
+      "left": 40,
+      "rotate": 0,
+      "attrs": {
+        "value": "31247"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_1_10",
+      "top": 624,
+      "left": 140,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_1_11",
+      "top": 624,
+      "left": 64,
+      "rotate": 0,
+      "attrs": {
+        "value": "29124"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_1_11",
+      "top": 624,
+      "left": 164,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_1_12",
+      "top": 624,
+      "left": 88,
+      "rotate": 0,
+      "attrs": {
+        "value": "28893"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_1_12",
+      "top": 624,
+      "left": 188,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_1_13",
+      "top": 624,
+      "left": 112,
+      "rotate": 0,
+      "attrs": {
+        "value": "28833"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_1_13",
+      "top": 624,
+      "left": 212,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_1_14",
+      "top": 624,
+      "left": 136,
+      "rotate": 0,
+      "attrs": {
+        "value": "31381"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_1_14",
+      "top": 624,
+      "left": 236,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_1_15",
+      "top": 624,
+      "left": 160,
+      "rotate": 0,
+      "attrs": {
+        "value": "30983"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_1_15",
+      "top": 624,
+      "left": 260,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_2_0",
+      "top": 648,
+      "left": -200,
+      "rotate": 0,
+      "attrs": {
+        "value": "30140"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_2_0",
+      "top": 648,
+      "left": -100,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_2_1",
+      "top": 648,
+      "left": -176,
+      "rotate": 0,
+      "attrs": {
+        "value": "31381"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_2_1",
+      "top": 648,
+      "left": -76,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_2_2",
+      "top": 648,
+      "left": -152,
+      "rotate": 0,
+      "attrs": {
+        "value": "28867"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_2_2",
+      "top": 648,
+      "left": -52,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_2_3",
+      "top": 648,
+      "left": -128,
+      "rotate": 0,
+      "attrs": {
+        "value": "29207"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_2_3",
+      "top": 648,
+      "left": -28,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_2_4",
+      "top": 648,
+      "left": -104,
+      "rotate": 0,
+      "attrs": {
+        "value": "30662"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_2_4",
+      "top": 648,
+      "left": -4,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_2_5",
+      "top": 648,
+      "left": -80,
+      "rotate": 0,
+      "attrs": {
+        "value": "29116"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_2_5",
+      "top": 648,
+      "left": 20,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_2_6",
+      "top": 648,
+      "left": -56,
+      "rotate": 0,
+      "attrs": {
+        "value": "29316"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_2_6",
+      "top": 648,
+      "left": 44,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_2_7",
+      "top": 648,
+      "left": -32,
+      "rotate": 0,
+      "attrs": {
+        "value": "29289"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_2_7",
+      "top": 648,
+      "left": 68,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_2_8",
+      "top": 648,
+      "left": -8,
+      "rotate": 0,
+      "attrs": {
+        "value": "30917"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_2_8",
+      "top": 648,
+      "left": 92,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_2_9",
+      "top": 648,
+      "left": 16,
+      "rotate": 0,
+      "attrs": {
+        "value": "28871"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_2_9",
+      "top": 648,
+      "left": 116,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_2_10",
+      "top": 648,
+      "left": 40,
+      "rotate": 0,
+      "attrs": {
+        "value": "28687"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_2_10",
+      "top": 648,
+      "left": 140,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_2_11",
+      "top": 648,
+      "left": 64,
+      "rotate": 0,
+      "attrs": {
+        "value": "29121"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_2_11",
+      "top": 648,
+      "left": 164,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_2_12",
+      "top": 648,
+      "left": 88,
+      "rotate": 0,
+      "attrs": {
+        "value": "29790"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_2_12",
+      "top": 648,
+      "left": 188,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_2_13",
+      "top": 648,
+      "left": 112,
+      "rotate": 0,
+      "attrs": {
+        "value": "30211"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_2_13",
+      "top": 648,
+      "left": 212,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_2_14",
+      "top": 648,
+      "left": 136,
+      "rotate": 0,
+      "attrs": {
+        "value": "30722"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_2_14",
+      "top": 648,
+      "left": 236,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_2_15",
+      "top": 648,
+      "left": 160,
+      "rotate": 0,
+      "attrs": {
+        "value": "30143"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_2_15",
+      "top": 648,
+      "left": 260,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_3_0",
+      "top": 672,
+      "left": -200,
+      "rotate": 0,
+      "attrs": {
+        "value": "29439"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_3_0",
+      "top": 672,
+      "left": -100,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_3_1",
+      "top": 672,
+      "left": -176,
+      "rotate": 0,
+      "attrs": {
+        "value": "30650"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_3_1",
+      "top": 672,
+      "left": -76,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_3_2",
+      "top": 672,
+      "left": -152,
+      "rotate": 0,
+      "attrs": {
+        "value": "30292"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_3_2",
+      "top": 672,
+      "left": -52,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_3_3",
+      "top": 672,
+      "left": -128,
+      "rotate": 0,
+      "attrs": {
+        "value": "30230"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_3_3",
+      "top": 672,
+      "left": -28,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_3_4",
+      "top": 672,
+      "left": -104,
+      "rotate": 0,
+      "attrs": {
+        "value": "29677"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_3_4",
+      "top": 672,
+      "left": -4,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_3_5",
+      "top": 672,
+      "left": -80,
+      "rotate": 0,
+      "attrs": {
+        "value": "30189"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_3_5",
+      "top": 672,
+      "left": 20,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_3_6",
+      "top": 672,
+      "left": -56,
+      "rotate": 0,
+      "attrs": {
+        "value": "29173"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_3_6",
+      "top": 672,
+      "left": 44,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_3_7",
+      "top": 672,
+      "left": -32,
+      "rotate": 0,
+      "attrs": {
+        "value": "30303"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_3_7",
+      "top": 672,
+      "left": 68,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_3_8",
+      "top": 672,
+      "left": -8,
+      "rotate": 0,
+      "attrs": {
+        "value": "29503"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_3_8",
+      "top": 672,
+      "left": 92,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_3_9",
+      "top": 672,
+      "left": 16,
+      "rotate": 0,
+      "attrs": {
+        "value": "27973"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_3_9",
+      "top": 672,
+      "left": 116,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_3_10",
+      "top": 672,
+      "left": 40,
+      "rotate": 0,
+      "attrs": {
+        "value": "29192"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_3_10",
+      "top": 672,
+      "left": 140,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_3_11",
+      "top": 672,
+      "left": 64,
+      "rotate": 0,
+      "attrs": {
+        "value": "29221"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_3_11",
+      "top": 672,
+      "left": 164,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_3_12",
+      "top": 672,
+      "left": 88,
+      "rotate": 0,
+      "attrs": {
+        "value": "29336"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_3_12",
+      "top": 672,
+      "left": 188,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_3_13",
+      "top": 672,
+      "left": 112,
+      "rotate": 0,
+      "attrs": {
+        "value": "29886"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_3_13",
+      "top": 672,
+      "left": 212,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_3_14",
+      "top": 672,
+      "left": 136,
+      "rotate": 0,
+      "attrs": {
+        "value": "30767"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_3_14",
+      "top": 672,
+      "left": 236,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_3_15",
+      "top": 672,
+      "left": 160,
+      "rotate": 0,
+      "attrs": {
+        "value": "28490"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_3_15",
+      "top": 672,
+      "left": 260,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_4_0",
+      "top": 696,
+      "left": -200,
+      "rotate": 0,
+      "attrs": {
+        "value": "29286"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_4_0",
+      "top": 696,
+      "left": -100,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_4_1",
+      "top": 696,
+      "left": -176,
+      "rotate": 0,
+      "attrs": {
+        "value": "28646"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_4_1",
+      "top": 696,
+      "left": -76,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_4_2",
+      "top": 696,
+      "left": -152,
+      "rotate": 0,
+      "attrs": {
+        "value": "30672"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_4_2",
+      "top": 696,
+      "left": -52,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_4_3",
+      "top": 696,
+      "left": -128,
+      "rotate": 0,
+      "attrs": {
+        "value": "28772"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_4_3",
+      "top": 696,
+      "left": -28,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_4_4",
+      "top": 696,
+      "left": -104,
+      "rotate": 0,
+      "attrs": {
+        "value": "30834"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_4_4",
+      "top": 696,
+      "left": -4,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_4_5",
+      "top": 696,
+      "left": -80,
+      "rotate": 0,
+      "attrs": {
+        "value": "28665"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_4_5",
+      "top": 696,
+      "left": 20,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_4_6",
+      "top": 696,
+      "left": -56,
+      "rotate": 0,
+      "attrs": {
+        "value": "28659"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_4_6",
+      "top": 696,
+      "left": 44,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_4_7",
+      "top": 696,
+      "left": -32,
+      "rotate": 0,
+      "attrs": {
+        "value": "27466"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_4_7",
+      "top": 696,
+      "left": 68,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_4_8",
+      "top": 696,
+      "left": -8,
+      "rotate": 0,
+      "attrs": {
+        "value": "24311"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_4_8",
+      "top": 696,
+      "left": 92,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_4_9",
+      "top": 696,
+      "left": 16,
+      "rotate": 0,
+      "attrs": {
+        "value": "25315"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_4_9",
+      "top": 696,
+      "left": 116,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_4_10",
+      "top": 696,
+      "left": 40,
+      "rotate": 0,
+      "attrs": {
+        "value": "24742"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_4_10",
+      "top": 696,
+      "left": 140,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_4_11",
+      "top": 696,
+      "left": 64,
+      "rotate": 0,
+      "attrs": {
+        "value": "24271"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_4_11",
+      "top": 696,
+      "left": 164,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_4_12",
+      "top": 696,
+      "left": 88,
+      "rotate": 0,
+      "attrs": {
+        "value": "28507"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_4_12",
+      "top": 696,
+      "left": 188,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_4_13",
+      "top": 696,
+      "left": 112,
+      "rotate": 0,
+      "attrs": {
+        "value": "27440"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_4_13",
+      "top": 696,
+      "left": 212,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_4_14",
+      "top": 696,
+      "left": 136,
+      "rotate": 0,
+      "attrs": {
+        "value": "30076"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_4_14",
+      "top": 696,
+      "left": 236,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_4_15",
+      "top": 696,
+      "left": 160,
+      "rotate": 0,
+      "attrs": {
+        "value": "29372"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_4_15",
+      "top": 696,
+      "left": 260,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_5_0",
+      "top": 720,
+      "left": -200,
+      "rotate": 0,
+      "attrs": {
+        "value": "30700"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_5_0",
+      "top": 720,
+      "left": -100,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_5_1",
+      "top": 720,
+      "left": -176,
+      "rotate": 0,
+      "attrs": {
+        "value": "29863"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_5_1",
+      "top": 720,
+      "left": -76,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_5_2",
+      "top": 720,
+      "left": -152,
+      "rotate": 0,
+      "attrs": {
+        "value": "29142"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_5_2",
+      "top": 720,
+      "left": -52,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_5_3",
+      "top": 720,
+      "left": -128,
+      "rotate": 0,
+      "attrs": {
+        "value": "28948"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_5_3",
+      "top": 720,
+      "left": -28,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_5_4",
+      "top": 720,
+      "left": -104,
+      "rotate": 0,
+      "attrs": {
+        "value": "30246"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_5_4",
+      "top": 720,
+      "left": -4,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_5_5",
+      "top": 720,
+      "left": -80,
+      "rotate": 0,
+      "attrs": {
+        "value": "28139"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_5_5",
+      "top": 720,
+      "left": 20,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_5_6",
+      "top": 720,
+      "left": -56,
+      "rotate": 0,
+      "attrs": {
+        "value": "27737"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_5_6",
+      "top": 720,
+      "left": 44,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_5_7",
+      "top": 720,
+      "left": -32,
+      "rotate": 0,
+      "attrs": {
+        "value": "23518"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_5_7",
+      "top": 720,
+      "left": 68,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_5_8",
+      "top": 720,
+      "left": -8,
+      "rotate": 0,
+      "attrs": {
+        "value": "20175"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_5_8",
+      "top": 720,
+      "left": 92,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_5_9",
+      "top": 720,
+      "left": 16,
+      "rotate": 0,
+      "attrs": {
+        "value": "17895"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_5_9",
+      "top": 720,
+      "left": 116,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_5_10",
+      "top": 720,
+      "left": 40,
+      "rotate": 0,
+      "attrs": {
+        "value": "17784"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_5_10",
+      "top": 720,
+      "left": 140,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_5_11",
+      "top": 720,
+      "left": 64,
+      "rotate": 0,
+      "attrs": {
+        "value": "19515"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_5_11",
+      "top": 720,
+      "left": 164,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_5_12",
+      "top": 720,
+      "left": 88,
+      "rotate": 0,
+      "attrs": {
+        "value": "23966"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_5_12",
+      "top": 720,
+      "left": 188,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_5_13",
+      "top": 720,
+      "left": 112,
+      "rotate": 0,
+      "attrs": {
+        "value": "28270"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_5_13",
+      "top": 720,
+      "left": 212,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_5_14",
+      "top": 720,
+      "left": 136,
+      "rotate": 0,
+      "attrs": {
+        "value": "29007"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_5_14",
+      "top": 720,
+      "left": 236,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_5_15",
+      "top": 720,
+      "left": 160,
+      "rotate": 0,
+      "attrs": {
+        "value": "30255"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_5_15",
+      "top": 720,
+      "left": 260,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_6_0",
+      "top": 744,
+      "left": -200,
+      "rotate": 0,
+      "attrs": {
+        "value": "29364"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_6_0",
+      "top": 744,
+      "left": -100,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_6_1",
+      "top": 744,
+      "left": -176,
+      "rotate": 0,
+      "attrs": {
+        "value": "30626"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_6_1",
+      "top": 744,
+      "left": -76,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_6_2",
+      "top": 744,
+      "left": -152,
+      "rotate": 0,
+      "attrs": {
+        "value": "28725"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_6_2",
+      "top": 744,
+      "left": -52,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_6_3",
+      "top": 744,
+      "left": -128,
+      "rotate": 0,
+      "attrs": {
+        "value": "30672"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_6_3",
+      "top": 744,
+      "left": -28,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_6_4",
+      "top": 744,
+      "left": -104,
+      "rotate": 0,
+      "attrs": {
+        "value": "29367"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_6_4",
+      "top": 744,
+      "left": -4,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_6_5",
+      "top": 744,
+      "left": -80,
+      "rotate": 0,
+      "attrs": {
+        "value": "29520"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_6_5",
+      "top": 744,
+      "left": 20,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_6_6",
+      "top": 744,
+      "left": -56,
+      "rotate": 0,
+      "attrs": {
+        "value": "26503"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_6_6",
+      "top": 744,
+      "left": 44,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_6_7",
+      "top": 744,
+      "left": -32,
+      "rotate": 0,
+      "attrs": {
+        "value": "19756"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_6_7",
+      "top": 744,
+      "left": 68,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_6_8",
+      "top": 744,
+      "left": -8,
+      "rotate": 0,
+      "attrs": {
+        "value": "13477"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_6_8",
+      "top": 744,
+      "left": 92,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_6_9",
+      "top": 744,
+      "left": 16,
+      "rotate": 0,
+      "attrs": {
+        "value": "9749"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_6_9",
+      "top": 744,
+      "left": 116,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_6_10",
+      "top": 744,
+      "left": 40,
+      "rotate": 0,
+      "attrs": {
+        "value": "9957"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_6_10",
+      "top": 744,
+      "left": 140,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_6_11",
+      "top": 744,
+      "left": 64,
+      "rotate": 0,
+      "attrs": {
+        "value": "13928"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_6_11",
+      "top": 744,
+      "left": 164,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_6_12",
+      "top": 744,
+      "left": 88,
+      "rotate": 0,
+      "attrs": {
+        "value": "20420"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_6_12",
+      "top": 744,
+      "left": 188,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_6_13",
+      "top": 744,
+      "left": 112,
+      "rotate": 0,
+      "attrs": {
+        "value": "24959"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_6_13",
+      "top": 744,
+      "left": 212,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_6_14",
+      "top": 744,
+      "left": 136,
+      "rotate": 0,
+      "attrs": {
+        "value": "29398"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_6_14",
+      "top": 744,
+      "left": 236,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_6_15",
+      "top": 744,
+      "left": 160,
+      "rotate": 0,
+      "attrs": {
+        "value": "28387"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_6_15",
+      "top": 744,
+      "left": 260,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_7_0",
+      "top": 768,
+      "left": -200,
+      "rotate": 0,
+      "attrs": {
+        "value": "30541"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_7_0",
+      "top": 768,
+      "left": -100,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_7_1",
+      "top": 768,
+      "left": -176,
+      "rotate": 0,
+      "attrs": {
+        "value": "29339"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_7_1",
+      "top": 768,
+      "left": -76,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_7_2",
+      "top": 768,
+      "left": -152,
+      "rotate": 0,
+      "attrs": {
+        "value": "30533"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_7_2",
+      "top": 768,
+      "left": -52,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_7_3",
+      "top": 768,
+      "left": -128,
+      "rotate": 0,
+      "attrs": {
+        "value": "29728"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_7_3",
+      "top": 768,
+      "left": -28,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_7_4",
+      "top": 768,
+      "left": -104,
+      "rotate": 0,
+      "attrs": {
+        "value": "28877"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_7_4",
+      "top": 768,
+      "left": -4,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_7_5",
+      "top": 768,
+      "left": -80,
+      "rotate": 0,
+      "attrs": {
+        "value": "26620"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_7_5",
+      "top": 768,
+      "left": 20,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_7_6",
+      "top": 768,
+      "left": -56,
+      "rotate": 0,
+      "attrs": {
+        "value": "23907"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_7_6",
+      "top": 768,
+      "left": 44,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_7_7",
+      "top": 768,
+      "left": -32,
+      "rotate": 0,
+      "attrs": {
+        "value": "16833"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_7_7",
+      "top": 768,
+      "left": 68,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_7_8",
+      "top": 768,
+      "left": -8,
+      "rotate": 0,
+      "attrs": {
+        "value": "9537"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_7_8",
+      "top": 768,
+      "left": 92,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_7_9",
+      "top": 768,
+      "left": 16,
+      "rotate": 0,
+      "attrs": {
+        "value": "3572"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_7_9",
+      "top": 768,
+      "left": 116,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_7_10",
+      "top": 768,
+      "left": 40,
+      "rotate": 0,
+      "attrs": {
+        "value": "3798"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_7_10",
+      "top": 768,
+      "left": 140,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_7_11",
+      "top": 768,
+      "left": 64,
+      "rotate": 0,
+      "attrs": {
+        "value": "9877"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_7_11",
+      "top": 768,
+      "left": 164,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_7_12",
+      "top": 768,
+      "left": 88,
+      "rotate": 0,
+      "attrs": {
+        "value": "18347"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_7_12",
+      "top": 768,
+      "left": 188,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_7_13",
+      "top": 768,
+      "left": 112,
+      "rotate": 0,
+      "attrs": {
+        "value": "23901"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_7_13",
+      "top": 768,
+      "left": 212,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_7_14",
+      "top": 768,
+      "left": 136,
+      "rotate": 0,
+      "attrs": {
+        "value": "28810"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_7_14",
+      "top": 768,
+      "left": 236,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_7_15",
+      "top": 768,
+      "left": 160,
+      "rotate": 0,
+      "attrs": {
+        "value": "29640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_7_15",
+      "top": 768,
+      "left": 260,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_8_0",
+      "top": 792,
+      "left": -200,
+      "rotate": 0,
+      "attrs": {
+        "value": "30061"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_8_0",
+      "top": 792,
+      "left": -100,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_8_1",
+      "top": 792,
+      "left": -176,
+      "rotate": 0,
+      "attrs": {
+        "value": "28507"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_8_1",
+      "top": 792,
+      "left": -76,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_8_2",
+      "top": 792,
+      "left": -152,
+      "rotate": 0,
+      "attrs": {
+        "value": "28576"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_8_2",
+      "top": 792,
+      "left": -52,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_8_3",
+      "top": 792,
+      "left": -128,
+      "rotate": 0,
+      "attrs": {
+        "value": "31169"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_8_3",
+      "top": 792,
+      "left": -28,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_8_4",
+      "top": 792,
+      "left": -104,
+      "rotate": 0,
+      "attrs": {
+        "value": "29736"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_8_4",
+      "top": 792,
+      "left": -4,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_8_5",
+      "top": 792,
+      "left": -80,
+      "rotate": 0,
+      "attrs": {
+        "value": "28647"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_8_5",
+      "top": 792,
+      "left": 20,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_8_6",
+      "top": 792,
+      "left": -56,
+      "rotate": 0,
+      "attrs": {
+        "value": "23282"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_8_6",
+      "top": 792,
+      "left": 44,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_8_7",
+      "top": 792,
+      "left": -32,
+      "rotate": 0,
+      "attrs": {
+        "value": "17032"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_8_7",
+      "top": 792,
+      "left": 68,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_8_8",
+      "top": 792,
+      "left": -8,
+      "rotate": 0,
+      "attrs": {
+        "value": "9953"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_8_8",
+      "top": 792,
+      "left": 92,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_8_9",
+      "top": 792,
+      "left": 16,
+      "rotate": 0,
+      "attrs": {
+        "value": "3539"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_8_9",
+      "top": 792,
+      "left": 116,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_8_10",
+      "top": 792,
+      "left": 40,
+      "rotate": 0,
+      "attrs": {
+        "value": "3762"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_8_10",
+      "top": 792,
+      "left": 140,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_8_11",
+      "top": 792,
+      "left": 64,
+      "rotate": 0,
+      "attrs": {
+        "value": "9802"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_8_11",
+      "top": 792,
+      "left": 164,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_8_12",
+      "top": 792,
+      "left": 88,
+      "rotate": 0,
+      "attrs": {
+        "value": "17675"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_8_12",
+      "top": 792,
+      "left": 188,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_8_13",
+      "top": 792,
+      "left": 112,
+      "rotate": 0,
+      "attrs": {
+        "value": "24357"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_8_13",
+      "top": 792,
+      "left": 212,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_8_14",
+      "top": 792,
+      "left": 136,
+      "rotate": 0,
+      "attrs": {
+        "value": "28668"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_8_14",
+      "top": 792,
+      "left": 236,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_8_15",
+      "top": 792,
+      "left": 160,
+      "rotate": 0,
+      "attrs": {
+        "value": "28955"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_8_15",
+      "top": 792,
+      "left": 260,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_9_0",
+      "top": 816,
+      "left": -200,
+      "rotate": 0,
+      "attrs": {
+        "value": "30729"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_9_0",
+      "top": 816,
+      "left": -100,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_9_1",
+      "top": 816,
+      "left": -176,
+      "rotate": 0,
+      "attrs": {
+        "value": "30804"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_9_1",
+      "top": 816,
+      "left": -76,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_9_2",
+      "top": 816,
+      "left": -152,
+      "rotate": 0,
+      "attrs": {
+        "value": "30658"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_9_2",
+      "top": 816,
+      "left": -52,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_9_3",
+      "top": 816,
+      "left": -128,
+      "rotate": 0,
+      "attrs": {
+        "value": "28912"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_9_3",
+      "top": 816,
+      "left": -28,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_9_4",
+      "top": 816,
+      "left": -104,
+      "rotate": 0,
+      "attrs": {
+        "value": "30901"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_9_4",
+      "top": 816,
+      "left": -4,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_9_5",
+      "top": 816,
+      "left": -80,
+      "rotate": 0,
+      "attrs": {
+        "value": "27259"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_9_5",
+      "top": 816,
+      "left": 20,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_9_6",
+      "top": 816,
+      "left": -56,
+      "rotate": 0,
+      "attrs": {
+        "value": "25241"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_9_6",
+      "top": 816,
+      "left": 44,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_9_7",
+      "top": 816,
+      "left": -32,
+      "rotate": 0,
+      "attrs": {
+        "value": "19906"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_9_7",
+      "top": 816,
+      "left": 68,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_9_8",
+      "top": 816,
+      "left": -8,
+      "rotate": 0,
+      "attrs": {
+        "value": "14340"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_9_8",
+      "top": 816,
+      "left": 92,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_9_9",
+      "top": 816,
+      "left": 16,
+      "rotate": 0,
+      "attrs": {
+        "value": "9791"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_9_9",
+      "top": 816,
+      "left": 116,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_9_10",
+      "top": 816,
+      "left": 40,
+      "rotate": 0,
+      "attrs": {
+        "value": "9515"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_9_10",
+      "top": 816,
+      "left": 140,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_9_11",
+      "top": 816,
+      "left": 64,
+      "rotate": 0,
+      "attrs": {
+        "value": "13772"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_9_11",
+      "top": 816,
+      "left": 164,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_9_12",
+      "top": 816,
+      "left": 88,
+      "rotate": 0,
+      "attrs": {
+        "value": "21281"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_9_12",
+      "top": 816,
+      "left": 188,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_9_13",
+      "top": 816,
+      "left": 112,
+      "rotate": 0,
+      "attrs": {
+        "value": "26330"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_9_13",
+      "top": 816,
+      "left": 212,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_9_14",
+      "top": 816,
+      "left": 136,
+      "rotate": 0,
+      "attrs": {
+        "value": "28509"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_9_14",
+      "top": 816,
+      "left": 236,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_9_15",
+      "top": 816,
+      "left": 160,
+      "rotate": 0,
+      "attrs": {
+        "value": "29327"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_9_15",
+      "top": 816,
+      "left": 260,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_10_0",
+      "top": 840,
+      "left": -200,
+      "rotate": 0,
+      "attrs": {
+        "value": "30221"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_10_0",
+      "top": 840,
+      "left": -100,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_10_1",
+      "top": 840,
+      "left": -176,
+      "rotate": 0,
+      "attrs": {
+        "value": "28899"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_10_1",
+      "top": 840,
+      "left": -76,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_10_2",
+      "top": 840,
+      "left": -152,
+      "rotate": 0,
+      "attrs": {
+        "value": "29980"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_10_2",
+      "top": 840,
+      "left": -52,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_10_3",
+      "top": 840,
+      "left": -128,
+      "rotate": 0,
+      "attrs": {
+        "value": "30716"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_10_3",
+      "top": 840,
+      "left": -28,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_10_4",
+      "top": 840,
+      "left": -104,
+      "rotate": 0,
+      "attrs": {
+        "value": "30492"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_10_4",
+      "top": 840,
+      "left": -4,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_10_5",
+      "top": 840,
+      "left": -80,
+      "rotate": 0,
+      "attrs": {
+        "value": "28633"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_10_5",
+      "top": 840,
+      "left": 20,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_10_6",
+      "top": 840,
+      "left": -56,
+      "rotate": 0,
+      "attrs": {
+        "value": "26364"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_10_6",
+      "top": 840,
+      "left": 44,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_10_7",
+      "top": 840,
+      "left": -32,
+      "rotate": 0,
+      "attrs": {
+        "value": "23368"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_10_7",
+      "top": 840,
+      "left": 68,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_10_8",
+      "top": 840,
+      "left": -8,
+      "rotate": 0,
+      "attrs": {
+        "value": "20749"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_10_8",
+      "top": 840,
+      "left": 92,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_10_9",
+      "top": 840,
+      "left": 16,
+      "rotate": 0,
+      "attrs": {
+        "value": "17339"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_10_9",
+      "top": 840,
+      "left": 116,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_10_10",
+      "top": 840,
+      "left": 40,
+      "rotate": 0,
+      "attrs": {
+        "value": "16974"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_10_10",
+      "top": 840,
+      "left": 140,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_10_11",
+      "top": 840,
+      "left": 64,
+      "rotate": 0,
+      "attrs": {
+        "value": "19879"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_10_11",
+      "top": 840,
+      "left": 164,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_10_12",
+      "top": 840,
+      "left": 88,
+      "rotate": 0,
+      "attrs": {
+        "value": "24635"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_10_12",
+      "top": 840,
+      "left": 188,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_10_13",
+      "top": 840,
+      "left": 112,
+      "rotate": 0,
+      "attrs": {
+        "value": "27362"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_10_13",
+      "top": 840,
+      "left": 212,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_10_14",
+      "top": 840,
+      "left": 136,
+      "rotate": 0,
+      "attrs": {
+        "value": "29544"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_10_14",
+      "top": 840,
+      "left": 236,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_10_15",
+      "top": 840,
+      "left": 160,
+      "rotate": 0,
+      "attrs": {
+        "value": "29538"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_10_15",
+      "top": 840,
+      "left": 260,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_11_0",
+      "top": 864,
+      "left": -200,
+      "rotate": 0,
+      "attrs": {
+        "value": "28843"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_11_0",
+      "top": 864,
+      "left": -100,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_11_1",
+      "top": 864,
+      "left": -176,
+      "rotate": 0,
+      "attrs": {
+        "value": "29968"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_11_1",
+      "top": 864,
+      "left": -76,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_11_2",
+      "top": 864,
+      "left": -152,
+      "rotate": 0,
+      "attrs": {
+        "value": "31344"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_11_2",
+      "top": 864,
+      "left": -52,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_11_3",
+      "top": 864,
+      "left": -128,
+      "rotate": 0,
+      "attrs": {
+        "value": "29521"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_11_3",
+      "top": 864,
+      "left": -28,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_11_4",
+      "top": 864,
+      "left": -104,
+      "rotate": 0,
+      "attrs": {
+        "value": "29452"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_11_4",
+      "top": 864,
+      "left": -4,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_11_5",
+      "top": 864,
+      "left": -80,
+      "rotate": 0,
+      "attrs": {
+        "value": "28961"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_11_5",
+      "top": 864,
+      "left": 20,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_11_6",
+      "top": 864,
+      "left": -56,
+      "rotate": 0,
+      "attrs": {
+        "value": "28882"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_11_6",
+      "top": 864,
+      "left": 44,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_11_7",
+      "top": 864,
+      "left": -32,
+      "rotate": 0,
+      "attrs": {
+        "value": "26892"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_11_7",
+      "top": 864,
+      "left": 68,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_11_8",
+      "top": 864,
+      "left": -8,
+      "rotate": 0,
+      "attrs": {
+        "value": "26178"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_11_8",
+      "top": 864,
+      "left": 92,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_11_9",
+      "top": 864,
+      "left": 16,
+      "rotate": 0,
+      "attrs": {
+        "value": "24962"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_11_9",
+      "top": 864,
+      "left": 116,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_11_10",
+      "top": 864,
+      "left": 40,
+      "rotate": 0,
+      "attrs": {
+        "value": "24773"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_11_10",
+      "top": 864,
+      "left": 140,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_11_11",
+      "top": 864,
+      "left": 64,
+      "rotate": 0,
+      "attrs": {
+        "value": "25464"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_11_11",
+      "top": 864,
+      "left": 164,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_11_12",
+      "top": 864,
+      "left": 88,
+      "rotate": 0,
+      "attrs": {
+        "value": "28252"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_11_12",
+      "top": 864,
+      "left": 188,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_11_13",
+      "top": 864,
+      "left": 112,
+      "rotate": 0,
+      "attrs": {
+        "value": "27493"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_11_13",
+      "top": 864,
+      "left": 212,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_11_14",
+      "top": 864,
+      "left": 136,
+      "rotate": 0,
+      "attrs": {
+        "value": "28301"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_11_14",
+      "top": 864,
+      "left": 236,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_11_15",
+      "top": 864,
+      "left": 160,
+      "rotate": 0,
+      "attrs": {
+        "value": "28514"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_11_15",
+      "top": 864,
+      "left": 260,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_12_0",
+      "top": 888,
+      "left": -200,
+      "rotate": 0,
+      "attrs": {
+        "value": "28536"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_12_0",
+      "top": 888,
+      "left": -100,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_12_1",
+      "top": 888,
+      "left": -176,
+      "rotate": 0,
+      "attrs": {
+        "value": "31446"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_12_1",
+      "top": 888,
+      "left": -76,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_12_2",
+      "top": 888,
+      "left": -152,
+      "rotate": 0,
+      "attrs": {
+        "value": "30025"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_12_2",
+      "top": 888,
+      "left": -52,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_12_3",
+      "top": 888,
+      "left": -128,
+      "rotate": 0,
+      "attrs": {
+        "value": "31412"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_12_3",
+      "top": 888,
+      "left": -28,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_12_4",
+      "top": 888,
+      "left": -104,
+      "rotate": 0,
+      "attrs": {
+        "value": "28890"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_12_4",
+      "top": 888,
+      "left": -4,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_12_5",
+      "top": 888,
+      "left": -80,
+      "rotate": 0,
+      "attrs": {
+        "value": "28896"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_12_5",
+      "top": 888,
+      "left": 20,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_12_6",
+      "top": 888,
+      "left": -56,
+      "rotate": 0,
+      "attrs": {
+        "value": "30790"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_12_6",
+      "top": 888,
+      "left": 44,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_12_7",
+      "top": 888,
+      "left": -32,
+      "rotate": 0,
+      "attrs": {
+        "value": "28788"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_12_7",
+      "top": 888,
+      "left": 68,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_12_8",
+      "top": 888,
+      "left": -8,
+      "rotate": 0,
+      "attrs": {
+        "value": "27743"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_12_8",
+      "top": 888,
+      "left": 92,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_12_9",
+      "top": 888,
+      "left": 16,
+      "rotate": 0,
+      "attrs": {
+        "value": "26505"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_12_9",
+      "top": 888,
+      "left": 116,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_12_10",
+      "top": 888,
+      "left": 40,
+      "rotate": 0,
+      "attrs": {
+        "value": "26789"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_12_10",
+      "top": 888,
+      "left": 140,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_12_11",
+      "top": 888,
+      "left": 64,
+      "rotate": 0,
+      "attrs": {
+        "value": "27375"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_12_11",
+      "top": 888,
+      "left": 164,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_12_12",
+      "top": 888,
+      "left": 88,
+      "rotate": 0,
+      "attrs": {
+        "value": "28188"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_12_12",
+      "top": 888,
+      "left": 188,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_12_13",
+      "top": 888,
+      "left": 112,
+      "rotate": 0,
+      "attrs": {
+        "value": "28802"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_12_13",
+      "top": 888,
+      "left": 212,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_12_14",
+      "top": 888,
+      "left": 136,
+      "rotate": 0,
+      "attrs": {
+        "value": "30721"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_12_14",
+      "top": 888,
+      "left": 236,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_12_15",
+      "top": 888,
+      "left": 160,
+      "rotate": 0,
+      "attrs": {
+        "value": "30626"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_12_15",
+      "top": 888,
+      "left": 260,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_13_0",
+      "top": 912,
+      "left": -200,
+      "rotate": 0,
+      "attrs": {
+        "value": "29576"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_13_0",
+      "top": 912,
+      "left": -100,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_13_1",
+      "top": 912,
+      "left": -176,
+      "rotate": 0,
+      "attrs": {
+        "value": "30368"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_13_1",
+      "top": 912,
+      "left": -76,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_13_2",
+      "top": 912,
+      "left": -152,
+      "rotate": 0,
+      "attrs": {
+        "value": "28972"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_13_2",
+      "top": 912,
+      "left": -52,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_13_3",
+      "top": 912,
+      "left": -128,
+      "rotate": 0,
+      "attrs": {
+        "value": "30943"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_13_3",
+      "top": 912,
+      "left": -28,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_13_4",
+      "top": 912,
+      "left": -104,
+      "rotate": 0,
+      "attrs": {
+        "value": "31065"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_13_4",
+      "top": 912,
+      "left": -4,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_13_5",
+      "top": 912,
+      "left": -80,
+      "rotate": 0,
+      "attrs": {
+        "value": "30347"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_13_5",
+      "top": 912,
+      "left": 20,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_13_6",
+      "top": 912,
+      "left": -56,
+      "rotate": 0,
+      "attrs": {
+        "value": "31260"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_13_6",
+      "top": 912,
+      "left": 44,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_13_7",
+      "top": 912,
+      "left": -32,
+      "rotate": 0,
+      "attrs": {
+        "value": "30751"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_13_7",
+      "top": 912,
+      "left": 68,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_13_8",
+      "top": 912,
+      "left": -8,
+      "rotate": 0,
+      "attrs": {
+        "value": "29154"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_13_8",
+      "top": 912,
+      "left": 92,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_13_9",
+      "top": 912,
+      "left": 16,
+      "rotate": 0,
+      "attrs": {
+        "value": "29896"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_13_9",
+      "top": 912,
+      "left": 116,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_13_10",
+      "top": 912,
+      "left": 40,
+      "rotate": 0,
+      "attrs": {
+        "value": "28660"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_13_10",
+      "top": 912,
+      "left": 140,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_13_11",
+      "top": 912,
+      "left": 64,
+      "rotate": 0,
+      "attrs": {
+        "value": "30699"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_13_11",
+      "top": 912,
+      "left": 164,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_13_12",
+      "top": 912,
+      "left": 88,
+      "rotate": 0,
+      "attrs": {
+        "value": "29722"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_13_12",
+      "top": 912,
+      "left": 188,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_13_13",
+      "top": 912,
+      "left": 112,
+      "rotate": 0,
+      "attrs": {
+        "value": "29042"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_13_13",
+      "top": 912,
+      "left": 212,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_13_14",
+      "top": 912,
+      "left": 136,
+      "rotate": 0,
+      "attrs": {
+        "value": "31083"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_13_14",
+      "top": 912,
+      "left": 236,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_13_15",
+      "top": 912,
+      "left": 160,
+      "rotate": 0,
+      "attrs": {
+        "value": "30895"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_13_15",
+      "top": 912,
+      "left": 260,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_14_0",
+      "top": 936,
+      "left": -200,
+      "rotate": 0,
+      "attrs": {
+        "value": "31165"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_14_0",
+      "top": 936,
+      "left": -100,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_14_1",
+      "top": 936,
+      "left": -176,
+      "rotate": 0,
+      "attrs": {
+        "value": "28903"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_14_1",
+      "top": 936,
+      "left": -76,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_14_2",
+      "top": 936,
+      "left": -152,
+      "rotate": 0,
+      "attrs": {
+        "value": "31234"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_14_2",
+      "top": 936,
+      "left": -52,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_14_3",
+      "top": 936,
+      "left": -128,
+      "rotate": 0,
+      "attrs": {
+        "value": "28656"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_14_3",
+      "top": 936,
+      "left": -28,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_14_4",
+      "top": 936,
+      "left": -104,
+      "rotate": 0,
+      "attrs": {
+        "value": "30068"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_14_4",
+      "top": 936,
+      "left": -4,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_14_5",
+      "top": 936,
+      "left": -80,
+      "rotate": 0,
+      "attrs": {
+        "value": "29068"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_14_5",
+      "top": 936,
+      "left": 20,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_14_6",
+      "top": 936,
+      "left": -56,
+      "rotate": 0,
+      "attrs": {
+        "value": "29951"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_14_6",
+      "top": 936,
+      "left": 44,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_14_7",
+      "top": 936,
+      "left": -32,
+      "rotate": 0,
+      "attrs": {
+        "value": "31134"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_14_7",
+      "top": 936,
+      "left": 68,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_14_8",
+      "top": 936,
+      "left": -8,
+      "rotate": 0,
+      "attrs": {
+        "value": "28910"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_14_8",
+      "top": 936,
+      "left": 92,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_14_9",
+      "top": 936,
+      "left": 16,
+      "rotate": 0,
+      "attrs": {
+        "value": "28995"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_14_9",
+      "top": 936,
+      "left": 116,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_14_10",
+      "top": 936,
+      "left": 40,
+      "rotate": 0,
+      "attrs": {
+        "value": "29707"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_14_10",
+      "top": 936,
+      "left": 140,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_14_11",
+      "top": 936,
+      "left": 64,
+      "rotate": 0,
+      "attrs": {
+        "value": "30144"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_14_11",
+      "top": 936,
+      "left": 164,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_14_12",
+      "top": 936,
+      "left": 88,
+      "rotate": 0,
+      "attrs": {
+        "value": "29196"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_14_12",
+      "top": 936,
+      "left": 188,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_14_13",
+      "top": 936,
+      "left": 112,
+      "rotate": 0,
+      "attrs": {
+        "value": "31277"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_14_13",
+      "top": 936,
+      "left": 212,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_14_14",
+      "top": 936,
+      "left": 136,
+      "rotate": 0,
+      "attrs": {
+        "value": "28745"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_14_14",
+      "top": 936,
+      "left": 236,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_14_15",
+      "top": 936,
+      "left": 160,
+      "rotate": 0,
+      "attrs": {
+        "value": "29694"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_14_15",
+      "top": 936,
+      "left": 260,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_15_0",
+      "top": 960,
+      "left": -200,
+      "rotate": 0,
+      "attrs": {
+        "value": "29887"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_15_0",
+      "top": 960,
+      "left": -100,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_15_1",
+      "top": 960,
+      "left": -176,
+      "rotate": 0,
+      "attrs": {
+        "value": "31464"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_15_1",
+      "top": 960,
+      "left": -76,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_15_2",
+      "top": 960,
+      "left": -152,
+      "rotate": 0,
+      "attrs": {
+        "value": "31160"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_15_2",
+      "top": 960,
+      "left": -52,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_15_3",
+      "top": 960,
+      "left": -128,
+      "rotate": 0,
+      "attrs": {
+        "value": "30993"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_15_3",
+      "top": 960,
+      "left": -28,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_15_4",
+      "top": 960,
+      "left": -104,
+      "rotate": 0,
+      "attrs": {
+        "value": "29734"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_15_4",
+      "top": 960,
+      "left": -4,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_15_5",
+      "top": 960,
+      "left": -80,
+      "rotate": 0,
+      "attrs": {
+        "value": "28814"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_15_5",
+      "top": 960,
+      "left": 20,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_15_6",
+      "top": 960,
+      "left": -56,
+      "rotate": 0,
+      "attrs": {
+        "value": "30682"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_15_6",
+      "top": 960,
+      "left": 44,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_15_7",
+      "top": 960,
+      "left": -32,
+      "rotate": 0,
+      "attrs": {
+        "value": "28828"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_15_7",
+      "top": 960,
+      "left": 68,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_15_8",
+      "top": 960,
+      "left": -8,
+      "rotate": 0,
+      "attrs": {
+        "value": "30557"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_15_8",
+      "top": 960,
+      "left": 92,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_15_9",
+      "top": 960,
+      "left": 16,
+      "rotate": 0,
+      "attrs": {
+        "value": "30777"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_15_9",
+      "top": 960,
+      "left": 116,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_15_10",
+      "top": 960,
+      "left": 40,
+      "rotate": 0,
+      "attrs": {
+        "value": "30518"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_15_10",
+      "top": 960,
+      "left": 140,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_15_11",
+      "top": 960,
+      "left": 64,
+      "rotate": 0,
+      "attrs": {
+        "value": "30574"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_15_11",
+      "top": 960,
+      "left": 164,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_15_12",
+      "top": 960,
+      "left": 88,
+      "rotate": 0,
+      "attrs": {
+        "value": "30404"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_15_12",
+      "top": 960,
+      "left": 188,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_15_13",
+      "top": 960,
+      "left": 112,
+      "rotate": 0,
+      "attrs": {
+        "value": "29717"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_15_13",
+      "top": 960,
+      "left": 212,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_15_14",
+      "top": 960,
+      "left": 136,
+      "rotate": 0,
+      "attrs": {
+        "value": "31458"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_15_14",
+      "top": 960,
+      "left": 236,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "cell_15_15",
+      "top": 960,
+      "left": 160,
+      "rotate": 0,
+      "attrs": {
+        "value": "30355"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "inj_15_15",
+      "top": 960,
+      "left": 260,
+      "rotate": 0,
+      "attrs": {
+        "value": "640"
+      }
+    }
+  ],
+  "connections": [
+    [
+      "esp:GND.1",
+      "row_mux:GND",
+      "black",
+      []
+    ],
+    [
+      "esp:GND.1",
+      "col_mux:GND",
+      "black",
+      []
+    ],
+    [
+      "esp:3V3.1",
+      "row_mux:VCC",
+      "red",
+      []
+    ],
+    [
+      "esp:3V3.1",
+      "col_mux:VCC",
+      "red",
+      []
+    ],
+    [
+      "esp:GND.1",
+      "row_mux:EN",
+      "black",
+      []
+    ],
+    [
+      "esp:GND.1",
+      "col_mux:EN",
+      "black",
+      []
+    ],
+    [
+      "esp:3V3.1",
+      "row_mux:SIG",
+      "red",
+      []
+    ],
+    [
+      "esp:1",
+      "col_mux:SIG",
+      "yellow",
+      []
+    ],
+    [
+      "col_mux:SIG",
+      "rpd:1",
+      "yellow",
+      []
+    ],
+    [
+      "rpd:2",
+      "esp:GND.1",
+      "black",
+      []
+    ],
+    [
+      "esp:3V3.1",
+      "c_dec_row:1",
+      "red",
+      []
+    ],
+    [
+      "c_dec_row:2",
+      "esp:GND.1",
+      "black",
+      []
+    ],
+    [
+      "esp:3V3.1",
+      "c_dec_col:1",
+      "red",
+      []
+    ],
+    [
+      "c_dec_col:2",
+      "esp:GND.1",
+      "black",
+      []
+    ],
+    [
+      "esp:3V3.1",
+      "c_bulk:1",
+      "red",
+      []
+    ],
+    [
+      "c_bulk:2",
+      "esp:GND.1",
+      "black",
+      []
+    ],
+    [
+      "esp:4",
+      "row_mux:S0",
+      "green",
+      []
+    ],
+    [
+      "esp:5",
+      "row_mux:S1",
+      "green",
+      []
+    ],
+    [
+      "esp:6",
+      "row_mux:S2",
+      "green",
+      []
+    ],
+    [
+      "esp:7",
+      "row_mux:S3",
+      "green",
+      []
+    ],
+    [
+      "esp:15",
+      "col_mux:S0",
+      "blue",
+      []
+    ],
+    [
+      "esp:16",
+      "col_mux:S1",
+      "blue",
+      []
+    ],
+    [
+      "esp:17",
+      "col_mux:S2",
+      "blue",
+      []
+    ],
+    [
+      "esp:18",
+      "col_mux:S3",
+      "blue",
+      []
+    ],
+    [
+      "row_mux:CH0",
+      "cell_0_0:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_0_0:2",
+      "inj_0_0:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_0_0:2",
+      "col_mux:CH0",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH0",
+      "cell_0_1:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_0_1:2",
+      "inj_0_1:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_0_1:2",
+      "col_mux:CH1",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH0",
+      "cell_0_2:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_0_2:2",
+      "inj_0_2:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_0_2:2",
+      "col_mux:CH2",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH0",
+      "cell_0_3:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_0_3:2",
+      "inj_0_3:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_0_3:2",
+      "col_mux:CH3",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH0",
+      "cell_0_4:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_0_4:2",
+      "inj_0_4:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_0_4:2",
+      "col_mux:CH4",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH0",
+      "cell_0_5:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_0_5:2",
+      "inj_0_5:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_0_5:2",
+      "col_mux:CH5",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH0",
+      "cell_0_6:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_0_6:2",
+      "inj_0_6:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_0_6:2",
+      "col_mux:CH6",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH0",
+      "cell_0_7:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_0_7:2",
+      "inj_0_7:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_0_7:2",
+      "col_mux:CH7",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH0",
+      "cell_0_8:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_0_8:2",
+      "inj_0_8:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_0_8:2",
+      "col_mux:CH8",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH0",
+      "cell_0_9:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_0_9:2",
+      "inj_0_9:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_0_9:2",
+      "col_mux:CH9",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH0",
+      "cell_0_10:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_0_10:2",
+      "inj_0_10:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_0_10:2",
+      "col_mux:CH10",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH0",
+      "cell_0_11:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_0_11:2",
+      "inj_0_11:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_0_11:2",
+      "col_mux:CH11",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH0",
+      "cell_0_12:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_0_12:2",
+      "inj_0_12:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_0_12:2",
+      "col_mux:CH12",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH0",
+      "cell_0_13:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_0_13:2",
+      "inj_0_13:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_0_13:2",
+      "col_mux:CH13",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH0",
+      "cell_0_14:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_0_14:2",
+      "inj_0_14:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_0_14:2",
+      "col_mux:CH14",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH0",
+      "cell_0_15:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_0_15:2",
+      "inj_0_15:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_0_15:2",
+      "col_mux:CH15",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH1",
+      "cell_1_0:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_1_0:2",
+      "inj_1_0:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_1_0:2",
+      "col_mux:CH0",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH1",
+      "cell_1_1:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_1_1:2",
+      "inj_1_1:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_1_1:2",
+      "col_mux:CH1",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH1",
+      "cell_1_2:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_1_2:2",
+      "inj_1_2:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_1_2:2",
+      "col_mux:CH2",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH1",
+      "cell_1_3:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_1_3:2",
+      "inj_1_3:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_1_3:2",
+      "col_mux:CH3",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH1",
+      "cell_1_4:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_1_4:2",
+      "inj_1_4:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_1_4:2",
+      "col_mux:CH4",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH1",
+      "cell_1_5:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_1_5:2",
+      "inj_1_5:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_1_5:2",
+      "col_mux:CH5",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH1",
+      "cell_1_6:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_1_6:2",
+      "inj_1_6:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_1_6:2",
+      "col_mux:CH6",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH1",
+      "cell_1_7:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_1_7:2",
+      "inj_1_7:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_1_7:2",
+      "col_mux:CH7",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH1",
+      "cell_1_8:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_1_8:2",
+      "inj_1_8:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_1_8:2",
+      "col_mux:CH8",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH1",
+      "cell_1_9:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_1_9:2",
+      "inj_1_9:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_1_9:2",
+      "col_mux:CH9",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH1",
+      "cell_1_10:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_1_10:2",
+      "inj_1_10:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_1_10:2",
+      "col_mux:CH10",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH1",
+      "cell_1_11:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_1_11:2",
+      "inj_1_11:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_1_11:2",
+      "col_mux:CH11",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH1",
+      "cell_1_12:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_1_12:2",
+      "inj_1_12:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_1_12:2",
+      "col_mux:CH12",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH1",
+      "cell_1_13:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_1_13:2",
+      "inj_1_13:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_1_13:2",
+      "col_mux:CH13",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH1",
+      "cell_1_14:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_1_14:2",
+      "inj_1_14:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_1_14:2",
+      "col_mux:CH14",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH1",
+      "cell_1_15:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_1_15:2",
+      "inj_1_15:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_1_15:2",
+      "col_mux:CH15",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH2",
+      "cell_2_0:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_2_0:2",
+      "inj_2_0:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_2_0:2",
+      "col_mux:CH0",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH2",
+      "cell_2_1:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_2_1:2",
+      "inj_2_1:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_2_1:2",
+      "col_mux:CH1",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH2",
+      "cell_2_2:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_2_2:2",
+      "inj_2_2:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_2_2:2",
+      "col_mux:CH2",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH2",
+      "cell_2_3:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_2_3:2",
+      "inj_2_3:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_2_3:2",
+      "col_mux:CH3",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH2",
+      "cell_2_4:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_2_4:2",
+      "inj_2_4:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_2_4:2",
+      "col_mux:CH4",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH2",
+      "cell_2_5:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_2_5:2",
+      "inj_2_5:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_2_5:2",
+      "col_mux:CH5",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH2",
+      "cell_2_6:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_2_6:2",
+      "inj_2_6:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_2_6:2",
+      "col_mux:CH6",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH2",
+      "cell_2_7:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_2_7:2",
+      "inj_2_7:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_2_7:2",
+      "col_mux:CH7",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH2",
+      "cell_2_8:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_2_8:2",
+      "inj_2_8:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_2_8:2",
+      "col_mux:CH8",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH2",
+      "cell_2_9:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_2_9:2",
+      "inj_2_9:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_2_9:2",
+      "col_mux:CH9",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH2",
+      "cell_2_10:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_2_10:2",
+      "inj_2_10:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_2_10:2",
+      "col_mux:CH10",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH2",
+      "cell_2_11:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_2_11:2",
+      "inj_2_11:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_2_11:2",
+      "col_mux:CH11",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH2",
+      "cell_2_12:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_2_12:2",
+      "inj_2_12:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_2_12:2",
+      "col_mux:CH12",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH2",
+      "cell_2_13:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_2_13:2",
+      "inj_2_13:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_2_13:2",
+      "col_mux:CH13",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH2",
+      "cell_2_14:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_2_14:2",
+      "inj_2_14:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_2_14:2",
+      "col_mux:CH14",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH2",
+      "cell_2_15:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_2_15:2",
+      "inj_2_15:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_2_15:2",
+      "col_mux:CH15",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH3",
+      "cell_3_0:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_3_0:2",
+      "inj_3_0:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_3_0:2",
+      "col_mux:CH0",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH3",
+      "cell_3_1:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_3_1:2",
+      "inj_3_1:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_3_1:2",
+      "col_mux:CH1",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH3",
+      "cell_3_2:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_3_2:2",
+      "inj_3_2:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_3_2:2",
+      "col_mux:CH2",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH3",
+      "cell_3_3:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_3_3:2",
+      "inj_3_3:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_3_3:2",
+      "col_mux:CH3",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH3",
+      "cell_3_4:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_3_4:2",
+      "inj_3_4:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_3_4:2",
+      "col_mux:CH4",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH3",
+      "cell_3_5:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_3_5:2",
+      "inj_3_5:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_3_5:2",
+      "col_mux:CH5",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH3",
+      "cell_3_6:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_3_6:2",
+      "inj_3_6:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_3_6:2",
+      "col_mux:CH6",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH3",
+      "cell_3_7:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_3_7:2",
+      "inj_3_7:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_3_7:2",
+      "col_mux:CH7",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH3",
+      "cell_3_8:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_3_8:2",
+      "inj_3_8:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_3_8:2",
+      "col_mux:CH8",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH3",
+      "cell_3_9:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_3_9:2",
+      "inj_3_9:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_3_9:2",
+      "col_mux:CH9",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH3",
+      "cell_3_10:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_3_10:2",
+      "inj_3_10:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_3_10:2",
+      "col_mux:CH10",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH3",
+      "cell_3_11:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_3_11:2",
+      "inj_3_11:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_3_11:2",
+      "col_mux:CH11",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH3",
+      "cell_3_12:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_3_12:2",
+      "inj_3_12:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_3_12:2",
+      "col_mux:CH12",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH3",
+      "cell_3_13:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_3_13:2",
+      "inj_3_13:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_3_13:2",
+      "col_mux:CH13",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH3",
+      "cell_3_14:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_3_14:2",
+      "inj_3_14:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_3_14:2",
+      "col_mux:CH14",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH3",
+      "cell_3_15:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_3_15:2",
+      "inj_3_15:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_3_15:2",
+      "col_mux:CH15",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH4",
+      "cell_4_0:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_4_0:2",
+      "inj_4_0:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_4_0:2",
+      "col_mux:CH0",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH4",
+      "cell_4_1:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_4_1:2",
+      "inj_4_1:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_4_1:2",
+      "col_mux:CH1",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH4",
+      "cell_4_2:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_4_2:2",
+      "inj_4_2:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_4_2:2",
+      "col_mux:CH2",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH4",
+      "cell_4_3:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_4_3:2",
+      "inj_4_3:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_4_3:2",
+      "col_mux:CH3",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH4",
+      "cell_4_4:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_4_4:2",
+      "inj_4_4:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_4_4:2",
+      "col_mux:CH4",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH4",
+      "cell_4_5:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_4_5:2",
+      "inj_4_5:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_4_5:2",
+      "col_mux:CH5",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH4",
+      "cell_4_6:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_4_6:2",
+      "inj_4_6:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_4_6:2",
+      "col_mux:CH6",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH4",
+      "cell_4_7:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_4_7:2",
+      "inj_4_7:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_4_7:2",
+      "col_mux:CH7",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH4",
+      "cell_4_8:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_4_8:2",
+      "inj_4_8:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_4_8:2",
+      "col_mux:CH8",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH4",
+      "cell_4_9:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_4_9:2",
+      "inj_4_9:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_4_9:2",
+      "col_mux:CH9",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH4",
+      "cell_4_10:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_4_10:2",
+      "inj_4_10:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_4_10:2",
+      "col_mux:CH10",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH4",
+      "cell_4_11:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_4_11:2",
+      "inj_4_11:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_4_11:2",
+      "col_mux:CH11",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH4",
+      "cell_4_12:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_4_12:2",
+      "inj_4_12:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_4_12:2",
+      "col_mux:CH12",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH4",
+      "cell_4_13:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_4_13:2",
+      "inj_4_13:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_4_13:2",
+      "col_mux:CH13",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH4",
+      "cell_4_14:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_4_14:2",
+      "inj_4_14:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_4_14:2",
+      "col_mux:CH14",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH4",
+      "cell_4_15:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_4_15:2",
+      "inj_4_15:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_4_15:2",
+      "col_mux:CH15",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH5",
+      "cell_5_0:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_5_0:2",
+      "inj_5_0:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_5_0:2",
+      "col_mux:CH0",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH5",
+      "cell_5_1:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_5_1:2",
+      "inj_5_1:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_5_1:2",
+      "col_mux:CH1",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH5",
+      "cell_5_2:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_5_2:2",
+      "inj_5_2:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_5_2:2",
+      "col_mux:CH2",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH5",
+      "cell_5_3:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_5_3:2",
+      "inj_5_3:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_5_3:2",
+      "col_mux:CH3",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH5",
+      "cell_5_4:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_5_4:2",
+      "inj_5_4:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_5_4:2",
+      "col_mux:CH4",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH5",
+      "cell_5_5:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_5_5:2",
+      "inj_5_5:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_5_5:2",
+      "col_mux:CH5",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH5",
+      "cell_5_6:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_5_6:2",
+      "inj_5_6:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_5_6:2",
+      "col_mux:CH6",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH5",
+      "cell_5_7:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_5_7:2",
+      "inj_5_7:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_5_7:2",
+      "col_mux:CH7",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH5",
+      "cell_5_8:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_5_8:2",
+      "inj_5_8:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_5_8:2",
+      "col_mux:CH8",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH5",
+      "cell_5_9:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_5_9:2",
+      "inj_5_9:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_5_9:2",
+      "col_mux:CH9",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH5",
+      "cell_5_10:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_5_10:2",
+      "inj_5_10:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_5_10:2",
+      "col_mux:CH10",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH5",
+      "cell_5_11:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_5_11:2",
+      "inj_5_11:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_5_11:2",
+      "col_mux:CH11",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH5",
+      "cell_5_12:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_5_12:2",
+      "inj_5_12:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_5_12:2",
+      "col_mux:CH12",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH5",
+      "cell_5_13:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_5_13:2",
+      "inj_5_13:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_5_13:2",
+      "col_mux:CH13",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH5",
+      "cell_5_14:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_5_14:2",
+      "inj_5_14:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_5_14:2",
+      "col_mux:CH14",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH5",
+      "cell_5_15:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_5_15:2",
+      "inj_5_15:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_5_15:2",
+      "col_mux:CH15",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH6",
+      "cell_6_0:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_6_0:2",
+      "inj_6_0:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_6_0:2",
+      "col_mux:CH0",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH6",
+      "cell_6_1:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_6_1:2",
+      "inj_6_1:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_6_1:2",
+      "col_mux:CH1",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH6",
+      "cell_6_2:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_6_2:2",
+      "inj_6_2:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_6_2:2",
+      "col_mux:CH2",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH6",
+      "cell_6_3:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_6_3:2",
+      "inj_6_3:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_6_3:2",
+      "col_mux:CH3",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH6",
+      "cell_6_4:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_6_4:2",
+      "inj_6_4:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_6_4:2",
+      "col_mux:CH4",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH6",
+      "cell_6_5:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_6_5:2",
+      "inj_6_5:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_6_5:2",
+      "col_mux:CH5",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH6",
+      "cell_6_6:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_6_6:2",
+      "inj_6_6:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_6_6:2",
+      "col_mux:CH6",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH6",
+      "cell_6_7:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_6_7:2",
+      "inj_6_7:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_6_7:2",
+      "col_mux:CH7",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH6",
+      "cell_6_8:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_6_8:2",
+      "inj_6_8:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_6_8:2",
+      "col_mux:CH8",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH6",
+      "cell_6_9:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_6_9:2",
+      "inj_6_9:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_6_9:2",
+      "col_mux:CH9",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH6",
+      "cell_6_10:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_6_10:2",
+      "inj_6_10:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_6_10:2",
+      "col_mux:CH10",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH6",
+      "cell_6_11:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_6_11:2",
+      "inj_6_11:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_6_11:2",
+      "col_mux:CH11",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH6",
+      "cell_6_12:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_6_12:2",
+      "inj_6_12:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_6_12:2",
+      "col_mux:CH12",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH6",
+      "cell_6_13:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_6_13:2",
+      "inj_6_13:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_6_13:2",
+      "col_mux:CH13",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH6",
+      "cell_6_14:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_6_14:2",
+      "inj_6_14:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_6_14:2",
+      "col_mux:CH14",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH6",
+      "cell_6_15:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_6_15:2",
+      "inj_6_15:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_6_15:2",
+      "col_mux:CH15",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH7",
+      "cell_7_0:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_7_0:2",
+      "inj_7_0:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_7_0:2",
+      "col_mux:CH0",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH7",
+      "cell_7_1:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_7_1:2",
+      "inj_7_1:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_7_1:2",
+      "col_mux:CH1",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH7",
+      "cell_7_2:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_7_2:2",
+      "inj_7_2:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_7_2:2",
+      "col_mux:CH2",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH7",
+      "cell_7_3:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_7_3:2",
+      "inj_7_3:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_7_3:2",
+      "col_mux:CH3",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH7",
+      "cell_7_4:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_7_4:2",
+      "inj_7_4:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_7_4:2",
+      "col_mux:CH4",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH7",
+      "cell_7_5:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_7_5:2",
+      "inj_7_5:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_7_5:2",
+      "col_mux:CH5",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH7",
+      "cell_7_6:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_7_6:2",
+      "inj_7_6:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_7_6:2",
+      "col_mux:CH6",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH7",
+      "cell_7_7:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_7_7:2",
+      "inj_7_7:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_7_7:2",
+      "col_mux:CH7",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH7",
+      "cell_7_8:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_7_8:2",
+      "inj_7_8:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_7_8:2",
+      "col_mux:CH8",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH7",
+      "cell_7_9:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_7_9:2",
+      "inj_7_9:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_7_9:2",
+      "col_mux:CH9",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH7",
+      "cell_7_10:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_7_10:2",
+      "inj_7_10:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_7_10:2",
+      "col_mux:CH10",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH7",
+      "cell_7_11:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_7_11:2",
+      "inj_7_11:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_7_11:2",
+      "col_mux:CH11",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH7",
+      "cell_7_12:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_7_12:2",
+      "inj_7_12:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_7_12:2",
+      "col_mux:CH12",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH7",
+      "cell_7_13:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_7_13:2",
+      "inj_7_13:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_7_13:2",
+      "col_mux:CH13",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH7",
+      "cell_7_14:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_7_14:2",
+      "inj_7_14:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_7_14:2",
+      "col_mux:CH14",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH7",
+      "cell_7_15:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_7_15:2",
+      "inj_7_15:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_7_15:2",
+      "col_mux:CH15",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH8",
+      "cell_8_0:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_8_0:2",
+      "inj_8_0:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_8_0:2",
+      "col_mux:CH0",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH8",
+      "cell_8_1:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_8_1:2",
+      "inj_8_1:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_8_1:2",
+      "col_mux:CH1",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH8",
+      "cell_8_2:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_8_2:2",
+      "inj_8_2:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_8_2:2",
+      "col_mux:CH2",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH8",
+      "cell_8_3:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_8_3:2",
+      "inj_8_3:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_8_3:2",
+      "col_mux:CH3",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH8",
+      "cell_8_4:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_8_4:2",
+      "inj_8_4:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_8_4:2",
+      "col_mux:CH4",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH8",
+      "cell_8_5:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_8_5:2",
+      "inj_8_5:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_8_5:2",
+      "col_mux:CH5",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH8",
+      "cell_8_6:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_8_6:2",
+      "inj_8_6:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_8_6:2",
+      "col_mux:CH6",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH8",
+      "cell_8_7:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_8_7:2",
+      "inj_8_7:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_8_7:2",
+      "col_mux:CH7",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH8",
+      "cell_8_8:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_8_8:2",
+      "inj_8_8:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_8_8:2",
+      "col_mux:CH8",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH8",
+      "cell_8_9:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_8_9:2",
+      "inj_8_9:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_8_9:2",
+      "col_mux:CH9",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH8",
+      "cell_8_10:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_8_10:2",
+      "inj_8_10:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_8_10:2",
+      "col_mux:CH10",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH8",
+      "cell_8_11:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_8_11:2",
+      "inj_8_11:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_8_11:2",
+      "col_mux:CH11",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH8",
+      "cell_8_12:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_8_12:2",
+      "inj_8_12:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_8_12:2",
+      "col_mux:CH12",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH8",
+      "cell_8_13:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_8_13:2",
+      "inj_8_13:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_8_13:2",
+      "col_mux:CH13",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH8",
+      "cell_8_14:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_8_14:2",
+      "inj_8_14:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_8_14:2",
+      "col_mux:CH14",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH8",
+      "cell_8_15:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_8_15:2",
+      "inj_8_15:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_8_15:2",
+      "col_mux:CH15",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH9",
+      "cell_9_0:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_9_0:2",
+      "inj_9_0:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_9_0:2",
+      "col_mux:CH0",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH9",
+      "cell_9_1:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_9_1:2",
+      "inj_9_1:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_9_1:2",
+      "col_mux:CH1",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH9",
+      "cell_9_2:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_9_2:2",
+      "inj_9_2:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_9_2:2",
+      "col_mux:CH2",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH9",
+      "cell_9_3:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_9_3:2",
+      "inj_9_3:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_9_3:2",
+      "col_mux:CH3",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH9",
+      "cell_9_4:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_9_4:2",
+      "inj_9_4:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_9_4:2",
+      "col_mux:CH4",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH9",
+      "cell_9_5:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_9_5:2",
+      "inj_9_5:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_9_5:2",
+      "col_mux:CH5",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH9",
+      "cell_9_6:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_9_6:2",
+      "inj_9_6:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_9_6:2",
+      "col_mux:CH6",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH9",
+      "cell_9_7:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_9_7:2",
+      "inj_9_7:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_9_7:2",
+      "col_mux:CH7",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH9",
+      "cell_9_8:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_9_8:2",
+      "inj_9_8:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_9_8:2",
+      "col_mux:CH8",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH9",
+      "cell_9_9:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_9_9:2",
+      "inj_9_9:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_9_9:2",
+      "col_mux:CH9",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH9",
+      "cell_9_10:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_9_10:2",
+      "inj_9_10:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_9_10:2",
+      "col_mux:CH10",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH9",
+      "cell_9_11:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_9_11:2",
+      "inj_9_11:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_9_11:2",
+      "col_mux:CH11",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH9",
+      "cell_9_12:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_9_12:2",
+      "inj_9_12:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_9_12:2",
+      "col_mux:CH12",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH9",
+      "cell_9_13:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_9_13:2",
+      "inj_9_13:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_9_13:2",
+      "col_mux:CH13",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH9",
+      "cell_9_14:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_9_14:2",
+      "inj_9_14:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_9_14:2",
+      "col_mux:CH14",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH9",
+      "cell_9_15:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_9_15:2",
+      "inj_9_15:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_9_15:2",
+      "col_mux:CH15",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH10",
+      "cell_10_0:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_10_0:2",
+      "inj_10_0:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_10_0:2",
+      "col_mux:CH0",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH10",
+      "cell_10_1:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_10_1:2",
+      "inj_10_1:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_10_1:2",
+      "col_mux:CH1",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH10",
+      "cell_10_2:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_10_2:2",
+      "inj_10_2:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_10_2:2",
+      "col_mux:CH2",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH10",
+      "cell_10_3:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_10_3:2",
+      "inj_10_3:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_10_3:2",
+      "col_mux:CH3",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH10",
+      "cell_10_4:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_10_4:2",
+      "inj_10_4:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_10_4:2",
+      "col_mux:CH4",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH10",
+      "cell_10_5:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_10_5:2",
+      "inj_10_5:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_10_5:2",
+      "col_mux:CH5",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH10",
+      "cell_10_6:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_10_6:2",
+      "inj_10_6:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_10_6:2",
+      "col_mux:CH6",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH10",
+      "cell_10_7:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_10_7:2",
+      "inj_10_7:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_10_7:2",
+      "col_mux:CH7",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH10",
+      "cell_10_8:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_10_8:2",
+      "inj_10_8:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_10_8:2",
+      "col_mux:CH8",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH10",
+      "cell_10_9:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_10_9:2",
+      "inj_10_9:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_10_9:2",
+      "col_mux:CH9",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH10",
+      "cell_10_10:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_10_10:2",
+      "inj_10_10:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_10_10:2",
+      "col_mux:CH10",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH10",
+      "cell_10_11:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_10_11:2",
+      "inj_10_11:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_10_11:2",
+      "col_mux:CH11",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH10",
+      "cell_10_12:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_10_12:2",
+      "inj_10_12:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_10_12:2",
+      "col_mux:CH12",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH10",
+      "cell_10_13:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_10_13:2",
+      "inj_10_13:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_10_13:2",
+      "col_mux:CH13",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH10",
+      "cell_10_14:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_10_14:2",
+      "inj_10_14:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_10_14:2",
+      "col_mux:CH14",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH10",
+      "cell_10_15:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_10_15:2",
+      "inj_10_15:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_10_15:2",
+      "col_mux:CH15",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH11",
+      "cell_11_0:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_11_0:2",
+      "inj_11_0:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_11_0:2",
+      "col_mux:CH0",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH11",
+      "cell_11_1:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_11_1:2",
+      "inj_11_1:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_11_1:2",
+      "col_mux:CH1",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH11",
+      "cell_11_2:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_11_2:2",
+      "inj_11_2:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_11_2:2",
+      "col_mux:CH2",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH11",
+      "cell_11_3:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_11_3:2",
+      "inj_11_3:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_11_3:2",
+      "col_mux:CH3",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH11",
+      "cell_11_4:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_11_4:2",
+      "inj_11_4:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_11_4:2",
+      "col_mux:CH4",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH11",
+      "cell_11_5:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_11_5:2",
+      "inj_11_5:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_11_5:2",
+      "col_mux:CH5",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH11",
+      "cell_11_6:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_11_6:2",
+      "inj_11_6:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_11_6:2",
+      "col_mux:CH6",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH11",
+      "cell_11_7:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_11_7:2",
+      "inj_11_7:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_11_7:2",
+      "col_mux:CH7",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH11",
+      "cell_11_8:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_11_8:2",
+      "inj_11_8:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_11_8:2",
+      "col_mux:CH8",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH11",
+      "cell_11_9:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_11_9:2",
+      "inj_11_9:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_11_9:2",
+      "col_mux:CH9",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH11",
+      "cell_11_10:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_11_10:2",
+      "inj_11_10:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_11_10:2",
+      "col_mux:CH10",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH11",
+      "cell_11_11:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_11_11:2",
+      "inj_11_11:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_11_11:2",
+      "col_mux:CH11",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH11",
+      "cell_11_12:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_11_12:2",
+      "inj_11_12:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_11_12:2",
+      "col_mux:CH12",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH11",
+      "cell_11_13:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_11_13:2",
+      "inj_11_13:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_11_13:2",
+      "col_mux:CH13",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH11",
+      "cell_11_14:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_11_14:2",
+      "inj_11_14:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_11_14:2",
+      "col_mux:CH14",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH11",
+      "cell_11_15:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_11_15:2",
+      "inj_11_15:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_11_15:2",
+      "col_mux:CH15",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH12",
+      "cell_12_0:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_12_0:2",
+      "inj_12_0:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_12_0:2",
+      "col_mux:CH0",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH12",
+      "cell_12_1:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_12_1:2",
+      "inj_12_1:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_12_1:2",
+      "col_mux:CH1",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH12",
+      "cell_12_2:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_12_2:2",
+      "inj_12_2:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_12_2:2",
+      "col_mux:CH2",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH12",
+      "cell_12_3:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_12_3:2",
+      "inj_12_3:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_12_3:2",
+      "col_mux:CH3",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH12",
+      "cell_12_4:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_12_4:2",
+      "inj_12_4:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_12_4:2",
+      "col_mux:CH4",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH12",
+      "cell_12_5:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_12_5:2",
+      "inj_12_5:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_12_5:2",
+      "col_mux:CH5",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH12",
+      "cell_12_6:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_12_6:2",
+      "inj_12_6:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_12_6:2",
+      "col_mux:CH6",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH12",
+      "cell_12_7:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_12_7:2",
+      "inj_12_7:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_12_7:2",
+      "col_mux:CH7",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH12",
+      "cell_12_8:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_12_8:2",
+      "inj_12_8:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_12_8:2",
+      "col_mux:CH8",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH12",
+      "cell_12_9:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_12_9:2",
+      "inj_12_9:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_12_9:2",
+      "col_mux:CH9",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH12",
+      "cell_12_10:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_12_10:2",
+      "inj_12_10:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_12_10:2",
+      "col_mux:CH10",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH12",
+      "cell_12_11:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_12_11:2",
+      "inj_12_11:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_12_11:2",
+      "col_mux:CH11",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH12",
+      "cell_12_12:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_12_12:2",
+      "inj_12_12:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_12_12:2",
+      "col_mux:CH12",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH12",
+      "cell_12_13:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_12_13:2",
+      "inj_12_13:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_12_13:2",
+      "col_mux:CH13",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH12",
+      "cell_12_14:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_12_14:2",
+      "inj_12_14:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_12_14:2",
+      "col_mux:CH14",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH12",
+      "cell_12_15:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_12_15:2",
+      "inj_12_15:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_12_15:2",
+      "col_mux:CH15",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH13",
+      "cell_13_0:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_13_0:2",
+      "inj_13_0:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_13_0:2",
+      "col_mux:CH0",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH13",
+      "cell_13_1:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_13_1:2",
+      "inj_13_1:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_13_1:2",
+      "col_mux:CH1",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH13",
+      "cell_13_2:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_13_2:2",
+      "inj_13_2:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_13_2:2",
+      "col_mux:CH2",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH13",
+      "cell_13_3:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_13_3:2",
+      "inj_13_3:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_13_3:2",
+      "col_mux:CH3",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH13",
+      "cell_13_4:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_13_4:2",
+      "inj_13_4:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_13_4:2",
+      "col_mux:CH4",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH13",
+      "cell_13_5:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_13_5:2",
+      "inj_13_5:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_13_5:2",
+      "col_mux:CH5",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH13",
+      "cell_13_6:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_13_6:2",
+      "inj_13_6:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_13_6:2",
+      "col_mux:CH6",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH13",
+      "cell_13_7:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_13_7:2",
+      "inj_13_7:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_13_7:2",
+      "col_mux:CH7",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH13",
+      "cell_13_8:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_13_8:2",
+      "inj_13_8:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_13_8:2",
+      "col_mux:CH8",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH13",
+      "cell_13_9:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_13_9:2",
+      "inj_13_9:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_13_9:2",
+      "col_mux:CH9",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH13",
+      "cell_13_10:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_13_10:2",
+      "inj_13_10:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_13_10:2",
+      "col_mux:CH10",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH13",
+      "cell_13_11:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_13_11:2",
+      "inj_13_11:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_13_11:2",
+      "col_mux:CH11",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH13",
+      "cell_13_12:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_13_12:2",
+      "inj_13_12:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_13_12:2",
+      "col_mux:CH12",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH13",
+      "cell_13_13:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_13_13:2",
+      "inj_13_13:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_13_13:2",
+      "col_mux:CH13",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH13",
+      "cell_13_14:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_13_14:2",
+      "inj_13_14:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_13_14:2",
+      "col_mux:CH14",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH13",
+      "cell_13_15:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_13_15:2",
+      "inj_13_15:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_13_15:2",
+      "col_mux:CH15",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH14",
+      "cell_14_0:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_14_0:2",
+      "inj_14_0:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_14_0:2",
+      "col_mux:CH0",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH14",
+      "cell_14_1:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_14_1:2",
+      "inj_14_1:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_14_1:2",
+      "col_mux:CH1",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH14",
+      "cell_14_2:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_14_2:2",
+      "inj_14_2:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_14_2:2",
+      "col_mux:CH2",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH14",
+      "cell_14_3:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_14_3:2",
+      "inj_14_3:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_14_3:2",
+      "col_mux:CH3",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH14",
+      "cell_14_4:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_14_4:2",
+      "inj_14_4:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_14_4:2",
+      "col_mux:CH4",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH14",
+      "cell_14_5:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_14_5:2",
+      "inj_14_5:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_14_5:2",
+      "col_mux:CH5",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH14",
+      "cell_14_6:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_14_6:2",
+      "inj_14_6:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_14_6:2",
+      "col_mux:CH6",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH14",
+      "cell_14_7:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_14_7:2",
+      "inj_14_7:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_14_7:2",
+      "col_mux:CH7",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH14",
+      "cell_14_8:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_14_8:2",
+      "inj_14_8:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_14_8:2",
+      "col_mux:CH8",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH14",
+      "cell_14_9:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_14_9:2",
+      "inj_14_9:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_14_9:2",
+      "col_mux:CH9",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH14",
+      "cell_14_10:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_14_10:2",
+      "inj_14_10:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_14_10:2",
+      "col_mux:CH10",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH14",
+      "cell_14_11:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_14_11:2",
+      "inj_14_11:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_14_11:2",
+      "col_mux:CH11",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH14",
+      "cell_14_12:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_14_12:2",
+      "inj_14_12:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_14_12:2",
+      "col_mux:CH12",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH14",
+      "cell_14_13:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_14_13:2",
+      "inj_14_13:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_14_13:2",
+      "col_mux:CH13",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH14",
+      "cell_14_14:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_14_14:2",
+      "inj_14_14:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_14_14:2",
+      "col_mux:CH14",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH14",
+      "cell_14_15:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_14_15:2",
+      "inj_14_15:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_14_15:2",
+      "col_mux:CH15",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH15",
+      "cell_15_0:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_15_0:2",
+      "inj_15_0:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_15_0:2",
+      "col_mux:CH0",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH15",
+      "cell_15_1:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_15_1:2",
+      "inj_15_1:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_15_1:2",
+      "col_mux:CH1",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH15",
+      "cell_15_2:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_15_2:2",
+      "inj_15_2:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_15_2:2",
+      "col_mux:CH2",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH15",
+      "cell_15_3:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_15_3:2",
+      "inj_15_3:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_15_3:2",
+      "col_mux:CH3",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH15",
+      "cell_15_4:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_15_4:2",
+      "inj_15_4:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_15_4:2",
+      "col_mux:CH4",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH15",
+      "cell_15_5:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_15_5:2",
+      "inj_15_5:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_15_5:2",
+      "col_mux:CH5",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH15",
+      "cell_15_6:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_15_6:2",
+      "inj_15_6:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_15_6:2",
+      "col_mux:CH6",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH15",
+      "cell_15_7:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_15_7:2",
+      "inj_15_7:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_15_7:2",
+      "col_mux:CH7",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH15",
+      "cell_15_8:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_15_8:2",
+      "inj_15_8:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_15_8:2",
+      "col_mux:CH8",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH15",
+      "cell_15_9:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_15_9:2",
+      "inj_15_9:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_15_9:2",
+      "col_mux:CH9",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH15",
+      "cell_15_10:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_15_10:2",
+      "inj_15_10:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_15_10:2",
+      "col_mux:CH10",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH15",
+      "cell_15_11:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_15_11:2",
+      "inj_15_11:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_15_11:2",
+      "col_mux:CH11",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH15",
+      "cell_15_12:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_15_12:2",
+      "inj_15_12:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_15_12:2",
+      "col_mux:CH12",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH15",
+      "cell_15_13:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_15_13:2",
+      "inj_15_13:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_15_13:2",
+      "col_mux:CH13",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH15",
+      "cell_15_14:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_15_14:2",
+      "inj_15_14:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_15_14:2",
+      "col_mux:CH14",
+      "orange",
+      []
+    ],
+    [
+      "row_mux:CH15",
+      "cell_15_15:1",
+      "orange",
+      []
+    ],
+    [
+      "cell_15_15:2",
+      "inj_15_15:1",
+      "orange",
+      []
+    ],
+    [
+      "inj_15_15:2",
+      "col_mux:CH15",
+      "orange",
+      []
+    ]
+  ],
+  "dependencies": {}
+}

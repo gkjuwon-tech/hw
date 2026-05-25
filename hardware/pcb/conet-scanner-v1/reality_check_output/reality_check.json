@@ -1,0 +1,805 @@
+{
+  "generated_at": "2026-05-25T02:16:07+00:00",
+  "verdict": "**\u26a0\ufe0f  Borderline. Order if you accept a v1 with caveats.**\n\nNo fire-level issues, but **9** MAJOR issues need manual review on the first article.\n\nSeverity counts:\n\n| Severity | Count |\n|---------:|------:|\n| FIRE (5) | 0 |\n| CRITICAL (4) | 0 |\n| MAJOR (3) | 9 |\n| WARNING (2) | 8 |\n| ADVISORY (1) | 1 |\n| INFO (0) | 1 |",
+  "findings": [
+    {
+      "module": "parse_bom",
+      "code": "BOM-COUNTERFEIT-RISK",
+      "title": "C155591 (TLV1117LV33DCYR (TI, SOT-223)) has documented counterfeit-risk on LCSC",
+      "severity": 2,
+      "detail": "If the part is a relabelled HT73xx clone, Vdo at 500 mA WiFi peak climbs to ~1.4 V leaving Vout = 5 - 1.4 = 3.6 V minus diode drops; OK on paper but thermal shutdown is the real risk.",
+      "refs": [
+        "U5"
+      ],
+      "data": {
+        "nominal": "('3.3 V +/- 1%', 'Iout 1 A', 'Vdo 1.15 V @ 1 A', 'RthJA 60 C/W')",
+        "worst": "('3.3 V +/- 3%', 'Iout 0.6 A before thermal foldback', 'Vdo 1.4 V @ 0.5 A', 'RthJA 80 C/W')"
+      }
+    },
+    {
+      "module": "parse_bom",
+      "code": "BOM-COUNTERFEIT-RISK",
+      "title": "C5183 (CD74HC4067SM96 (TI marking; LCSC often ships HGSemi or 3PEAK clone)) has documented counterfeit-risk on LCSC",
+      "severity": 2,
+      "detail": "*** Top measurement-quality risk ***. The ADC divider math assumes R_mux_on = 80 ohm in the schematic. Real R_on at 3V3 on a genuine TI is already 180 ohm; on a clone it can hit 450 ohm worst-case. With 2 muxes in series that is up to 900 ohm of fixed series resistance in front of R_cell. Below ~5 kohm of pressure the reading collapses into the mux noise floor.",
+      "refs": [
+        "U2",
+        "U3"
+      ],
+      "data": {
+        "nominal": "('R_on typ 180 ohm @ Vcc=3.3V', 'R_on max 270 ohm', 'Ileak <1 uA', 'tpd 30 ns')",
+        "worst": "('R_on typ 320 ohm @ Vcc=3.3V', 'R_on max 450 ohm', 'Ileak 5 uA at 70 C', 'tpd 50 ns')"
+      }
+    },
+    {
+      "module": "parse_cpl",
+      "code": "CPL-ROTATION-SUSPECT",
+      "title": "`D2` rotation 0 -- JLCPCB usually needs +270 for this footprint",
+      "severity": 3,
+      "detail": "`D2` (Top) is placed at rotation **0** but the JLCPCB rotation database recommends **+270** for this LCSC footprint relative to the EDA-tool zero orientation. If the EDA-tool zero matches the LCSC photo, this is fine; if not, the part will be soldered rotated and may either short pins or fail to make contact. **Verify against the LCSC product page photo before ordering.**",
+      "refs": [
+        "D2"
+      ],
+      "data": {
+        "rotation": 0,
+        "jlcpcb_offset": 270
+      }
+    },
+    {
+      "module": "parse_cpl",
+      "code": "CPL-ROTATION-SUSPECT",
+      "title": "`D3` rotation 0 -- JLCPCB usually needs +270 for this footprint",
+      "severity": 3,
+      "detail": "`D3` (Top) is placed at rotation **0** but the JLCPCB rotation database recommends **+270** for this LCSC footprint relative to the EDA-tool zero orientation. If the EDA-tool zero matches the LCSC photo, this is fine; if not, the part will be soldered rotated and may either short pins or fail to make contact. **Verify against the LCSC product page photo before ordering.**",
+      "refs": [
+        "D3"
+      ],
+      "data": {
+        "rotation": 0,
+        "jlcpcb_offset": 270
+      }
+    },
+    {
+      "module": "parse_cpl",
+      "code": "CPL-ROTATION-SUSPECT",
+      "title": "`J1` rotation 0 -- JLCPCB usually needs +90 for this footprint",
+      "severity": 3,
+      "detail": "`J1` (Top) is placed at rotation **0** but the JLCPCB rotation database recommends **+90** for this LCSC footprint relative to the EDA-tool zero orientation. If the EDA-tool zero matches the LCSC photo, this is fine; if not, the part will be soldered rotated and may either short pins or fail to make contact. **Verify against the LCSC product page photo before ordering.**",
+      "refs": [
+        "J1"
+      ],
+      "data": {
+        "rotation": 0,
+        "jlcpcb_offset": 90
+      }
+    },
+    {
+      "module": "parse_cpl",
+      "code": "CPL-ROTATION-SUSPECT",
+      "title": "`J2` rotation 0 -- JLCPCB usually needs +90 for this footprint",
+      "severity": 3,
+      "detail": "`J2` (Top) is placed at rotation **0** but the JLCPCB rotation database recommends **+90** for this LCSC footprint relative to the EDA-tool zero orientation. If the EDA-tool zero matches the LCSC photo, this is fine; if not, the part will be soldered rotated and may either short pins or fail to make contact. **Verify against the LCSC product page photo before ordering.**",
+      "refs": [
+        "J2"
+      ],
+      "data": {
+        "rotation": 0,
+        "jlcpcb_offset": 90
+      }
+    },
+    {
+      "module": "parse_cpl",
+      "code": "CPL-ROTATION-SUSPECT",
+      "title": "`U5` rotation 0 -- JLCPCB usually needs +180 for this footprint",
+      "severity": 3,
+      "detail": "`U5` (Top) is placed at rotation **0** but the JLCPCB rotation database recommends **+180** for this LCSC footprint relative to the EDA-tool zero orientation. If the EDA-tool zero matches the LCSC photo, this is fine; if not, the part will be soldered rotated and may either short pins or fail to make contact. **Verify against the LCSC product page photo before ordering.**",
+      "refs": [
+        "U5"
+      ],
+      "data": {
+        "rotation": 0,
+        "jlcpcb_offset": 180
+      }
+    },
+    {
+      "module": "parse_gerber",
+      "code": "GBR-LAYER-EMPTY",
+      "title": "Outer copper layer `conet-scanner-v1-B_Cu.gbr` is essentially empty (364 B, 1 traces)",
+      "severity": 3,
+      "detail": "`conet-scanner-v1-B_Cu.gbr` is 364 bytes with **1** drawn copper segments. For a 4-layer board this means there is no return path / pour on this outer layer. Signal integrity for any trace that depends on this layer as its reference plane (and microstrip impedance control) is compromised.\n\nIf this is `B_Cu`, USB D+/D- and digital I/O on the top layer have no controlled-impedance return; USB 12 Mbps still works but EMI and ESD margins are reduced. Add a solid GND pour on B_Cu before final tape-out.",
+      "refs": [
+        "conet-scanner-v1-B_Cu.gbr"
+      ],
+      "data": {}
+    },
+    {
+      "module": "power_budget",
+      "code": "PWR-LDO-BURST-TSD",
+      "title": "U5 burst die temp 174 C in WIFI_HOTPA exceeds thermal shutdown",
+      "severity": 3,
+      "detail": "WiFi burst peak in scenario `WIFI_HOTPA` (WiFi peak with hot PA (degraded silicon)) would, on a worst-case clone LDO at 40.0 C ambient, push the die to **174 C**. Clone TLV1117LV33 substitutes (HT7333, TP1117) trigger thermal shutdown around 120-140 C. The first burst on a clone part may foldback for tens of ms causing a brief +3V3 sag.\n\nMitigation:\n* Use larger copper pour around U5 tab (target RthJA <= 35 C/W).\n* Or replace U5 with an AP2112K-3.3 (LDO with native foldback + better RthJA).\n* Or push WiFi power down via `WiFi.setTxPower(WIFI_POWER_11dBm)` in firmware.",
+      "refs": [
+        "U5"
+      ],
+      "data": {
+        "scenario": "WIFI_HOTPA",
+        "description": "WiFi peak with hot PA (degraded silicon)",
+        "duration_class": "burst",
+        "i_out_3v3_ma": 700.0,
+        "i_in_5v_ma": 1400.0,
+        "v_ptc_v": 0.105,
+        "v_ldo_in_v": 4.595,
+        "v_3v3_v": 2.195,
+        "ldo_dropout_v": 2.4,
+        "ldo_dissipation_w": 1.68,
+        "ldo_die_temp_c": 174.4,
+        "ptc_tripped": false,
+        "case": "worst_clone_40C"
+      }
+    },
+    {
+      "module": "strapping_check",
+      "code": "STRAP-INFO-GPIO48",
+      "title": "GPIO48 (red LED) sits at ~0 V during boot via 1k+LED",
+      "severity": 0,
+      "detail": "GPIO48 is **not** a strapping pin on ESP32-S3 but it is left floating during the first ~300 ms of boot. The current schematic puts 1k -> red LED -> GND on this pin. During boot the pin floats high-Z; the LED is dark. After firmware takes over the pin is driven explicitly. No risk. **Just confirming we checked.**",
+      "refs": [
+        "U1.GPIO48",
+        "D3",
+        "R21"
+      ],
+      "data": {}
+    },
+    {
+      "module": "strapping_check",
+      "code": "STRAP-ANTENNA-KEEPOUT",
+      "title": "WROOM-1 antenna keep-out (15 mm) not satisfiable on 60x40 board",
+      "severity": 2,
+      "detail": "ESP32-S3-WROOM-1 datasheet requires 15 mm of antenna keep-out (no copper, no metal). With U1 placed at (30, 22) mm on a 60 x 40 mm board, the antenna extends past the board edge -- WiFi link budget is reduced by ~6 dB. Documented as a known issue in README.md; included here for completeness so field deployments default to wired Ethernet.",
+      "refs": [
+        "U1"
+      ],
+      "data": {}
+    },
+    {
+      "module": "strapping_check",
+      "code": "STRAP-PSRAM-VARIANT",
+      "title": "Firmware must be built for `N8R8` octal PSRAM variant specifically",
+      "severity": 2,
+      "detail": "BOM specifies ESP32-S3-WROOM-1**-N8R8** (8 MB flash + 8 MB octal PSRAM). The firmware in `firmware/tactile_scanner_esp32` must be compiled with `CONFIG_SPIRAM_MODE_OCT=y` and `CONFIG_ESPTOOLPY_FLASHSIZE_8MB=y`. If a stock Arduino IDE board profile for 'ESP32-S3 DevKitC' is used, PSRAM stays in quad mode and accesses fail silently. The CI build script `firmware/.../wokwi/build_firmware.sh` needs auditing for the right platformio env.",
+      "refs": [
+        "U1"
+      ],
+      "data": {}
+    },
+    {
+      "module": "adc_divider",
+      "code": "ADC-DYNAMIC-RANGE",
+      "title": "Real ADC dynamic range with MUX R_on reality is 2232 counts (12-bit) -- 2348 per schematic",
+      "severity": 2,
+      "detail": "The schematic divider math is optimistic. Computed counts between un-pressed (R_cell=30 kohm) and fully pressed (R_cell=2 kohm):\n\n* Schematic (R_mux=80 ohm):     low=1020 hi=3368 span=2348\n* Genuine TI typ (R_mux=180):   low=1015 hi=3313 span=2298\n* Genuine TI worst (R_mux=270): low=1010 hi=3266 span=2256\n* Clone typ (R_mux=320):        low=1008 hi=3240 span=2232\n* Clone worst (R_mux=450):      low=1001 hi=3174 span=2173\n\nNumbers stay healthy (~2000 counts out of 4095) even on a clone, but the calibration is no longer linear in pressure -- a per-cell baseline subtraction remains mandatory. Reality model passes.",
+      "refs": [
+        "U2",
+        "U3",
+        "R30"
+      ],
+      "data": {
+        "table": [
+          {
+            "r_cell_ohm": 100000,
+            "v_schematic": 0.2996,
+            "adc_schematic": 372,
+            "v_ti_typ": 0.299,
+            "adc_ti_typ": 371,
+            "v_ti_worst": 0.2985,
+            "adc_ti_worst": 370,
+            "v_clone_typ": 0.2983,
+            "adc_clone_typ": 370,
+            "v_clone_worst": 0.2976,
+            "adc_clone_worst": 369
+          },
+          {
+            "r_cell_ohm": 30000,
+            "v_schematic": 0.8217,
+            "adc_schematic": 1020,
+            "v_ti_typ": 0.8176,
+            "adc_ti_typ": 1015,
+            "v_ti_worst": 0.814,
+            "adc_ti_worst": 1010,
+            "v_clone_typ": 0.812,
+            "adc_clone_typ": 1008,
+            "v_clone_worst": 0.8068,
+            "adc_clone_worst": 1001
+          },
+          {
+            "r_cell_ohm": 15000,
+            "v_schematic": 1.3116,
+            "adc_schematic": 1628,
+            "v_ti_typ": 1.3013,
+            "adc_ti_typ": 1615,
+            "v_ti_worst": 1.2921,
+            "adc_ti_worst": 1603,
+            "v_clone_typ": 1.2871,
+            "adc_clone_typ": 1597,
+            "v_clone_worst": 1.2741,
+            "adc_clone_worst": 1581
+          },
+          {
+            "r_cell_ohm": 8000,
+            "v_schematic": 1.8172,
+            "adc_schematic": 2255,
+            "v_ti_typ": 1.7974,
+            "adc_ti_typ": 2230,
+            "v_ti_worst": 1.7799,
+            "adc_ti_worst": 2209,
+            "v_clone_typ": 1.7704,
+            "adc_clone_typ": 2197,
+            "v_clone_worst": 1.746,
+            "adc_clone_worst": 2167
+          },
+          {
+            "r_cell_ohm": 4000,
+            "v_schematic": 2.3305,
+            "adc_schematic": 2892,
+            "v_ti_typ": 2.2981,
+            "adc_ti_typ": 2852,
+            "v_ti_worst": 2.2696,
+            "adc_ti_worst": 2816,
+            "v_clone_typ": 2.2541,
+            "adc_clone_typ": 2797,
+            "v_clone_worst": 2.2148,
+            "adc_clone_worst": 2748
+          },
+          {
+            "r_cell_ohm": 2000,
+            "v_schematic": 2.7138,
+            "adc_schematic": 3368,
+            "v_ti_typ": 2.6699,
+            "adc_ti_typ": 3313,
+            "v_ti_worst": 2.6316,
+            "adc_ti_worst": 3266,
+            "v_clone_typ": 2.6108,
+            "adc_clone_typ": 3240,
+            "v_clone_worst": 2.5581,
+            "adc_clone_worst": 3174
+          },
+          {
+            "r_cell_ohm": 1000,
+            "v_schematic": 2.957,
+            "adc_schematic": 3669,
+            "v_ti_typ": 2.9049,
+            "adc_ti_typ": 3605,
+            "v_ti_worst": 2.8596,
+            "adc_ti_worst": 3549,
+            "v_clone_typ": 2.8351,
+            "adc_clone_typ": 3518,
+            "v_clone_worst": 2.7731,
+            "adc_clone_worst": 3441
+          },
+          {
+            "r_cell_ohm": 500,
+            "v_schematic": 3.0957,
+            "adc_schematic": 3841,
+            "v_ti_typ": 3.0387,
+            "adc_ti_typ": 3771,
+            "v_ti_worst": 2.9891,
+            "adc_ti_worst": 3709,
+            "v_clone_typ": 2.9623,
+            "adc_clone_typ": 3676,
+            "v_clone_worst": 2.8947,
+            "adc_clone_worst": 3592
+          }
+        ],
+        "dyn": {
+          "schematic": [
+            1020,
+            3368,
+            2348
+          ],
+          "ti_typ": [
+            1015,
+            3313,
+            2298
+          ],
+          "ti_worst": [
+            1010,
+            3266,
+            2256
+          ],
+          "clone_typ": [
+            1008,
+            3240,
+            2232
+          ],
+          "clone_worst": [
+            1001,
+            3174,
+            2173
+          ]
+        }
+      }
+    },
+    {
+      "module": "adc_divider",
+      "code": "ADC-ADS-PGA-CAUTION",
+      "title": "ADS1115 path B requires PGA gain = 1 (FS = +/-4.096V)",
+      "severity": 2,
+      "detail": "When jumper SJ1 routes U2 SIG to ADS1115 AIN0, the input swings 0..3.3 V single-ended. The ADS PGA defaults to gain 2 (FS = +/-2.048 V) on hardware reset; that saturates at 2.048 V => values above ~62% of full pressure clip. Firmware must explicitly set PGA = 001 (FS = +/-4.096 V) before the first read. README claims `PGA up to +/-0.256 V` which is the opposite end of the gain table -- the README text is wrong and will mislead anyone bringing up path B.",
+      "refs": [
+        "U4",
+        "SJ1"
+      ],
+      "data": {}
+    },
+    {
+      "module": "topology_check",
+      "code": "TOPO-WOKWI-MIRRORED",
+      "title": "Wokwi diagram and schematic disagree on which MUX feeds the ADC",
+      "severity": 3,
+      "detail": "Wokwi `diagram.json`:\n* `row_mux:SIG` <-> `esp:3V3.1`      (row side = current source)\n* `col_mux:SIG` <-> `esp:1`           (col side = ADC)\n* `col_mux:SIG` <-> 10k <-> GND       (pull-down on col side)\n\nSchematic prose:\n* `U2 SIG` -> `ADC_IN` -> `GPIO 1`    (row side = ADC, per the netlist)\n* `U3 SIG` -> R30 10k -> GND          (col side pulled down)\n\nThe two describe **mirror-image** circuits. The math (and the firmware) doesn't care which side is the source and which side is the ADC -- the divider produces the same V_ADC either way. But:\n\n1. The PCB copper has to match *one* of them. If the layout follows the    schematic, the simulator is testing a circuit that doesn't exist on    silicon.\n2. The firmware reads `GPIO 1 (ADC1_CH0) = ADC_IN`. In the schematic    wiring this is U2.SIG (row side); in the Wokwi wiring it is U3.SIG    (col side). The MUX row/col select code in `.ino` assumes the **row    side is the constant +3V3 source** (one MUX always drives, the other    always samples) -- this matches Wokwi, not schematic prose.\n\nConclusion: **the schematic prose is wrong; the Wokwi diagram is right**. Update `schematic.md` so the netlist matches the silicon. The PCB Gerbers should be re-inspected to confirm copper actually routes `+3V3` to `U2.SIG` and not the other way around.",
+      "refs": [
+        "schematic.md",
+        "diagram.json"
+      ],
+      "data": {}
+    },
+    {
+      "module": "topology_check",
+      "code": "TOPO-FIRMWARE-INA826",
+      "title": "firmware comment claims INA826 differential amp; BOM does not include one",
+      "severity": 2,
+      "detail": "`tactile_scanner_esp32.ino` top-of-file comment:\n\n> ... samples one piezo-resistive cell at a time through an **INA826 differential amplifier** connected to ADC1.\n\nThe BOM has no INA826. The `analogRead(ADC_PIN)` in the actual loop reads the MUX SIG node directly with no front-end amplification.\n\nEither:\n* The comment is stale and should be removed -- silicon doesn't have   an INA826; the divider math runs unbuffered.\n* Or path B (ADS1115) was supposed to be the differential path and the   INA826 mention is a leftover from an earlier revision.\n\nCosmetic but misleading; flag for whoever brings up the first article.",
+      "refs": [
+        "tactile_scanner_esp32.ino"
+      ],
+      "data": {}
+    },
+    {
+      "module": "topology_check",
+      "code": "TOPO-WOKWI-BOARD-MISMATCH",
+      "title": "Wokwi board attrs do not match the WROOM-1-N8R8 part on the BOM",
+      "severity": 3,
+      "detail": "`psramType` = `none`, but real module is WROOM-1-**N8R8** (8 MB octal PSRAM). Any firmware code that uses PSRAM (`ESP.getPsramSize() > 0`) passes the wokwi test silently and fails on silicon.\n\n`flashSize` = `4` MB, but real module is **N8** (8 MB). Partition tables that overflow the simulator's 4 MB image will be silently truncated by wokwi and crash on silicon.",
+      "refs": [
+        "diagram.json",
+        "U1"
+      ],
+      "data": {}
+    },
+    {
+      "module": "topology_check",
+      "code": "TOPO-WOKWI-CELL-COVERAGE",
+      "title": "Wokwi diagram only models 5 cells out of 256",
+      "severity": 1,
+      "detail": "The 16x16 mesh has 256 cells. The Wokwi diagram instantiates only **5** of them as wokwi-resistor parts. The remaining 251 cells appear as open circuits to the simulator. The scan loop will read those positions as 0 mV (good baseline) but the MUX cross-talk and leakage through unmodelled cells is invisible to the test. Test coverage is happy-path only.",
+      "refs": [
+        "diagram.json"
+      ],
+      "data": {}
+    },
+    {
+      "module": "software_sim",
+      "code": "SIM-FALSE-POSITIVE",
+      "title": "`no_press` matrix yielded 256 non-zero cells",
+      "severity": 2,
+      "detail": "With every cell at the un-pressed value (~R_cell=30 kohm), the compressed payload should be near-zero everywhere. Seeing 256 non-zero cells means the noise floor / kAdcDead threshold (32 counts) is too low for the real divider output (~1000 counts with R_mux=320 ohm). The firmware will report phantom touches on an unloaded mesh. **Recommend raising kAdcDead to ~80 counts or adding a per-cell baseline.**",
+      "refs": [
+        "scanner_frame.h"
+      ],
+      "data": {}
+    }
+  ],
+  "power_table": [
+    {
+      "scenario": "IDLE",
+      "description": "CPU 240 MHz, WiFi off, no scan",
+      "duration_class": "steady",
+      "i_out_3v3_ma": 30.0,
+      "i_in_5v_ma": 45.5,
+      "v_ptc_v": 0.003,
+      "v_ldo_in_v": 4.997,
+      "v_3v3_v": 3.3,
+      "ldo_dropout_v": 0.203,
+      "ldo_dissipation_w": 0.051,
+      "ldo_die_temp_c": 28.1,
+      "ptc_tripped": false,
+      "case": "typ_ti_25C"
+    },
+    {
+      "scenario": "SCAN",
+      "description": "200 Hz scan loop, MUX active, WiFi off",
+      "duration_class": "steady",
+      "i_out_3v3_ma": 60.0,
+      "i_in_5v_ma": 90.9,
+      "v_ptc_v": 0.007,
+      "v_ldo_in_v": 4.993,
+      "v_3v3_v": 3.3,
+      "ldo_dropout_v": 0.246,
+      "ldo_dissipation_w": 0.102,
+      "ldo_die_temp_c": 31.1,
+      "ptc_tripped": false,
+      "case": "typ_ti_25C"
+    },
+    {
+      "scenario": "WIFI_AVG",
+      "description": "WiFi connected, average current",
+      "duration_class": "steady",
+      "i_out_3v3_ma": 200.0,
+      "i_in_5v_ma": 303.0,
+      "v_ptc_v": 0.023,
+      "v_ldo_in_v": 4.977,
+      "v_3v3_v": 3.3,
+      "ldo_dropout_v": 0.448,
+      "ldo_dissipation_w": 0.335,
+      "ldo_die_temp_c": 45.1,
+      "ptc_tripped": false,
+      "case": "typ_ti_25C"
+    },
+    {
+      "scenario": "WIFI_PEAK",
+      "description": "WiFi TX peak inside a burst (us..ms duration)",
+      "duration_class": "burst",
+      "i_out_3v3_ma": 500.0,
+      "i_in_5v_ma": 757.6,
+      "v_ptc_v": 0.057,
+      "v_ldo_in_v": 4.943,
+      "v_3v3_v": 3.3,
+      "ldo_dropout_v": 0.88,
+      "ldo_dissipation_w": 0.822,
+      "ldo_die_temp_c": 74.3,
+      "ptc_tripped": false,
+      "case": "typ_ti_25C"
+    },
+    {
+      "scenario": "WIFI_HOTPA",
+      "description": "WiFi peak with hot PA (degraded silicon)",
+      "duration_class": "burst",
+      "i_out_3v3_ma": 700.0,
+      "i_in_5v_ma": 1060.6,
+      "v_ptc_v": 0.08,
+      "v_ldo_in_v": 4.92,
+      "v_3v3_v": 3.3,
+      "ldo_dropout_v": 1.168,
+      "ldo_dissipation_w": 1.134,
+      "ldo_die_temp_c": 93.1,
+      "ptc_tripped": false,
+      "case": "typ_ti_25C"
+    },
+    {
+      "scenario": "IDLE",
+      "description": "CPU 240 MHz, WiFi off, no scan",
+      "duration_class": "steady",
+      "i_out_3v3_ma": 30.0,
+      "i_in_5v_ma": 42.7,
+      "v_ptc_v": 0.003,
+      "v_ldo_in_v": 4.697,
+      "v_3v3_v": 3.3,
+      "ldo_dropout_v": 0.364,
+      "ldo_dissipation_w": 0.042,
+      "ldo_die_temp_c": 43.4,
+      "ptc_tripped": false,
+      "case": "worst_clone_40C"
+    },
+    {
+      "scenario": "SCAN",
+      "description": "200 Hz scan loop, MUX active, WiFi off",
+      "duration_class": "steady",
+      "i_out_3v3_ma": 60.0,
+      "i_in_5v_ma": 85.5,
+      "v_ptc_v": 0.006,
+      "v_ldo_in_v": 4.694,
+      "v_3v3_v": 3.3,
+      "ldo_dropout_v": 0.428,
+      "ldo_dissipation_w": 0.084,
+      "ldo_die_temp_c": 46.7,
+      "ptc_tripped": false,
+      "case": "worst_clone_40C"
+    },
+    {
+      "scenario": "WIFI_AVG",
+      "description": "WiFi connected, average current",
+      "duration_class": "steady",
+      "i_out_3v3_ma": 200.0,
+      "i_in_5v_ma": 284.8,
+      "v_ptc_v": 0.021,
+      "v_ldo_in_v": 4.679,
+      "v_3v3_v": 3.3,
+      "ldo_dropout_v": 0.727,
+      "ldo_dissipation_w": 0.276,
+      "ldo_die_temp_c": 62.1,
+      "ptc_tripped": false,
+      "case": "worst_clone_40C"
+    },
+    {
+      "scenario": "WIFI_PEAK",
+      "description": "WiFi TX peak inside a burst (us..ms duration)",
+      "duration_class": "burst",
+      "i_out_3v3_ma": 500.0,
+      "i_in_5v_ma": 718.4,
+      "v_ptc_v": 0.054,
+      "v_ldo_in_v": 4.646,
+      "v_3v3_v": 3.268,
+      "ldo_dropout_v": 1.378,
+      "ldo_dissipation_w": 0.689,
+      "ldo_die_temp_c": 95.1,
+      "ptc_tripped": false,
+      "case": "worst_clone_40C"
+    },
+    {
+      "scenario": "WIFI_HOTPA",
+      "description": "WiFi peak with hot PA (degraded silicon)",
+      "duration_class": "burst",
+      "i_out_3v3_ma": 700.0,
+      "i_in_5v_ma": 1400.0,
+      "v_ptc_v": 0.105,
+      "v_ldo_in_v": 4.595,
+      "v_3v3_v": 2.195,
+      "ldo_dropout_v": 2.4,
+      "ldo_dissipation_w": 1.68,
+      "ldo_die_temp_c": 174.4,
+      "ptc_tripped": false,
+      "case": "worst_clone_40C"
+    }
+  ],
+  "adc_table": [
+    {
+      "r_cell_ohm": 100000,
+      "v_schematic": 0.2996,
+      "adc_schematic": 372,
+      "v_ti_typ": 0.299,
+      "adc_ti_typ": 371,
+      "v_ti_worst": 0.2985,
+      "adc_ti_worst": 370,
+      "v_clone_typ": 0.2983,
+      "adc_clone_typ": 370,
+      "v_clone_worst": 0.2976,
+      "adc_clone_worst": 369
+    },
+    {
+      "r_cell_ohm": 30000,
+      "v_schematic": 0.8217,
+      "adc_schematic": 1020,
+      "v_ti_typ": 0.8176,
+      "adc_ti_typ": 1015,
+      "v_ti_worst": 0.814,
+      "adc_ti_worst": 1010,
+      "v_clone_typ": 0.812,
+      "adc_clone_typ": 1008,
+      "v_clone_worst": 0.8068,
+      "adc_clone_worst": 1001
+    },
+    {
+      "r_cell_ohm": 15000,
+      "v_schematic": 1.3116,
+      "adc_schematic": 1628,
+      "v_ti_typ": 1.3013,
+      "adc_ti_typ": 1615,
+      "v_ti_worst": 1.2921,
+      "adc_ti_worst": 1603,
+      "v_clone_typ": 1.2871,
+      "adc_clone_typ": 1597,
+      "v_clone_worst": 1.2741,
+      "adc_clone_worst": 1581
+    },
+    {
+      "r_cell_ohm": 8000,
+      "v_schematic": 1.8172,
+      "adc_schematic": 2255,
+      "v_ti_typ": 1.7974,
+      "adc_ti_typ": 2230,
+      "v_ti_worst": 1.7799,
+      "adc_ti_worst": 2209,
+      "v_clone_typ": 1.7704,
+      "adc_clone_typ": 2197,
+      "v_clone_worst": 1.746,
+      "adc_clone_worst": 2167
+    },
+    {
+      "r_cell_ohm": 4000,
+      "v_schematic": 2.3305,
+      "adc_schematic": 2892,
+      "v_ti_typ": 2.2981,
+      "adc_ti_typ": 2852,
+      "v_ti_worst": 2.2696,
+      "adc_ti_worst": 2816,
+      "v_clone_typ": 2.2541,
+      "adc_clone_typ": 2797,
+      "v_clone_worst": 2.2148,
+      "adc_clone_worst": 2748
+    },
+    {
+      "r_cell_ohm": 2000,
+      "v_schematic": 2.7138,
+      "adc_schematic": 3368,
+      "v_ti_typ": 2.6699,
+      "adc_ti_typ": 3313,
+      "v_ti_worst": 2.6316,
+      "adc_ti_worst": 3266,
+      "v_clone_typ": 2.6108,
+      "adc_clone_typ": 3240,
+      "v_clone_worst": 2.5581,
+      "adc_clone_worst": 3174
+    },
+    {
+      "r_cell_ohm": 1000,
+      "v_schematic": 2.957,
+      "adc_schematic": 3669,
+      "v_ti_typ": 2.9049,
+      "adc_ti_typ": 3605,
+      "v_ti_worst": 2.8596,
+      "adc_ti_worst": 3549,
+      "v_clone_typ": 2.8351,
+      "adc_clone_typ": 3518,
+      "v_clone_worst": 2.7731,
+      "adc_clone_worst": 3441
+    },
+    {
+      "r_cell_ohm": 500,
+      "v_schematic": 3.0957,
+      "adc_schematic": 3841,
+      "v_ti_typ": 3.0387,
+      "adc_ti_typ": 3771,
+      "v_ti_worst": 2.9891,
+      "adc_ti_worst": 3709,
+      "v_clone_typ": 2.9623,
+      "adc_clone_typ": 3676,
+      "v_clone_worst": 2.8947,
+      "adc_clone_worst": 3592
+    }
+  ],
+  "gerber_summary": {
+    "layers": [
+      {
+        "name": "conet-scanner-v1-B_Cu.gbr",
+        "bytes": 364,
+        "n_traces": 1,
+        "min_aperture_mm": 0.25,
+        "n_apertures": 1,
+        "bbox": [
+          2.5,
+          2.5,
+          5.5,
+          2.5
+        ]
+      },
+      {
+        "name": "conet-scanner-v1-B_Mask.gbr",
+        "bytes": 294,
+        "n_traces": 0,
+        "min_aperture_mm": null,
+        "n_apertures": 0,
+        "bbox": null
+      },
+      {
+        "name": "conet-scanner-v1-B_Silkscreen.gbr",
+        "bytes": 23230,
+        "n_traces": 497,
+        "min_aperture_mm": 0.13,
+        "n_apertures": 3,
+        "bbox": [
+          15.799999999999999,
+          16.65,
+          44.566666999999995,
+          22.7
+        ]
+      },
+      {
+        "name": "conet-scanner-v1-Edge_Cuts.gbr",
+        "bytes": 1765,
+        "n_traces": 69,
+        "min_aperture_mm": 0.1,
+        "n_apertures": 1,
+        "bbox": [
+          0.0,
+          0.0,
+          60.0,
+          40.0
+        ]
+      },
+      {
+        "name": "conet-scanner-v1-F_Cu.gbr",
+        "bytes": 13841,
+        "n_traces": 148,
+        "min_aperture_mm": 0.25,
+        "n_apertures": 20,
+        "bbox": [
+          2.5149999999999997,
+          1.44,
+          57.485,
+          37.5
+        ]
+      },
+      {
+        "name": "conet-scanner-v1-F_Mask.gbr",
+        "bytes": 7047,
+        "n_traces": 0,
+        "min_aperture_mm": 1.5,
+        "n_apertures": 19,
+        "bbox": [
+          2.5149999999999997,
+          1.44,
+          57.485,
+          37.5
+        ]
+      },
+      {
+        "name": "conet-scanner-v1-F_Paste.gbr",
+        "bytes": 6366,
+        "n_traces": 0,
+        "min_aperture_mm": null,
+        "n_apertures": 16,
+        "bbox": [
+          2.5149999999999997,
+          3.0999999999999996,
+          57.485,
+          37.5
+        ]
+      },
+      {
+        "name": "conet-scanner-v1-F_Silkscreen.gbr",
+        "bytes": 72796,
+        "n_traces": 1622,
+        "min_aperture_mm": 0.13,
+        "n_apertures": 42,
+        "bbox": [
+          1.65,
+          0.09999999999999999,
+          58.349999999999994,
+          39.4
+        ]
+      },
+      {
+        "name": "conet-scanner-v1-In1_Cu.gbr",
+        "bytes": 1546,
+        "n_traces": 45,
+        "min_aperture_mm": 0.0,
+        "n_apertures": 3,
+        "bbox": [
+          0.3,
+          0.3,
+          59.699999999999996,
+          39.699999999999996
+        ]
+      },
+      {
+        "name": "conet-scanner-v1-In2_Cu.gbr",
+        "bytes": 1546,
+        "n_traces": 45,
+        "min_aperture_mm": 0.0,
+        "n_apertures": 3,
+        "bbox": [
+          0.3,
+          0.3,
+          59.699999999999996,
+          39.699999999999996
+        ]
+      }
+    ],
+    "drills": [
+      {
+        "name": "conet-scanner-v1-NPTH.drl",
+        "bytes": 212,
+        "hits": 4,
+        "min_drill_mm": 2.7,
+        "n_tools": 1
+      },
+      {
+        "name": "conet-scanner-v1-PTH.drl",
+        "bytes": 211,
+        "hits": 4,
+        "min_drill_mm": 0.8,
+        "n_tools": 1
+      }
+    ],
+    "outline": {
+      "bytes": 1765,
+      "bbox": [
+        0.0,
+        0.0,
+        60.0,
+        40.0
+      ],
+      "total_perimeter_mm": 196.56132511996407
+    }
+  }
+}

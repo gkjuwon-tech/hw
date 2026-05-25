@@ -202,4 +202,36 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Conet-Tactile-Windows-Setup
-          path: desktop/release/*.exe
+          path: desktop/release/*.exe  pcb-reality-check:
+    # Reality-check gate for the PCB manufacturing artifacts. Runs every push.
+    # Fails the build if any finding is severity >= CRITICAL (4). Uploads
+    # REALITY_CHECK.md and the JSON sidecar as artifacts so reviewers can read
+    # the verdict in the PR without checking out the branch.
+    name: hardware — PCB reality check
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: hardware/pcb/conet-scanner-v1
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build host-mode scanner simulator (used by software_sim)
+        run: make -C ../../../firmware/tactile_scanner_esp32/wokwi/host_sim
+
+      - name: Run reality_check (must be all severity < 4)
+        run: python3 -m tools.reality_check
+
+      - name: Upload reality-check artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reality-check
+          path: |
+            hardware/pcb/conet-scanner-v1/REALITY_CHECK.md
+            hardware/pcb/conet-scanner-v1/reality_check_output/reality_check.json
+            firmware/tactile_scanner_esp32/wokwi/diagram.reality.json
