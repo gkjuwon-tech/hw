@@ -24,6 +24,14 @@ Attribution is provided here as a courtesy.
 | `shipping-port.jpg` | `1494412651409-8963ce7935a7` | chuttersnap |
 | `cloud-operator.jpg` | `1581091226825-a6a2a5aee158` | ThisisEngineering |
 | `engineering-review.jpg` | `1581094288338-2314dddb7ece` | ThisisEngineering |
+| `hw-board.jpg` | `1518770660439-4636190af475` | Alexandre Debiève |
+| `hw-appliance.jpg` | `1591488320449-011701bb6704` | Nana Dua |
+| `hw-rig.jpg` | `1581092334651-ddf26d9a09d0` | ThisisEngineering |
+| `hw-cad.jpg` | `1581092580497-e0d23cbdf1dc` | ThisisEngineering |
+| `hw-desk.jpg` | `1593642632559-0c6d3fc62b89` | Domenico Loia |
+| `hw-dial.jpg` | `1581092335397-9583eb92d232` | ThisisEngineering |
+| `hw-warehouse.jpg` | `1586528116311-ad8dd3c8310d` | Petrebels |
+| `hw-aerial.jpg` | `1565891741441-64926e441838` | Marcin Jozwiak |
 
 `_fetch.sh` is the reference script used to populate this directory; it pulls
 from `images.unsplash.com`, which is the CDN entry point for the Unsplash
