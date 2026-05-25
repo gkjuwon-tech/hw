@@ -62,9 +62,9 @@
   --line-strong: #000000;    /* outer chrome borders */
 
   /* ── accent (chrome) ────────────────────────────────────────────── */
-  --navy: #4f7d1f;           /* brand green, titlebar bg */
-  --navy-deep: #355414;
-  --navy-on: #ffffff;
+  --lime: #4f7d1f;           /* brand green, titlebar bg */
+  --lime-deep: #355414;
+  --lime-on: #ffffff;
   --link: #426d18;
   --selection: #3f6618;      /* selected row in a table / nav */
   --selection-on: #ffffff;

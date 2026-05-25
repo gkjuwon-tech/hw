@@ -132,7 +132,7 @@ export async function startSidecar(): Promise<SidecarHandle> {
   });
 
   try {
-    await waitForHealthz(port, 15_000);
+    await waitForHealthz(port, 60_000);
   } catch (err) {
     proc.kill("SIGTERM");
     throw err;

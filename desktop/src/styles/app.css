@@ -3,7 +3,7 @@
 
    Layout:
 
-       ┌── titlebar (navy) ────────────────────────────────────────────┐
+       ┌── titlebar (lime) ────────────────────────────────────────────┐
        │                                                               │
        ├──────────┬────────────────────────────────────────────────────┤
        │ device   │  toolbar (gray, button strip)                      │
@@ -36,11 +36,11 @@
   border-bottom: 1px solid var(--line-strong);
 }
 
-/* ---------- titlebar (navy header with build/uptime) ---------- */
+/* ---------- titlebar (lime header with build/uptime) ---------- */
 .titlebar {
   position: relative;
-  background: var(--navy);
-  color: var(--navy-on);
+  background: var(--lime);
+  color: var(--lime-on);
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
@@ -51,7 +51,7 @@
   -webkit-app-region: drag;
   /* Banded two-tone fill + 1px CRT scanlines. The repeating-linear-
      gradient renders as one black scanline per two pixels and gives
-     the navy bar a real "glowing CRT" presence instead of a flat
+     the lime bar a real "glowing CRT" presence instead of a flat
      web-2.0 hero block. */
   background-image:
     repeating-linear-gradient(
@@ -63,10 +63,10 @@
     ),
     linear-gradient(
       90deg,
-      var(--navy-deep) 0,
-      var(--navy-deep) 12px,
-      var(--navy) 12px,
-      var(--navy) 100%
+      var(--lime-deep) 0,
+      var(--lime-deep) 12px,
+      var(--lime) 12px,
+      var(--lime) 100%
     );
   /* Hard 1px highlight along the very top edge — classic CDE/Win95
      "window has a light source above" cue. */
@@ -92,7 +92,7 @@
   content: "";
   position: absolute;
   inset: 3px;
-  background: var(--navy);
+  background: var(--lime);
 }
 .titlebar__meta {
   font-family: var(--font-mono);
@@ -207,12 +207,12 @@
   text-shadow: 1px 1px 0 var(--bevel-hi);
 }
 .btn--primary {
-  background: var(--navy);
-  color: var(--navy-on);
-  border-color: var(--navy-deep);
+  background: var(--lime);
+  color: var(--lime-on);
+  border-color: var(--lime-deep);
 }
 .btn--primary:active {
-  background: var(--navy-deep);
+  background: var(--lime-deep);
 }
 .btn--danger {
   color: #ffffff;
@@ -832,7 +832,7 @@
   background: var(--surface-3);
 }
 .step[data-state="active"] .step__num {
-  color: var(--navy);
+  color: var(--lime);
   font-weight: 700;
 }
 .step[data-state="done"] .step__num::before {
@@ -882,7 +882,7 @@
 .field input:focus,
 .field select:focus,
 .field textarea:focus {
-  outline: 1px dotted var(--navy);
+  outline: 1px dotted var(--lime);
   outline-offset: -3px;
 }
 .field input:disabled {
@@ -943,7 +943,7 @@
 
 /* ---------- focus ---------- */
 :focus-visible {
-  outline: 1px dotted var(--navy);
+  outline: 1px dotted var(--lime);
   outline-offset: -2px;
 }
 

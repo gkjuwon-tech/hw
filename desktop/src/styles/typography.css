@@ -102,7 +102,7 @@ img {
 .eyebrow__dot {
   width: 8px;
   height: 8px;
-  background: var(--navy);
+  background: var(--lime);
   display: inline-block;
 }
 
@@ -212,7 +212,7 @@ img {
   position: absolute;
   left: 2px;
   top: 0;
-  color: var(--navy);
+  color: var(--lime);
   font-weight: 700;
 }
 

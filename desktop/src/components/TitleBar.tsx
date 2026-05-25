@@ -1,5 +1,5 @@
 /**
- * Title bar — the navy strip across the very top of the window.
+ * Title bar — the lime strip across the very top of the window.
  *
  * Carries the product mark, the resolved sidecar host, and the agent
  * build label. Acts as an Electron drag region (everything but the
