@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Tactile Edge — Conet Tactile</title>
+    <meta
+      name="description"
+      content="A fanless inference appliance for the line cabinet. Order direct, ship from Seoul in three weeks, activate Tactile Cloud with the first month on us."
+    />
+    <meta name="theme-color" content="#0b0c0a" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="../styles.css" />
+    <link rel="stylesheet" href="product.css" />
+  </head>
+
+  <body>
+    <a class="skiplink" href="#main">Skip to content</a>
+
+    <header class="topbar" id="topbar">
+      <div class="topbar__inner">
+        <a class="brand" href="../index.html" aria-label="Conet Tactile, home">
+          <span class="brand__mark" aria-hidden="true"></span>
+          <span class="brand__word">Conet&nbsp;Tactile</span>
+        </a>
+
+        <nav class="nav" aria-label="Primary">
+          <a href="../index.html#problem">Why tactile</a>
+          <a href="../index.html#product">Product</a>
+          <a href="../index.html#industries">Industries</a>
+          <a href="../index.html#specs">Specifications</a>
+          <a href="../index.html#company">Company</a>
+        </nav>
+
+        <a class="cta-link" href="#order">
+          Order
+          <span aria-hidden="true" class="arrow">&rarr;</span>
+        </a>
+      </div>
+    </header>
+
+    <main id="main">
+      <!-- ────────────────────────────── HERO ────────────────────────────── -->
+      <section
+        class="hero section--photo hero--product"
+        style="--bg: url('../assets/hero-factory.jpg')"
+        aria-label="Tactile Edge"
+      >
+        <div class="hero__inner">
+          <p class="eyebrow eyebrow--light">
+            <span class="eyebrow__dot" aria-hidden="true"></span>
+            Direct order &mdash; Tactile&nbsp;Edge
+          </p>
+          <h1 class="hero__title">
+            Order the box.<br />
+            Activate the&nbsp;cloud.<br />
+            Inspect the&nbsp;line.
+          </h1>
+          <p class="hero__lede">
+            A fanless inference appliance for the line cabinet. One per line.
+            Pre-flashed, pre-provisioned, and shipped from Seoul inside three
+            weeks. Tactile Cloud activates on the next screen with the first
+            month on us.
+          </p>
+          <div class="hero__actions">
+            <a class="link-strong" href="#order">Continue to order</a>
+            <a class="link-quiet" href="#what">
+              What is in the box
+              <span class="arrow" aria-hidden="true">&rarr;</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="hero__meta">
+          <p><span class="num">USD&nbsp;1,290</span><span class="unit">one&#8209;time, per&nbsp;line</span></p>
+          <p><span class="num">3&nbsp;weeks</span><span class="unit">from Seoul, customs at&nbsp;checkout</span></p>
+          <p><span class="num">30&nbsp;days</span><span class="unit">free Tactile&nbsp;Cloud&nbsp;trial</span></p>
+        </div>
+      </section>
+
+      <!-- ─────────────────────────── WHAT IS IT ─────────────────────────── -->
+      <section
+        class="section section--split section--photo section--photo--left"
+        id="what"
+        style="--bg: url('../assets/product-process.jpg')"
+      >
+        <div class="split">
+          <div class="split__photo" aria-hidden="true"></div>
+          <div class="split__copy">
+            <p class="eyebrow">01 &mdash; The appliance</p>
+            <h2 class="h2">An inference box that does not look like one.</h2>
+            <p class="body">
+              Tactile Edge is the appliance you mount on the line cabinet. It
+              reads a 16&nbsp;&times;&nbsp;16 piezo-resistive mesh at
+              200&nbsp;Hz, runs the on-board one-class anomaly model, and
+              either fires a 24&nbsp;V relay into your reject actuator or
+              POSTs a verdict to your MES. Anomaly latency stays under fifty
+              milliseconds at line speed.
+            </p>
+            <p class="body">
+              We ship the appliance pre-flashed and pre-provisioned to your
+              Tactile Cloud workspace. The first time it boots on your line,
+              it shows up in the desktop app over USB-C and the web console
+              over your network. No engineering visit. No SI integration fee.
+            </p>
+            <ul class="checks">
+              <li>Tactile&nbsp;Edge appliance, IP54 enclosure, DIN-rail&nbsp;/ magnetic mount</li>
+              <li>350&nbsp;mm &times; 1&nbsp;m starter Tactile&nbsp;Mesh roll</li>
+              <li>Rotary cutter, termination clips, install jig</li>
+              <li>USB-C cable, 24&nbsp;V DC barrel adapter, mount magnets</li>
+              <li>One Tactile&nbsp;Cloud workspace, pre-provisioned to your email</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ──────────────────────────── FOUR STEPS ────────────────────────── -->
+      <section
+        class="section section--photo"
+        id="how"
+        style="--bg: url('../assets/problem-line.jpg')"
+      >
+        <div class="section__inner">
+          <header class="section__head">
+            <p class="eyebrow eyebrow--light">02 &mdash; Order to line</p>
+            <h2 class="h2 h2--light">
+              From card to first inspection,<br />four&nbsp;checkpoints.
+            </h2>
+            <p class="lede lede--light">
+              The customer journey is a single afternoon of work on our side
+              and a single shift of work on yours. Everything between is
+              fulfillment, freight, and the post.
+            </p>
+          </header>
+
+          <ol class="steps">
+            <li class="step">
+              <span class="step__num">01</span>
+              <h3 class="step__title">Card &amp; address</h3>
+              <p class="step__body">
+                Stripe Checkout collects the card and the shipping address.
+                Customs, VAT, and freight are quoted live based on the
+                destination. Your Tactile&nbsp;Cloud workspace is reserved
+                the moment Stripe returns a session id.
+              </p>
+            </li>
+            <li class="step">
+              <span class="step__num">02</span>
+              <h3 class="step__title">Cloud activation</h3>
+              <p class="step__body">
+                On the next page you sign up for Tactile&nbsp;Cloud. The
+                first month is on us; a card is required so the line does
+                not stop on day thirty-one. Cancel any time from the desktop
+                app or by emailing us.
+              </p>
+            </li>
+            <li class="step">
+              <span class="step__num">03</span>
+              <h3 class="step__title">Appliance ships</h3>
+              <p class="step__body">
+                Pre-flashed appliance, mesh roll, and install kit ship from
+                Seoul inside three weeks. A tracking number lands in your
+                inbox. We see the appliance come online the moment you
+                power it.
+              </p>
+            </li>
+            <li class="step">
+              <span class="step__num">04</span>
+              <h3 class="step__title">Five known-good parts</h3>
+              <p class="step__body">
+                Run five good parts down the belt and tap calibrate in the
+                desktop app. Tactile&nbsp;Cloud auto-detects line speed,
+                builds the signature, and is live before the shift ends.
+                Optional bad-sample tuning takes minutes.
+              </p>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- ───────────────────── INTERSTITIAL QUOTE ──────────────────── -->
+      <section
+        class="section section--photo section--quote"
+        style="--bg: url('../assets/industry-semicon.jpg')"
+      >
+        <figure class="quote">
+          <blockquote>
+            <p>
+              <span class="quote__open" aria-hidden="true">&ldquo;</span>
+              The first night the Edge was on the line we caught a wafer
+              cassette with a stack-height defect the vision system had been
+              missing for nine months. Twenty minutes from unboxing to first
+              verdict.
+              <span class="quote__close" aria-hidden="true">&rdquo;</span>
+            </p>
+          </blockquote>
+          <figcaption class="quote__attribution">
+            <span>Process engineer</span>
+            <span class="quote__divider" aria-hidden="true"></span>
+            <span>200&nbsp;mm fab, Yongin</span>
+          </figcaption>
+        </figure>
+      </section>
+
+      <!-- ───────────────────────────── SPECS ──────────────────────────────── -->
+      <section
+        class="section section--split section--photo section--photo--left"
+        id="specs"
+        style="--bg: url('../assets/cloud-circuit.jpg')"
+      >
+        <div class="split split--specs">
+          <div class="split__photo" aria-hidden="true"></div>
+          <div class="split__copy">
+            <p class="eyebrow">03 &mdash; Specifications</p>
+            <h2 class="h2">Engineering reference.</h2>
+            <p class="body">
+              The appliance is built around the Conet&nbsp;Scanner board.
+              These are the numbers your controls engineer will ask for first.
+            </p>
+
+          <table class="specs__table" aria-label="Tactile Edge specifications">
+            <tbody>
+              <tr>
+                <th scope="row">Inference</th>
+                <td>One-class anomaly model on device, &lt;&nbsp;50&nbsp;ms verdict latency</td>
+              </tr>
+              <tr>
+                <th scope="row">Sensing matrix</th>
+                <td>16&nbsp;&times;&nbsp;16 piezo-resistive, 5&nbsp;mm pitch, FFC-1.0&nbsp;mm</td>
+              </tr>
+              <tr>
+                <th scope="row">Scan rate</th>
+                <td>1&nbsp;kHz internal, 200&nbsp;Hz USB CDC uplink</td>
+              </tr>
+              <tr>
+                <th scope="row">ADC path</th>
+                <td>12-bit internal + optional 16-bit external (MCP3564)</td>
+              </tr>
+              <tr>
+                <th scope="row">MCU</th>
+                <td>ESP32-S3-WROOM-1, 16&nbsp;MB flash, 8&nbsp;MB PSRAM, native USB</td>
+              </tr>
+              <tr>
+                <th scope="row">Connectors</th>
+                <td>FFC-1.0&nbsp;mm row+col, USB-C, 24&nbsp;V&nbsp;DC barrel, 24&nbsp;V relay header</td>
+              </tr>
+              <tr>
+                <th scope="row">Enclosure</th>
+                <td>IP54, DIN-rail clip + magnetic base, 92&nbsp;&times;&nbsp;78&nbsp;&times;&nbsp;28&nbsp;mm</td>
+              </tr>
+              <tr>
+                <th scope="row">Power</th>
+                <td>USB-C 5&nbsp;V or 24&nbsp;V&nbsp;DC, PoE+ ready</td>
+              </tr>
+              <tr>
+                <th scope="row">Mesh roll</th>
+                <td>350&nbsp;mm &times; 1&nbsp;m starter, food-grade laminate, 5&nbsp;mm pitch</td>
+              </tr>
+              <tr>
+                <th scope="row">Warranty</th>
+                <td>Two years on the appliance, six months on the mesh starter roll</td>
+              </tr>
+              <tr>
+                <th scope="row">Lead time</th>
+                <td>Three weeks from Seoul, customs and freight at checkout</td>
+              </tr>
+            </tbody>
+          </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ───────────────────────────── ORDER ────────────────────────────── -->
+      <section
+        class="section section--split section--photo section--photo--right section--contact-split"
+        id="order"
+        style="--bg: url('../assets/shipping-port.jpg')"
+      >
+        <div class="split split--reverse split--order">
+         <div class="split__copy">
+          <p class="eyebrow">04 &mdash; Order</p>
+          <h2 class="h2">Two fields, then Stripe.</h2>
+          <p class="lede">
+            Card, shipping address, customs, and VAT are collected by Stripe
+            on the next screen. After payment we activate a one-month free
+            trial of Tactile&nbsp;Cloud and email the desktop installer
+            link. Korean VAT applies on KR shipments; DDP for KR,&nbsp;JP,
+            and EU; DAP elsewhere.
+          </p>
+
+          <form class="form" id="buy-form" novalidate>
+            <div class="form__row">
+              <label for="buy-email">Email for order updates</label>
+              <input
+                id="buy-email"
+                name="email"
+                type="email"
+                autocomplete="email"
+                placeholder="you@line.kr"
+              />
+            </div>
+            <div class="form__row">
+              <label for="buy-qty">Quantity</label>
+              <input
+                id="buy-qty"
+                name="quantity"
+                type="number"
+                min="1"
+                max="20"
+                value="1"
+              />
+            </div>
+            <div class="form__row form__row--wide">
+              <dl class="kv kv--inline">
+                <div>
+                  <dt>Appliance</dt>
+                  <dd>Tactile&nbsp;Edge, one per line</dd>
+                </div>
+                <div>
+                  <dt>Unit price</dt>
+                  <dd>USD&nbsp;1,290, one-time</dd>
+                </div>
+                <div>
+                  <dt>Lead time</dt>
+                  <dd>Three weeks from Seoul</dd>
+                </div>
+                <div>
+                  <dt>Cloud trial</dt>
+                  <dd>30 days free, then USD&nbsp;49&nbsp;/&nbsp;month</dd>
+                </div>
+              </dl>
+            </div>
+            <div class="form__row form__row--wide form__row--submit">
+              <button class="submit" type="button" id="buy-submit">
+                <span class="submit__label">Continue to checkout</span>
+                <span class="arrow" aria-hidden="true">&rarr;</span>
+              </button>
+              <p class="form__legal">
+                Address, customs, and tax are collected on the next screen.
+                <br />
+                Or write to
+                <a href="mailto:tactile@conet.studio">tactile@conet.studio</a>
+                if you need a quote with a PO number.
+              </p>
+            </div>
+            <p class="form__mock" id="buy-mock-banner" hidden>
+              <span class="form__mock-dot" aria-hidden="true"></span>
+              Mock checkout &mdash; no real card will be charged. Live mode
+              activates when <code>CONET_STRIPE_SECRET_KEY</code> is set on
+              the backend.
+            </p>
+          </form>
+         </div>
+         <div class="split__photo" aria-hidden="true"></div>
+        </div>
+      </section>
+
+      <!-- ───────────────────────────── FAQ ──────────────────────────── -->
+      <section
+        class="section section--photo section--faq"
+        id="faq"
+        style="--bg: url('../assets/quote-machine.jpg')"
+      >
+        <div class="section__inner section__inner--specs">
+          <header class="section__head section__head--inline">
+            <p class="eyebrow eyebrow--light">05 &mdash; Before you tap</p>
+            <h2 class="h2 h2--light">Frequently asked.</h2>
+          </header>
+
+          <dl class="faq">
+            <div class="faq__row">
+              <dt>Does the desktop app cost extra?</dt>
+              <dd>
+                The desktop app is the Tactile&nbsp;Cloud client. Free to
+                install; the cloud subscription is what is metered. Your
+                trial covers the first month with no per-part cap.
+              </dd>
+            </div>
+            <div class="faq__row">
+              <dt>What happens if I cancel during the trial?</dt>
+              <dd>
+                The subscription is cancelled, no card is charged, the
+                desktop app stays installed and keeps working in
+                calibration-only mode. The appliance is yours either way.
+              </dd>
+            </div>
+            <div class="faq__row">
+              <dt>Can I order more than one appliance?</dt>
+              <dd>
+                Yes &mdash; bump the quantity field on the order form. Each
+                appliance ships with its own pre-flashed identity and is
+                pre-bound to your workspace. Volume tiers kick in above ten
+                units; contract terms above fifty.
+              </dd>
+            </div>
+            <div class="faq__row">
+              <dt>What about customs?</dt>
+              <dd>
+                Stripe Checkout calculates VAT, customs, and freight from
+                your shipping address. We ship DDP for KR,&nbsp;JP, and EU;
+                DAP elsewhere. If you need a written quote with a PO
+                number,
+                <a href="../index.html#contact">ping us&nbsp;&rarr;</a>
+              </dd>
+            </div>
+          </dl>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer__inner">
+        <div class="footer__brand">
+          <span class="brand__mark" aria-hidden="true"></span>
+          <span>Conet&nbsp;Tactile</span>
+        </div>
+        <nav class="footer__nav" aria-label="Footer">
+          <a href="../index.html#problem">Why tactile</a>
+          <a href="../index.html#product">Product</a>
+          <a href="../index.html#industries">Industries</a>
+          <a href="../index.html#pricing">Pricing</a>
+          <a href="../index.html#specs">Specifications</a>
+          <a href="../index.html#contact">Contact</a>
+        </nav>
+        <p class="footer__legal">
+          &copy; <span id="year">2026</span> Conet Studio. Seoul, Korea. All rights reserved.
+        </p>
+      </div>
+    </footer>
+
+    <script src="../script.js" defer></script>
+    <script src="product.js" defer></script>
+  </body>
+</html>

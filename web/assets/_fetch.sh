@@ -18,6 +18,10 @@ declare -A PHOTOS=(
   [quote-machine.jpg]="photo-1485827404703-89b55fcc595e"
   [pricing-shipping.jpg]="photo-1553413077-190dd305871c"
   [company-floor.jpg]="photo-1532187863486-abf9dbad1b69"
+  # ------ direct-order product pages ------
+  [shipping-port.jpg]="photo-1494412651409-8963ce7935a7"
+  [cloud-operator.jpg]="photo-1581091226825-a6a2a5aee158"
+  [engineering-review.jpg]="photo-1581094288338-2314dddb7ece"
 )
 
 for name in "${!PHOTOS[@]}"; do
