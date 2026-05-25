@@ -8,7 +8,7 @@
  * On packaged builds the binary lives at `process.resourcesPath/sidecar/sidecar`
  * (or `sidecar.exe` on Windows). In dev mode we fall back to
  * `python -m uvicorn app.main:app --port <port>` if the user has the backend
- * importable on the host Python — this is purely for hacking and never ships.
+ * importable on the host Python ??this is purely for hacking and never ships.
  */
 import { spawn, type ChildProcess } from "node:child_process";
 import { createServer } from "node:net";
@@ -91,7 +91,7 @@ export async function startSidecar(): Promise<SidecarHandle> {
     ...process.env,
     CONET_DESKTOP_HOST: "127.0.0.1",
     CONET_DESKTOP_PORT: String(port),
-    // Disable the backend's auth requirement when running embedded —
+    // Disable the backend's auth requirement when running embedded ??
     // the renderer talks to a loopback-only sidecar that's never exposed.
     CONET_AUTH_REQUIRED: "false",
     CONET_ENVIRONMENT: "desktop",
@@ -101,7 +101,7 @@ export async function startSidecar(): Promise<SidecarHandle> {
     proc = spawn(binary, [], {
       env,
       stdio: ["ignore", "pipe", "pipe"],
-      windowsHide: true,
+      windowsHide: false,
     });
   } else {
     // Dev-mode fallback. Requires `uvicorn` + the backend package on the
@@ -150,3 +150,4 @@ export function stopSidecar(handle: SidecarHandle | null): void {
     if (!handle.proc.killed) handle.proc.kill("SIGKILL");
   }, 2_000).unref();
 }
+

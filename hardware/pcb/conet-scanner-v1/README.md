@@ -92,8 +92,8 @@ COL conductor 1    ────────────→   J2 pin 2   (U3 Y1)
 COL conductor 15   ────────────→   J2 pin 16  (U3 Y15)
 ```
 
-- U2 (ROW) SIG  → ADC_IN (GPIO 1).
-- U3 (COL) SIG  → 10 kΩ pull-down to GND, also tied to U2 SIG through the mesh's Velostat layer. The col MUX selects which column is "active" while the row MUX scans rows; the cell at (row, col) appears as a resistance between ADC_IN and GND.
+- U2 (ROW) SIG  → +3V3.
+- U3 (COL) SIG  → ADC_IN (GPIO 1) and 10 kΩ pull-down to GND. Tied to U2 SIG through the mesh's Velostat layer. The row MUX drives +3V3 to the active row, while the col MUX routes the active column to the ADC and pull-down.
 
 ## Power
 
@@ -128,6 +128,8 @@ COL conductor 15   ────────────→   J2 pin 16  (U3 Y15)
   but functional for line-of-sight bench testing. The first cell deployed
   to a factory should rely on USB or wired Ethernet rather than the
   on-module antenna.
+- **CRITICAL: LDO Substitution**: Do NOT allow the assembler to substitute the `TLV1117LV33` with an `AMS1117-3.3`. The BOM uses a 10µF MLCC output capacitor. AMS1117 requires a Tantalum capacitor to remain stable; using an MLCC will cause violent oscillation and destroy the ESP32.
+- **PTC Fuse**: The 500mA PTC fuse (F1) is borderline for ESP32-S3 WiFi bursts. It has been upgraded to a 1A PTC in the BOM to prevent brownouts.
 
 ## Ordering JLCPCB
 

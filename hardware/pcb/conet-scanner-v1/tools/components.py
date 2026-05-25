@@ -97,10 +97,10 @@ COMPONENTS: list[Component] = [
         comment="USBLC6-2SC6Y", description="USB-C ESD protection",
     ),
     Component(
-        refdes="F1", value="500mA PTC",
-        footprint="1812", lcsc="C75132",
+        refdes="F1", value="1A PTC",
+        footprint="1812", lcsc="C150410",
         x=21.0, y=7.0, rotation=0,
-        comment="MF-MSMF050X-2", description="Resettable PTC fuse, 500mA hold, 1812",
+        comment="1812 1A PTC", description="Resettable PTC fuse, 1A hold, 1812",
     ),
 
     # ---- Mesh interface (FFC) ---------------------------------------------

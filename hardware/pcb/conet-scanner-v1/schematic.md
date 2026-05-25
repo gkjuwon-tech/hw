@@ -27,8 +27,8 @@ USB-C  ─D±,VBUS─┤ USB native (GPIO 19/20)                                
 
          J1 (16-pin FFC, ROW)  ─→ U2 Y0..Y15
          J2 (16-pin FFC, COL)  ─→ U3 Y0..Y15
-                                  U2 SIG  ──→ ADC_IN
-                                  U3 SIG  ──→ GND via 10 kΩ pull-down (R30)
+                                  U2 SIG  ──→ +3V3
+                                  U3 SIG  ──→ ADC_IN (and GND via 10 kΩ pull-down R30)
 ```
 
 ---
@@ -64,7 +64,7 @@ USB-C  ─D±,VBUS─┤ USB native (GPIO 19/20)                                
 | `U2 VCC` | `+3V3` |
 | `U2 VEE` | `GND` |
 | `U2 Y0..Y15` | J1 pin 1..16 (mesh ROW conductors 0..15) |
-| `U2 SIG` | `ADC_IN` (= ESP32 GPIO 1) and optionally U4.AIN0 (DNP solder jumper SJ1) |
+| `U2 SIG` | `+3V3` |
 
 ### Column mux (U3, CD74HC4067)
 
@@ -78,16 +78,17 @@ USB-C  ─D±,VBUS─┤ USB native (GPIO 19/20)                                
 | `U3 VCC` | `+3V3` |
 | `U3 VEE` | `GND` |
 | `U3 Y0..Y15` | J2 pin 1..16 (mesh COL conductors 0..15) |
-| `U3 SIG` | `GND` through R30 (10 kΩ pull-down) |
+| `U3 SIG` | `ADC_IN` (= ESP32 GPIO 1), GND through R30 (10 kΩ pull-down), and optionally U4.AIN0 (DNP SJ1) |
 
 ### ADC sampling path
 
 ```
-ROW(r) ─[Velostat]─ COL(c) ─ U3.Y(c) ─ U3 SIG ─ R30 (10 kΩ) ─ GND
+ROW(r) ─[Velostat]─ COL(c) ─ U3.Y(c) ─ U3 SIG ─→ ADC_IN ─→ U1.GPIO1 (ADC1_CH0)
+                          ├─→ R30 (10 kΩ) ─ GND
                           └─→ when U3.S = c, the (r,c) cell is the only
                               non-isolated column path.
-U2.Y(r) ─ U2 SIG ─→ ADC_IN ─→ U1.GPIO1 (ADC1_CH0)
-                  └ DNP R31 (10 kΩ) ─ DNP C30 (100 nF) ─ GND   ; RC filter bodge pads
+U2.Y(r) ─ U2 SIG ─→ +3V3
+                  └ DNP R31 (10 kΩ) ─ DNP C30 (100 nF) ─ GND   ; RC filter bodge pads on ADC_IN
 ```
 
 The cell at (r, c) is the resistance `R_cell(r,c)` between U2.Y(r) and U3.Y(c) through the Velostat layer. When U2 selects row r and U3 selects column c, the ADC sees a divider:
@@ -106,11 +107,11 @@ Higher pressure → lower `R_cell` → higher `V_ADC` → higher ADC reading.
 |-----|----------|
 | `I2C_SDA` | U1.GPIO8 ⇆ U4.SDA |
 | `I2C_SCL` | U1.GPIO9 ⇆ U4.SCL |
-| `U4.AIN0` | jumper SJ1 → U2 SIG |
+| `U4.AIN0` | jumper SJ1 → U3 SIG |
 | `U4.ADDR` | GND (I²C addr 0x48) |
 | `U4.VDD/VSS` | `+3V3` / `GND` |
 
-`SJ1` is a solder-jumper that diverts U2 SIG from ADC_IN to U4.AIN0 when bridged. Default: open (use ESP32 internal ADC).
+`SJ1` is a solder-jumper that diverts U3 SIG from ADC_IN to U4.AIN0 when bridged. Default: open (use ESP32 internal ADC).
 
 ### LEDs
 
@@ -154,7 +155,7 @@ Both J1 and J2 are FH12-16S-1SH (Hirose, top contact). Pin 1 marker on PCB silks
 
 To leave room for in-the-field tuning without spinning a v2:
 
-- **SJ1** — solder jumper to route U2 SIG into ADS1115 instead of ESP32 ADC.
+- **SJ1** — solder jumper to route U3 SIG into ADS1115 instead of ESP32 ADC.
 - **R31 / C30** — RC low-pass filter footprint on ADC_IN line. Populate if mesh runs >1 m and we see noise above 1 % of full-scale.
 - **TP1..TP4** — test points on `+5V`, `+3V3`, `ADC_IN`, `U3 SIG`. For debugging with a scope.
 - **J4** — 4-pin 2.54 mm header for external UART (GPIO 43/44). Useful if native USB ever fights us during bring-up.
