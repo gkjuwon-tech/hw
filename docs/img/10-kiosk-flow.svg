@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 470" font-family="-apple-system, 'Segoe UI', 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', sans-serif">
+  <rect x="0" y="0" width="940" height="470" fill="#ffffff"/>
+  <text x="32" y="46" font-size="26" font-weight="700" fill="#14110f">터치 디스플레이 + 키오스크 — 5단계</text>
+  <text x="32" y="74" font-size="15" fill="#8a8a86">디스플레이 꽂고 → 키오스크 계정 자동로그인 → 유닛 켜면 → 부팅하자마자 풀스크린 화면. .exe / .dmg 0.</text>
+
+  <defs>
+    <marker id="dnk" markerWidth="10" markerHeight="10" refX="3" refY="7" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L6,0 L3,7 Z" fill="#15803d"/>
+    </marker>
+  </defs>
+
+  <!-- step 1 -->
+  <rect x="120" y="100" width="700" height="46" rx="10" fill="#f0fdf4" stroke="#15803d" stroke-width="2"/>
+  <circle cx="150" cy="123" r="15" fill="#15803d"/>
+  <text x="150" y="128" font-size="15" fill="#ffffff" text-anchor="middle" font-weight="700">1</text>
+  <text x="180" y="119" font-size="15" fill="#14532d" font-weight="700">디스플레이 물리 연결 (7.6.1)</text>
+  <text x="180" y="137" font-size="12.5" fill="#166534">HDMI(영상) + USB(터치) + 전원 세 줄. 한쪽만 꽂으면 터치 안 먹는 함정 주의</text>
+
+  <line x1="470" y1="148" x2="470" y2="164" stroke="#15803d" stroke-width="2" marker-end="url(#dnk)"/>
+
+  <!-- step 2 -->
+  <rect x="120" y="166" width="700" height="46" rx="10" fill="#f0fdf4" stroke="#15803d" stroke-width="2"/>
+  <circle cx="150" cy="189" r="15" fill="#15803d"/>
+  <text x="150" y="194" font-size="15" fill="#ffffff" text-anchor="middle" font-weight="700">2</text>
+  <text x="180" y="185" font-size="15" fill="#14532d" font-weight="700">conet-kiosk 사용자 + 자동 로그인 (7.6.3)</text>
+  <text x="180" y="203" font-size="12.5" fill="#166534">전용 계정 만들고 LightDM 자동로그인 → 로그인 화면 없이 바로 데스크탑</text>
+
+  <line x1="470" y1="214" x2="470" y2="230" stroke="#15803d" stroke-width="2" marker-end="url(#dnk)"/>
+
+  <!-- step 3 -->
+  <rect x="120" y="232" width="700" height="46" rx="10" fill="#f0fdf4" stroke="#15803d" stroke-width="2"/>
+  <circle cx="150" cy="255" r="15" fill="#15803d"/>
+  <text x="150" y="260" font-size="15" fill="#ffffff" text-anchor="middle" font-weight="700">3</text>
+  <text x="180" y="251" font-size="15" fill="#14532d" font-weight="700">conet-edge-kiosk systemd 유닛 활성화 (7.6.4)</text>
+  <text x="180" y="269" font-size="12.5" fill="#166534">enable --now → Chromium 키오스크가 부팅 때 자동 실행되도록 등록</text>
+
+  <line x1="470" y1="280" x2="470" y2="296" stroke="#15803d" stroke-width="2" marker-end="url(#dnk)"/>
+
+  <!-- step 4 -->
+  <rect x="120" y="298" width="700" height="46" rx="10" fill="#f0fdf4" stroke="#15803d" stroke-width="2"/>
+  <circle cx="150" cy="321" r="15" fill="#15803d"/>
+  <text x="150" y="326" font-size="15" fill="#ffffff" text-anchor="middle" font-weight="700">4</text>
+  <text x="180" y="317" font-size="15" fill="#14532d" font-weight="700">부팅 → Chromium 풀스크린 키오스크 자동 진입</text>
+  <text x="180" y="335" font-size="12.5" fill="#166534">전원만 넣으면 끝. 박씨 아저씨는 화면 보고 손가락만 터치</text>
+
+  <line x1="470" y1="346" x2="470" y2="362" stroke="#15803d" stroke-width="2" marker-end="url(#dnk)"/>
+
+  <!-- step 5 (highlight) -->
+  <rect x="120" y="364" width="700" height="50" rx="10" fill="#f7fee7" stroke="#84cc16" stroke-width="2.5"/>
+  <circle cx="150" cy="389" r="15" fill="#65a30d"/>
+  <text x="150" y="394" font-size="15" fill="#ffffff" text-anchor="middle" font-weight="700">5</text>
+  <text x="180" y="384" font-size="15" fill="#3f6212" font-weight="700">화면 = edge_agent가 127.0.0.1:8088/kiosk/index.html 직접 서빙</text>
+  <text x="180" y="403" font-size="12.5" fill="#4d7c0f">루프백이라 외부 인터넷 0. 인터넷 끊겨도 검사·화면 그대로 돎. verdict 실시간 표시.</text>
+
+  <!-- footer -->
+  <rect x="32" y="432" width="876" height="30" rx="8" fill="#fafaf9" stroke="#e7e5e4" stroke-width="1.5"/>
+  <text x="48" y="452" font-size="12.5" fill="#475569">설치·다운로드·"확인되지 않은 개발자" 팝업 전부 없음 — 소프트웨어는 박스에 이미 들어있음 (Cognex 방식).</text>
+</svg>
