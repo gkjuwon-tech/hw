@@ -29,7 +29,12 @@ async def test_edge_crud(client: AsyncClient) -> None:
 
     r = await client.post(
         "/v1/edges",
-        json={"id": edge_id, "hostname": "x", "model": "jetson-orin-nano-8gb"},
+        json={
+            "id": edge_id,
+            "hostname": "x",
+            "model": "jetson-orin-nano-8gb",
+            "serial": "TEST-1234567890",
+        },
     )
     assert r.status_code == 409
 
@@ -55,7 +60,12 @@ async def test_edge_heartbeat_updates_state(client: AsyncClient) -> None:
     edge_id = f"edge-{uuid.uuid4().hex[:8]}"
     r = await client.post(
         "/v1/edges",
-        json={"id": edge_id, "hostname": edge_id, "model": "jetson-orin-nano-8gb"},
+        json={
+            "id": edge_id,
+            "hostname": edge_id,
+            "model": "jetson-orin-nano-8gb",
+            "serial": "TEST-1234567890",
+        },
     )
     assert r.status_code == 201, r.text
 
@@ -123,7 +133,10 @@ async def test_edge_heartbeat_updates_state(client: AsyncClient) -> None:
 
 async def test_edge_telemetry_recent(client: AsyncClient) -> None:
     edge_id = f"edge-{uuid.uuid4().hex[:8]}"
-    await client.post("/v1/edges", json={"id": edge_id, "hostname": edge_id})
+    await client.post(
+        "/v1/edges",
+        json={"id": edge_id, "hostname": edge_id, "serial": "TEST-1234567890"},
+    )
 
     for fps in (10.0, 50.0, 100.0):
         r = await client.post(
@@ -151,7 +164,10 @@ async def test_edge_telemetry_recent(client: AsyncClient) -> None:
 
 async def test_edge_delete(client: AsyncClient) -> None:
     edge_id = f"edge-{uuid.uuid4().hex[:8]}"
-    await client.post("/v1/edges", json={"id": edge_id, "hostname": edge_id})
+    await client.post(
+        "/v1/edges",
+        json={"id": edge_id, "hostname": edge_id, "serial": "TEST-1234567890"},
+    )
 
     r = await client.delete(f"/v1/edges/{edge_id}")
     assert r.status_code == 204
@@ -168,7 +184,10 @@ async def test_telemetry_endpoint_authorized(client: AsyncClient) -> None:
     buffer (``/telemetry/recent``) is exercised by ``test_edge_telemetry_recent``.
     """
     edge_id = f"edge-{uuid.uuid4().hex[:8]}"
-    await client.post("/v1/edges", json={"id": edge_id, "hostname": edge_id})
+    await client.post(
+        "/v1/edges",
+        json={"id": edge_id, "hostname": edge_id, "serial": "TEST-1234567890"},
+    )
     r = await client.get(f"/v1/edges/{edge_id}/telemetry/recent")
     assert r.status_code == 200
     assert r.json() == []

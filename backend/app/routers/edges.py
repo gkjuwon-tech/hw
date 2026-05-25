@@ -32,6 +32,7 @@ from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.config import settings
 from app.core.events import bus
 from app.core.security import AuthContext, require_org, require_write_scope
 from app.db import Edge, get_session
@@ -51,11 +52,34 @@ async def enroll_edge(
     auth: AuthContext = Depends(require_write_scope),
     session: AsyncSession = Depends(get_session),
 ) -> Edge:
+    """Legacy edge enrollment path.
+
+    In production this should be disabled (``CONET_LEGACY_EDGE_ENROLL=false``)
+    and operators should use the two-step claim-redeem flow
+    (``POST /v1/claims`` + ``POST /v1/claims/redeem``) which validates the
+    physical device's serial and firmware version.
+
+    Even when enabled, this path now requires a non-empty serial so an
+    operator can't enroll a phantom edge by typing a random ID.
+    """
+    if not settings.legacy_edge_enroll_enabled:
+        raise HTTPException(
+            status.HTTP_410_GONE,
+            "legacy edge enrollment disabled; use POST /v1/claims + /v1/claims/redeem",
+        )
+
+    serial = (payload.serial or "").strip()
+    if len(serial) < 4:
+        raise HTTPException(
+            status.HTTP_422_UNPROCESSABLE_ENTITY,
+            "serial is required (min 4 chars). use claim-redeem for full validation.",
+        )
+
     edge = Edge(
         id=payload.id,
         org_id=auth.org_id,
         hostname=payload.hostname,
-        serial=payload.serial,
+        serial=serial,
         model=payload.model,
         site=payload.site,
     )

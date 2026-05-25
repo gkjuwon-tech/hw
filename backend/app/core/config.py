@@ -76,6 +76,15 @@ class Settings(BaseSettings):
             "endpoints are disabled — use the seed CLI instead."
         ),
     )
+    legacy_edge_enroll_enabled: bool = Field(
+        default=True,
+        description=(
+            "If True, POST /v1/edges accepts direct enrollment (back-compat). "
+            "Set False in production so operators must use the claim-redeem flow "
+            "(POST /v1/claims + POST /v1/claims/redeem) which validates serial "
+            "and firmware version of the physical appliance."
+        ),
+    )
 
     # ── rate limit ─────────────────────────────────────────────────────
     rate_limit_enabled: bool = True

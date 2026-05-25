@@ -93,6 +93,8 @@ export function Overview({
         />
       </div>
 
+      <FleetKpis edges={edges} lines={lines} />
+
       <div className="grid grid--detail">
         <section className="card">
           <header className="card__head">
@@ -196,6 +198,108 @@ export function Overview({
             )}
           </div>
         </section>
+      </div>
+    </div>
+  );
+}
+
+interface FleetKpisProps {
+  edges: Edge[];
+  lines: Line[];
+}
+
+function FleetKpis({ edges, lines }: FleetKpisProps): JSX.Element {
+  const totalFps = edges.reduce((acc, e) => acc + (e.frames_per_second ?? 0), 0);
+  const avgGpu = edges.length
+    ? edges.reduce((acc, e) => acc + (e.gpu_pct ?? 0), 0) / edges.length
+    : 0;
+  const hottestGpu = edges.reduce(
+    (acc, e) => (e.gpu_temp_c > acc ? e.gpu_temp_c : acc),
+    0,
+  );
+  const p99 = edges.reduce(
+    (acc, e) => (e.inference_p99_ms > acc ? e.inference_p99_ms : acc),
+    0,
+  );
+  const liveLines = lines.filter((l) => l.status === "live").length;
+
+  return (
+    <section className="card">
+      <header className="card__head">
+        <h3 className="h3">Fleet KPIs</h3>
+        <span className="mono" style={{ fontSize: 11, color: "var(--muted)" }}>
+          rolled up from /v1/edges &amp; /v1/lines
+        </span>
+      </header>
+      <div
+        className="card__body"
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(5, 1fr)",
+          gap: 12,
+        }}
+      >
+        <Kpi label="Total FPS" value={totalFps.toFixed(1)} unit="f/s" />
+        <Kpi label="Avg GPU" value={avgGpu.toFixed(0)} unit="%" />
+        <Kpi
+          label="Hottest GPU"
+          value={hottestGpu.toFixed(1)}
+          unit="°C"
+          warn={hottestGpu >= 85}
+        />
+        <Kpi
+          label="Worst p99"
+          value={p99.toFixed(1)}
+          unit="ms"
+          warn={p99 >= 150}
+        />
+        <Kpi label="Live lines" value={`${liveLines}/${lines.length}`} unit="" />
+      </div>
+    </section>
+  );
+}
+
+interface KpiProps {
+  label: string;
+  value: string;
+  unit: string;
+  warn?: boolean;
+}
+
+function Kpi({ label, value, unit, warn }: KpiProps): JSX.Element {
+  return (
+    <div
+      style={{
+        padding: 8,
+        border: "1px solid var(--bevel-dark, #222)",
+        background: "var(--ink, #0c0c10)",
+        textAlign: "center",
+      }}
+    >
+      <div
+        className="mono"
+        style={{
+          fontSize: 10,
+          letterSpacing: "0.08em",
+          color: "var(--muted)",
+          marginBottom: 4,
+        }}
+      >
+        {label}
+      </div>
+      <div
+        style={{
+          fontSize: 22,
+          fontWeight: 700,
+          color: warn ? "var(--signal-bad, #f55)" : "var(--text, #ddd)",
+        }}
+      >
+        {value}
+        {unit ? (
+          <span className="mono" style={{ fontSize: 11, marginLeft: 2, color: "var(--muted)" }}>
+            {unit}
+          </span>
+        ) : null}
       </div>
     </div>
   );

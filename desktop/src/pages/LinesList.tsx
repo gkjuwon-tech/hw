@@ -12,6 +12,7 @@ import type { Line, LineStatus } from "../lib/types";
 export interface LinesListProps {
   lines: Line[];
   onOpen: (lineId: string) => void;
+  onTune?: (lineId: string) => void;
   apiError: boolean;
 }
 
@@ -31,7 +32,7 @@ function ledStateFor(status: LineStatus | undefined): string {
   return "off";
 }
 
-export function LinesList({ lines, onOpen, apiError }: LinesListProps): JSX.Element {
+export function LinesList({ lines, onOpen, onTune, apiError }: LinesListProps): JSX.Element {
   return (
     <div className="page">
       <PageHeader
@@ -67,6 +68,7 @@ export function LinesList({ lines, onOpen, apiError }: LinesListProps): JSX.Elem
                   <th className="right">Score</th>
                   <th className="right">Drift (z)</th>
                   <th>Registered</th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
@@ -100,6 +102,20 @@ export function LinesList({ lines, onOpen, apiError }: LinesListProps): JSX.Elem
                           : "—"}
                       </td>
                       <td>{formatDate(line.created_at)}</td>
+                      <td>
+                        {onTune ? (
+                          <button
+                            type="button"
+                            className="btn btn--ghost"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onTune(line.id);
+                            }}
+                          >
+                            Tune
+                          </button>
+                        ) : null}
+                      </td>
                     </tr>
                   );
                 })}
