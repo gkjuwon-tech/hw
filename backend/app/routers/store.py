@@ -22,6 +22,7 @@ journey is exercisable without any external credentials.
 
 from __future__ import annotations
 
+import json
 from typing import Any
 
 from fastapi import APIRouter, HTTPException, Request, status
@@ -35,7 +36,12 @@ from app.core.store_catalog import (
     get_hardware_sku,
     get_software_plan,
 )
-from app.core.stripe_client import StripeClient, get_client, is_mock_mode
+from app.core.stripe_client import (
+    StripeClient,
+    get_client,
+    is_mock_mode,
+    verify_stripe_signature,
+)
 
 router = APIRouter(prefix="/v1/store", tags=["store"])
 logger = get_logger("conet.store")
@@ -284,11 +290,16 @@ async def get_order(session_id: str) -> dict[str, Any]:
 
 @router.post("/webhook", status_code=status.HTTP_200_OK)
 async def stripe_webhook(request: Request) -> dict[str, str]:
-    """Receive Stripe webhook events.
+    """Receive and verify Stripe webhook events.
 
-    Signature verification requires ``CONET_STRIPE_WEBHOOK_SECRET``. In
-    mock mode this endpoint is reachable but is effectively a no-op —
-    mock sessions are completed synchronously by ``/mock/complete``.
+    In **mock mode** this endpoint is reachable but a no-op — mock sessions
+    are completed synchronously by ``/mock/complete``.
+
+    In **live mode**, when ``CONET_STRIPE_WEBHOOK_SECRET`` is set every
+    event is authenticated against the ``Stripe-Signature`` header before
+    we act on it; a missing or invalid signature is rejected with 400. We
+    parse the verified envelope and acknowledge known event types
+    (``checkout.session.completed`` is the one the purchase flow cares about).
     """
     body = await request.body()
     sig = request.headers.get("Stripe-Signature", "")
@@ -300,12 +311,31 @@ async def stripe_webhook(request: Request) -> dict[str, str]:
     if is_mock_mode():
         return {"received": "mock", "status": "ignored"}
 
-    # Real signature verification is delegated to the Stripe SDK when
-    # available. For now we just record receipt — production deployments
-    # should plug in ``stripe.Webhook.construct_event`` here.
     if not settings.stripe_webhook_secret:
+        # Live mode but no signing secret configured yet — record receipt
+        # without trusting the payload. Set CONET_STRIPE_WEBHOOK_SECRET to
+        # enable verification.
+        logger.warning("stripe_webhook_secret_unset")
         return {"received": "noop", "status": "webhook_secret_unset"}
-    return {"received": "ok", "status": "logged"}
+
+    if not verify_stripe_signature(body, sig, settings.stripe_webhook_secret):
+        logger.warning("stripe_webhook_signature_invalid")
+        raise HTTPException(
+            status.HTTP_400_BAD_REQUEST, "invalid Stripe-Signature"
+        )
+
+    try:
+        event = json.loads(body)
+    except json.JSONDecodeError as exc:
+        raise HTTPException(status.HTTP_400_BAD_REQUEST, "malformed event body") from exc
+
+    event_type = event.get("type", "")
+    session_id = ((event.get("data") or {}).get("object") or {}).get("id")
+    logger.info(
+        "stripe_webhook_verified",
+        extra={"event_type": event_type, "session_id": session_id},
+    )
+    return {"received": "ok", "status": "verified", "type": event_type}
 
 
 # ── mock-checkout endpoints ────────────────────────────────────────

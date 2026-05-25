@@ -104,15 +104,23 @@ class Settings(BaseSettings):
     pricing_usd_per_krw: float = Field(default=1 / 1360.0, gt=0)
 
     # ── store / stripe checkout ────────────────────────────────────────
-    # Live mode requires CONET_STRIPE_SECRET_KEY. If unset OR
-    # CONET_STRIPE_MOCK_MODE=true, the store runs in mock mode: no Stripe
-    # calls are made, a local pretend-checkout page is used, and the
-    # success flow is fully driven by the backend. Mock mode lets the
-    # marketing site demo the full purchase journey without secrets.
+    # Live mode is driven entirely by whether CONET_STRIPE_SECRET_KEY is set:
+    #
+    #   * key present  → live mode. Real Stripe Checkout Sessions are created
+    #     over HTTPS and the marketing site redirects to checkout.stripe.com.
+    #     Drop a TEST key (``sk_test_…``) here to exercise the full purchase
+    #     journey against Stripe's test environment — test cards only, no
+    #     real money moves. Swap to a live key (``sk_live_…``) for production.
+    #   * key absent   → mock mode. No Stripe calls are made, a local
+    #     pretend-checkout page is served, and the success flow is driven
+    #     by the backend. Useful for CI, offline demos, and recorded walkthroughs.
+    #
+    # Mock mode can also be forced on with CONET_STRIPE_MOCK_MODE=true even
+    # when a key is present (e.g. to demo without touching Stripe at all).
     stripe_secret_key: str | None = Field(default=None)
     stripe_publishable_key: str | None = Field(default=None)
     stripe_webhook_secret: str | None = Field(default=None)
-    stripe_mock_mode: bool = Field(default=True)
+    stripe_mock_mode: bool = Field(default=False)
     store_default_currency: str = Field(default="usd", min_length=3, max_length=3)
     store_success_url: str = Field(
         default="http://localhost:5173/product/activate.html",
