@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 580" font-family="-apple-system, 'Segoe UI', 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', sans-serif">
+  <rect x="0" y="0" width="920" height="580" fill="#ffffff"/>
+  <text x="32" y="46" font-size="26" font-weight="700" fill="#14110f">발주 타임라인 — 같은 날 다 질러 (3~4주)</text>
+  <text x="32" y="74" font-size="15" fill="#8a8a86">Day 0에 다섯 군데 동시 발주. 제일 오래 걸리는 PCB가 전체 일정을 정함. 기다리는 동안 깔판 만들고, Jetson 셋업해.</text>
+
+  <!-- x scale: x = 200 + day*40 (day 0..16) -->
+  <line x1="200" y1="110" x2="200" y2="470" stroke="#84cc16" stroke-width="2" stroke-dasharray="5 4"/>
+  <text x="200" y="104" font-size="12" fill="#4d7c0f" text-anchor="middle" font-weight="700">Day 0 발주</text>
+  <line x1="480" y1="110" x2="480" y2="470" stroke="#e7e5e4" stroke-width="1.5"/>
+  <text x="480" y="104" font-size="12" fill="#a8a29e" text-anchor="middle">Day 7</text>
+  <line x1="760" y1="110" x2="760" y2="470" stroke="#e7e5e4" stroke-width="1.5"/>
+  <text x="760" y="104" font-size="12" fill="#a8a29e" text-anchor="middle">Day 14</text>
+
+  <!-- Row 1: 한국 부품 day0->2 -->
+  <text x="190" y="142" font-size="13" fill="#3f3f46" text-anchor="end" font-weight="600">한국 부품(디마·쿠팡)</text>
+  <rect x="200" y="130" width="80" height="18" rx="6" fill="#16a34a"/>
+  <text x="290" y="144" font-size="12" fill="#15803d">→ Day 1~2</text>
+
+  <!-- Row 2: Adafruit day0->5 -->
+  <text x="190" y="178" font-size="13" fill="#3f3f46" text-anchor="end" font-weight="600">Adafruit(해외)</text>
+  <rect x="200" y="166" width="200" height="18" rx="6" fill="#0ea5e9"/>
+  <text x="410" y="180" font-size="12" fill="#0369a1">→ Day 4~5</text>
+
+  <!-- Row 3: Jetson day0->7 -->
+  <text x="190" y="214" font-size="13" fill="#3f3f46" text-anchor="end" font-weight="600">Jetson Edge(총판)</text>
+  <rect x="200" y="202" width="280" height="18" rx="6" fill="#15803d"/>
+  <text x="490" y="216" font-size="12" fill="#166534">→ Day 5~7 (재고 따라)</text>
+
+  <!-- Row 4: JLCPCB day0->10 (longest) -->
+  <text x="190" y="250" font-size="13" fill="#b91c1c" text-anchor="end" font-weight="700">JLCPCB PCB ★</text>
+  <rect x="200" y="238" width="400" height="18" rx="6" fill="#ea580c"/>
+  <text x="610" y="252" font-size="12" fill="#c2410c" font-weight="700">→ Day 8~10 (제일 김)</text>
+
+  <!-- separator -->
+  <line x1="60" y1="276" x2="860" y2="276" stroke="#e7e5e4" stroke-width="1.5" stroke-dasharray="3 3"/>
+  <text x="60" y="296" font-size="12" fill="#2563eb" font-weight="700">↓ 네가 손 쓰는 구간 (배송 기다리는 동안)</text>
+
+  <!-- Row 5: 깔판 만들기 (you) day3->6 -->
+  <text x="190" y="326" font-size="13" fill="#1d4ed8" text-anchor="end" font-weight="600">깔판 만들기(너)</text>
+  <rect x="320" y="314" width="120" height="18" rx="6" fill="#2563eb"/>
+  <text x="380" y="350" font-size="11" fill="#1d4ed8" text-anchor="middle">한국 부품 오면 바로</text>
+
+  <!-- Row 6: Jetson 셋업 (you) day7->9 -->
+  <text x="190" y="386" font-size="13" fill="#1d4ed8" text-anchor="end" font-weight="600">Jetson 셋업(너)</text>
+  <rect x="480" y="374" width="100" height="18" rx="6" fill="#2563eb"/>
+  <text x="530" y="410" font-size="11" fill="#1d4ed8" text-anchor="middle">JetPack+edge_agent</text>
+
+  <!-- Row 7: PCB연결+캘리브+가동 (you) day10->13 -->
+  <text x="190" y="446" font-size="13" fill="#1d4ed8" text-anchor="end" font-weight="600">PCB연결·캘리브·가동(너)</text>
+  <rect x="600" y="434" width="120" height="18" rx="6" fill="#2563eb"/>
+  <text x="728" y="448" font-size="11.5" fill="#1d4ed8">→ 데모</text>
+
+  <!-- baseline -->
+  <line x1="200" y1="470" x2="860" y2="470" stroke="#d6d3d1" stroke-width="2"/>
+
+  <!-- key message -->
+  <rect x="32" y="492" width="856" height="64" rx="12" fill="#fef2f2" stroke="#ef4444" stroke-width="1.5"/>
+  <text x="48" y="518" font-size="15" fill="#b91c1c" font-weight="700">핵심 — PCB(주황)가 제일 오래 걸림. Gerber 머지되면 그날 다섯 군데 다 질러.</text>
+  <text x="48" y="540" font-size="13" fill="#7f1d1d">한국 부품 오는 1~2일에 깔판, Jetson 오면 JetPack+agent 셋업, PCB 오면 케이블 꽂고 캘리브 → 가동. 노는 시간 0.</text>
+</svg>

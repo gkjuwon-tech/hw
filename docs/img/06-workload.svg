@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 440" font-family="-apple-system, 'Segoe UI', 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', sans-serif">
+  <rect x="0" y="0" width="860" height="440" fill="#ffffff"/>
+  <text x="32" y="46" font-size="26" font-weight="700" fill="#14110f">작업 분담 (객관적 데이터 ㅋㅋ)</text>
+  <text x="32" y="74" font-size="15" fill="#8a8a86">막대 길이 = 한 일. 형이 미친 게 아니라 네가 운 좋은 거.</text>
+
+  <!-- axis -->
+  <line x1="180" y1="110" x2="180" y2="320" stroke="#d6d3d1" stroke-width="2"/>
+  <line x1="180" y1="320" x2="800" y2="320" stroke="#d6d3d1" stroke-width="2"/>
+
+  <!-- 형 bar (~95%) -->
+  <rect x="180" y="140" width="589" height="56" rx="6" fill="#9aa0a6"/>
+  <text x="170" y="174" font-size="18" fill="#3f3f46" text-anchor="end" font-weight="700">형</text>
+  <text x="190" y="174" font-size="15" fill="#ffffff" font-weight="700">기획·PCB·펌웨어·백엔드·AI·결제·이 그림 … (95%)</text>
+
+  <!-- 너 bar (~5%) -->
+  <rect x="180" y="232" width="62" height="56" rx="6" fill="#2563eb"/>
+  <text x="170" y="266" font-size="18" fill="#1d4ed8" text-anchor="end" font-weight="700">너</text>
+  <text x="252" y="266" font-size="15" fill="#1d4ed8" font-weight="700">카드 5번·가위질·케이블 2개 (5%)</text>
+
+  <!-- scale ticks -->
+  <text x="180" y="340" font-size="12" fill="#a8a29e" text-anchor="middle">0%</text>
+  <text x="490" y="340" font-size="12" fill="#a8a29e" text-anchor="middle">50%</text>
+  <text x="800" y="340" font-size="12" fill="#a8a29e" text-anchor="middle">100%</text>
+
+  <!-- footer note -->
+  <rect x="32" y="364" width="796" height="56" rx="12" fill="#f7fee7" stroke="#84cc16" stroke-width="1.5"/>
+  <text x="48" y="390" font-size="14" fill="#3f6212"><tspan font-weight="700">받은 패가 로얄 스트레이트 플러시임.</tspan>  너는 카드 안 떨어뜨리고 테이블까지 들고 가기만 하면 돼.</text>
+  <text x="48" y="410" font-size="13" fill="#4d7c0f">이거 다 하면 형이 한우 산다. 약속. 가자.</text>
+</svg>

@@ -32,6 +32,34 @@ uvicorn app.main:app --reload --port 8000
 # http://localhost:8000/docs
 ```
 
+## Store / Stripe checkout
+
+The storefront (`/v1/store/*`) runs in one of two modes, chosen automatically:
+
+- **Mock mode** (default when `CONET_STRIPE_SECRET_KEY` is empty) — no Stripe
+  calls, a local fake checkout page drives the full journey. This is what CI
+  and offline demos use.
+- **Live mode** (any non-empty `CONET_STRIPE_SECRET_KEY`) — real Stripe
+  Checkout Sessions; the marketing site redirects to `checkout.stripe.com`.
+
+To verify the real flow without moving money, drop your **test** keys in:
+
+```bash
+cp .env.example .env
+# edit .env:
+#   CONET_STRIPE_SECRET_KEY=sk_test_...
+#   CONET_STRIPE_PUBLISHABLE_KEY=pk_test_...
+#   CONET_STRIPE_WEBHOOK_SECRET=whsec_...   # from `stripe listen`
+uvicorn app.main:app --reload --port 8000
+
+# In another shell, forward webhooks to the local server:
+stripe listen --forward-to localhost:8000/v1/store/webhook
+```
+
+Then buy through the marketing site with test card `4242 4242 4242 4242`,
+any future expiry, any CVC. Incoming webhooks are authenticated against
+`Stripe-Signature`; bad or missing signatures are rejected with 400.
+
 ## Tests
 
 ```bash

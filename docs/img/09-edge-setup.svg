@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 440" font-family="-apple-system, 'Segoe UI', 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', sans-serif">
+  <rect x="0" y="0" width="940" height="440" fill="#ffffff"/>
+  <text x="32" y="46" font-size="26" font-weight="700" fill="#14110f">Jetson Edge 셋업 — 5단계, 위에서 아래로</text>
+  <text x="32" y="74" font-size="15" fill="#8a8a86">박스 켜고 → 형 에이전트 깔고 → 설정 채우고 → 한 번 캘리브 → 자동 가동. 한 번만 하면 끝.</text>
+
+  <defs>
+    <marker id="dn" markerWidth="10" markerHeight="10" refX="3" refY="7" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L6,0 L3,7 Z" fill="#15803d"/>
+    </marker>
+  </defs>
+
+  <!-- step 1 -->
+  <rect x="120" y="100" width="700" height="48" rx="10" fill="#f0fdf4" stroke="#15803d" stroke-width="2"/>
+  <circle cx="150" cy="124" r="15" fill="#15803d"/>
+  <text x="150" y="129" font-size="15" fill="#ffffff" text-anchor="middle" font-weight="700">1</text>
+  <text x="180" y="120" font-size="15" fill="#14532d" font-weight="700">JetPack 플래시</text>
+  <text x="180" y="138" font-size="12.5" fill="#166534">SDK Manager(또는 SD 이미지)로 L4T 굽고 첫 부팅 — Ubuntu 깔리는 거랑 똑같음</text>
+
+  <line x1="470" y1="150" x2="470" y2="166" stroke="#15803d" stroke-width="2" marker-end="url(#dn)"/>
+
+  <!-- step 2 -->
+  <rect x="120" y="168" width="700" height="48" rx="10" fill="#f0fdf4" stroke="#15803d" stroke-width="2"/>
+  <circle cx="150" cy="192" r="15" fill="#15803d"/>
+  <text x="150" y="197" font-size="15" fill="#ffffff" text-anchor="middle" font-weight="700">2</text>
+  <text x="180" y="188" font-size="15" fill="#14532d" font-weight="700">edge_agent 설치</text>
+  <text x="180" y="206" font-size="12.5" fill="#166534">venv + pip install -e . + systemd 서비스 등록 (형이 README에 명령어 다 줌)</text>
+
+  <line x1="470" y1="218" x2="470" y2="234" stroke="#15803d" stroke-width="2" marker-end="url(#dn)"/>
+
+  <!-- step 3 -->
+  <rect x="120" y="236" width="700" height="48" rx="10" fill="#f0fdf4" stroke="#15803d" stroke-width="2"/>
+  <circle cx="150" cy="260" r="15" fill="#15803d"/>
+  <text x="150" y="265" font-size="15" fill="#ffffff" text-anchor="middle" font-weight="700">3</text>
+  <text x="180" y="256" font-size="15" fill="#14532d" font-weight="700">edge.env 설정</text>
+  <text x="180" y="274" font-size="12.5" fill="#166534">Cloud URL · API 키 · edge_id · line_id · scanner_port=/dev/ttyACM0</text>
+
+  <line x1="470" y1="286" x2="470" y2="302" stroke="#15803d" stroke-width="2" marker-end="url(#dn)"/>
+
+  <!-- step 4 -->
+  <rect x="120" y="304" width="700" height="48" rx="10" fill="#fffbeb" stroke="#f59e0b" stroke-width="2"/>
+  <circle cx="150" cy="328" r="15" fill="#f59e0b"/>
+  <text x="150" y="333" font-size="15" fill="#ffffff" text-anchor="middle" font-weight="700">4</text>
+  <text x="180" y="324" font-size="15" fill="#92400e" font-weight="700">라인 캘리브 (딱 1회)</text>
+  <text x="180" y="342" font-size="12.5" fill="#b45309">정상품 5번 올렸다 내려서 "정상은 이렇게 생겼다" 학습 — 에이전트는 이거 안 함, 네가 1회</text>
+
+  <line x1="470" y1="354" x2="470" y2="370" stroke="#15803d" stroke-width="2" marker-end="url(#dn)"/>
+
+  <!-- step 5 -->
+  <rect x="120" y="372" width="700" height="48" rx="10" fill="#f7fee7" stroke="#84cc16" stroke-width="2.5"/>
+  <circle cx="150" cy="396" r="15" fill="#65a30d"/>
+  <text x="150" y="401" font-size="15" fill="#ffffff" text-anchor="middle" font-weight="700">5</text>
+  <text x="180" y="392" font-size="15" fill="#3f6212" font-weight="700">가동 → 자동 inspect + heartbeat</text>
+  <text x="180" y="410" font-size="12.5" fill="#4d7c0f">systemctl enable --now → 깔판 위 물건 지나갈 때마다 pass/fail. 재부팅해도 자동 시작.</text>
+</svg>

@@ -21,6 +21,8 @@ directly via ``httpx``, which is already a dependency.
 
 from __future__ import annotations
 
+import hashlib
+import hmac
 import secrets
 import time
 from dataclasses import dataclass, field
@@ -35,6 +37,56 @@ from app.core.logging import get_logger
 logger = get_logger("conet.store.stripe")
 
 STRIPE_API_BASE = "https://api.stripe.com/v1"
+
+# Reject webhook events whose signature timestamp is older than this, to
+# defeat replay. Matches Stripe's own default tolerance.
+STRIPE_SIGNATURE_TOLERANCE_SECONDS = 300
+
+
+def verify_stripe_signature(
+    payload: bytes,
+    sig_header: str,
+    secret: str,
+    *,
+    tolerance: int = STRIPE_SIGNATURE_TOLERANCE_SECONDS,
+    now: int | None = None,
+) -> bool:
+    """Verify a ``Stripe-Signature`` header against the raw request body.
+
+    Stripe signs ``"{timestamp}.{payload}"`` with HMAC-SHA256 keyed on the
+    endpoint's ``whsec_…`` secret and ships it as
+    ``t=<unix>,v1=<hex>[,v1=<hex>…]``. We recompute the MAC and compare in
+    constant time against every ``v1`` scheme present, then enforce the
+    timestamp tolerance to reject replays. This mirrors
+    ``stripe.Webhook.construct_event`` without pulling in the SDK.
+    """
+    if not sig_header or not secret:
+        return False
+
+    timestamp: str | None = None
+    signatures: list[str] = []
+    for chunk in sig_header.split(","):
+        key, _, value = chunk.strip().partition("=")
+        if key == "t":
+            timestamp = value
+        elif key == "v1":
+            signatures.append(value)
+
+    if timestamp is None or not signatures:
+        return False
+    try:
+        ts = int(timestamp)
+    except ValueError:
+        return False
+
+    current = int(now if now is not None else time.time())
+    if abs(current - ts) > tolerance:
+        return False
+
+    expected = hmac.new(
+        secret.encode("utf-8"), f"{ts}.".encode() + payload, hashlib.sha256
+    ).hexdigest()
+    return any(hmac.compare_digest(expected, candidate) for candidate in signatures)
 
 
 @dataclass
@@ -266,10 +318,10 @@ class StripeClient:
         resp = await self._http.get(
             f"{STRIPE_API_BASE}/checkout/sessions/{session_id}",
             auth=(settings.stripe_secret_key, ""),
-            params={"expand[]": "shipping_details"},
+            params={"expand[]": "line_items"},
         )
         resp.raise_for_status()
-        return resp.json()
+        return _normalize_live_session(resp.json())
 
     # ── mock-only helpers exposed to the mock-checkout router ──────
 
@@ -325,6 +377,22 @@ class StripeClient:
         resp.raise_for_status()
         data = resp.json()
         return {"id": data["id"], "url": data["url"], "mode": data.get("mode", "payment")}
+
+
+def _normalize_live_session(data: dict[str, Any]) -> dict[str, Any]:
+    """Smooth over Stripe API-version differences for the order endpoint.
+
+    Newer API versions moved the collected shipping address from the
+    top-level ``shipping_details`` onto ``collected_information``. The order
+    endpoint reads ``shipping_details``, so backfill it when only the newer
+    shape is present. Left as-is otherwise.
+    """
+    if not data.get("shipping_details"):
+        collected = data.get("collected_information") or {}
+        shipping = collected.get("shipping_details")
+        if shipping:
+            data["shipping_details"] = shipping
+    return data
 
 
 def _serialize_mock(session: MockSession) -> dict[str, Any]:
