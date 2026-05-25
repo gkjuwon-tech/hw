@@ -26,7 +26,20 @@ constexpr uint32_t kScanHz = 200;
 constexpr uint32_t kScanPeriodUs = 1000000UL / kScanHz;
 
 constexpr uint16_t kAdcMax = 4095;   // 12-bit ADC full-scale
-constexpr uint16_t kAdcDead = 32;    // noise floor subtracted before compression
+// Noise floor subtracted before compression. The v1 divider
+// (V_ADC = 3.3V * R30 / (R30 + R_cell + 2*R_mux_on); R30=10k) puts the
+// fully-unloaded baseline at ~970-1050 counts across every silicon
+// variant in tools/reality_check/adc_divider.py and ~5% per-cell yarn
+// resistance tolerance. A 32-count dead band ships ~1000 counts of
+// false signal on every unpressed cell as phantom-touch payload. 1100
+// zeroes out the unpressed baseline across the simulated variance band
+// and leaves the pressed range (~1000..3300 counts) mapped onto roughly
+// 0..240 of 255. Per-cell baseline subtraction (recorded on the first
+// quiet scan after boot, then subtracted from every subsequent raw
+// reading) is the v2 fix; this constant is the v1 quick-fix that keeps
+// the wire format usable for the prototype build without needing any
+// calibration step.
+constexpr uint16_t kAdcDead = 1100;
 
 // ─── Wire format ─────────────────────────────────────────────────────────────
 constexpr uint32_t kFrameMagic = 0x434F4E54UL;  // 'CONT'
