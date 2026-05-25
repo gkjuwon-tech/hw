@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 400" font-family="-apple-system, 'Segoe UI', 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', sans-serif">
+  <rect x="0" y="0" width="940" height="400" fill="#ffffff"/>
+  <text x="32" y="46" font-size="26" font-weight="700" fill="#14110f">전체 그림 한 장 — 데이터가 흐르는 길</text>
+  <text x="32" y="74" font-size="15" fill="#8a8a86">왼쪽에서 오른쪽으로 흐름. 파란 박스 = 네가 하는 일. 회색 박스 = 형이 이미 다 한 일.</text>
+
+  <!-- box 1: 깔판 -->
+  <rect x="32" y="120" width="150" height="120" rx="14" fill="#eff6ff" stroke="#2563eb" stroke-width="3"/>
+  <text x="107" y="158" font-size="17" font-weight="700" fill="#1d4ed8" text-anchor="middle">① 깔판</text>
+  <text x="107" y="182" font-size="13" fill="#334155" text-anchor="middle">Tactile Mesh</text>
+  <text x="107" y="206" font-size="12" fill="#64748b" text-anchor="middle">압력 센서</text>
+  <text x="107" y="226" font-size="12" fill="#2563eb" text-anchor="middle" font-weight="700">← 네 가위질</text>
+
+  <!-- box 2: PCB -->
+  <rect x="232" y="120" width="150" height="120" rx="14" fill="#f4f5f3" stroke="#9aa0a6" stroke-width="3"/>
+  <text x="307" y="158" font-size="17" font-weight="700" fill="#3f3f46" text-anchor="middle">② Scanner PCB</text>
+  <text x="307" y="182" font-size="13" fill="#334155" text-anchor="middle">ESP32-S3</text>
+  <text x="307" y="206" font-size="12" fill="#64748b" text-anchor="middle">형 설계·JLCPCB 조립</text>
+  <text x="307" y="226" font-size="12" fill="#2563eb" text-anchor="middle" font-weight="700">← 너: 발주+케이블</text>
+
+  <!-- box 3: 노트북 -->
+  <rect x="432" y="120" width="150" height="120" rx="14" fill="#f4f5f3" stroke="#9aa0a6" stroke-width="3"/>
+  <text x="507" y="158" font-size="17" font-weight="700" fill="#3f3f46" text-anchor="middle">③ 노트북</text>
+  <text x="507" y="182" font-size="13" fill="#334155" text-anchor="middle">Gateway</text>
+  <text x="507" y="206" font-size="12" fill="#64748b" text-anchor="middle">gateway.py</text>
+  <text x="507" y="226" font-size="12" fill="#64748b" text-anchor="middle">형이 줌</text>
+
+  <!-- box 4: Cloud -->
+  <rect x="632" y="120" width="150" height="120" rx="14" fill="#f4f5f3" stroke="#9aa0a6" stroke-width="3"/>
+  <text x="707" y="158" font-size="17" font-weight="700" fill="#3f3f46" text-anchor="middle">④ Cloud</text>
+  <text x="707" y="182" font-size="13" fill="#334155" text-anchor="middle">FastAPI · AI</text>
+  <text x="707" y="206" font-size="12" fill="#64748b" text-anchor="middle">docker compose up</text>
+  <text x="707" y="226" font-size="12" fill="#64748b" text-anchor="middle">형이 다 짬</text>
+
+  <!-- box 5: 판정 -->
+  <rect x="832" y="120" width="76" height="120" rx="14" fill="#f7fee7" stroke="#84cc16" stroke-width="3"/>
+  <text x="870" y="170" font-size="15" font-weight="700" fill="#4d7c0f" text-anchor="middle">⑤</text>
+  <text x="870" y="196" font-size="14" font-weight="700" fill="#16a34a" text-anchor="middle">pass</text>
+  <text x="870" y="216" font-size="14" font-weight="700" fill="#dc2626" text-anchor="middle">fail</text>
+
+  <!-- arrows -->
+  <defs>
+    <marker id="ah" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L7,3 L0,6 Z" fill="#52525b"/>
+    </marker>
+  </defs>
+  <line x1="182" y1="180" x2="230" y2="180" stroke="#52525b" stroke-width="3" marker-end="url(#ah)"/>
+  <line x1="382" y1="180" x2="430" y2="180" stroke="#52525b" stroke-width="3" marker-end="url(#ah)"/>
+  <text x="406" y="170" font-size="11" fill="#dc2626" text-anchor="middle" font-weight="700">USB-C</text>
+  <line x1="582" y1="180" x2="630" y2="180" stroke="#52525b" stroke-width="3" marker-end="url(#ah)"/>
+  <line x1="782" y1="180" x2="830" y2="180" stroke="#52525b" stroke-width="3" marker-end="url(#ah)"/>
+
+  <!-- legend / footer -->
+  <rect x="32" y="290" width="876" height="80" rx="12" fill="#fafaf9" stroke="#e7e5e4" stroke-width="1.5"/>
+  <rect x="52" y="312" width="22" height="22" rx="5" fill="#eff6ff" stroke="#2563eb" stroke-width="2.5"/>
+  <text x="84" y="328" font-size="14" fill="#1d4ed8" font-weight="700">네 일</text>
+  <text x="84" y="350" font-size="12.5" fill="#475569">가위질 1번 · 카드 5번 · 케이블 2개 · 클릭 몇 번</text>
+  <rect x="492" y="312" width="22" height="22" rx="5" fill="#f4f5f3" stroke="#9aa0a6" stroke-width="2.5"/>
+  <text x="524" y="328" font-size="14" fill="#3f3f46" font-weight="700">형 일 (이미 끝남)</text>
+  <text x="524" y="350" font-size="12.5" fill="#475569">PCB 설계 · 펌웨어 · 백엔드 · AI · 결제 · 이 그림</text>
+</svg>

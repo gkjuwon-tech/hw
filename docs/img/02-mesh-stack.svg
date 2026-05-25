@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 520" font-family="-apple-system, 'Segoe UI', 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', sans-serif">
+  <rect x="0" y="0" width="820" height="520" fill="#ffffff"/>
+  <text x="32" y="46" font-size="26" font-weight="700" fill="#14110f">깔판 단면 — 5층 샌드위치</text>
+  <text x="32" y="74" font-size="15" fill="#8a8a86">위에서부터 이 순서로 쌓아. 햄(Velostat)을 빵(천 격자) 두 장이 위아래로 감싸는 구조.</text>
+
+  <!-- layers (drawn top to bottom) -->
+  <!-- Top TPU -->
+  <rect x="120" y="110" width="480" height="40" rx="6" fill="#dbeafe" stroke="#60a5fa" stroke-width="2"/>
+  <text x="360" y="135" font-size="15" fill="#1e3a8a" text-anchor="middle" font-weight="600">① Top TPU 코팅 (라미네이트 — 뚜껑)</text>
+
+  <!-- 세로줄 (열) -->
+  <rect x="120" y="160" width="480" height="46" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+  <!-- vertical ticks to show columns -->
+  <g stroke="#2563eb" stroke-width="3">
+    <line x1="150" y1="166" x2="150" y2="200"/><line x1="178" y1="166" x2="178" y2="200"/>
+    <line x1="206" y1="166" x2="206" y2="200"/><line x1="234" y1="166" x2="234" y2="200"/>
+    <line x1="262" y1="166" x2="262" y2="200"/><line x1="290" y1="166" x2="290" y2="200"/>
+    <line x1="318" y1="166" x2="318" y2="200"/><line x1="346" y1="166" x2="346" y2="200"/>
+    <line x1="374" y1="166" x2="374" y2="200"/><line x1="402" y1="166" x2="402" y2="200"/>
+    <line x1="430" y1="166" x2="430" y2="200"/><line x1="458" y1="166" x2="458" y2="200"/>
+    <line x1="486" y1="166" x2="486" y2="200"/><line x1="514" y1="166" x2="514" y2="200"/>
+    <line x1="542" y1="166" x2="542" y2="200"/><line x1="570" y1="166" x2="570" y2="200"/>
+  </g>
+  <text x="360" y="234" font-size="14" fill="#1d4ed8" text-anchor="middle" font-weight="700">② 세로줄(열) — 전도성 천 16가닥 │││</text>
+
+  <!-- Velostat -->
+  <rect x="120" y="252" width="480" height="48" rx="6" fill="#1c1c1c"/>
+  <text x="360" y="282" font-size="15" fill="#f5f5f4" text-anchor="middle" font-weight="700">③ Velostat 압력 필름 (검정) = 햄</text>
+
+  <!-- 가로줄 (행) -->
+  <rect x="120" y="310" width="480" height="46" rx="6" fill="#fff7ed" stroke="#f59e0b" stroke-width="2"/>
+  <g stroke="#f59e0b" stroke-width="3">
+    <line x1="140" y1="320" x2="580" y2="320"/><line x1="140" y1="330" x2="580" y2="330"/>
+    <line x1="140" y1="340" x2="580" y2="340"/><line x1="140" y1="348" x2="580" y2="348"/>
+  </g>
+  <text x="360" y="350" font-size="14" fill="#b45309" text-anchor="middle" font-weight="700">④ 가로줄(행) — 전도성 천 16가닥 ═══</text>
+
+  <!-- Bottom TPU -->
+  <rect x="120" y="366" width="480" height="40" rx="6" fill="#dbeafe" stroke="#60a5fa" stroke-width="2"/>
+  <text x="360" y="391" font-size="15" fill="#1e3a8a" text-anchor="middle" font-weight="600">⑤ Bottom TPU 코팅 (바닥)</text>
+
+  <!-- VHB tape -->
+  <rect x="120" y="416" width="480" height="26" rx="4" fill="#fee2e2" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="6 4"/>
+  <text x="360" y="434" font-size="12.5" fill="#b91c1c" text-anchor="middle">밑면: 3M VHB 양면테이프 (보호지는 데모 직전에만 떼!)</text>
+
+  <!-- right callouts -->
+  <text x="630" y="186" font-size="13" fill="#2563eb">세로 16</text>
+  <text x="630" y="282" font-size="13" fill="#52525b">누르면 저항↓</text>
+  <text x="630" y="338" font-size="13" fill="#b45309">가로 16</text>
+
+  <!-- bottom note -->
+  <rect x="32" y="464" width="756" height="38" rx="10" fill="#f7fee7" stroke="#84cc16" stroke-width="1.5"/>
+  <text x="48" y="488" font-size="13.5" fill="#3f6212">가로 × 세로 = 16 × 16 = <tspan font-weight="700">256 셀</tspan>. 한 가로줄과 한 세로줄이 겹치는 교차점 1개가 셀 1개.</text>
+</svg>
