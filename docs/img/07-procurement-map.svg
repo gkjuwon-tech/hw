@@ -1,49 +1,55 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 600" font-family="-apple-system, 'Segoe UI', 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', sans-serif">
-  <rect x="0" y="0" width="920" height="600" fill="#ffffff"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 720" font-family="-apple-system, 'Segoe UI', 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', sans-serif">
+  <rect x="0" y="0" width="920" height="720" fill="#ffffff"/>
   <text x="32" y="46" font-size="26" font-weight="700" fill="#14110f">발주 지도 — 어디서 뭘 사나</text>
-  <text x="32" y="74" font-size="15" fill="#8a8a86">네 군데서 끝. 카드는 전부 네 거. 형은 설계만 했고 부품값까지 낼 이유 없음.</text>
+  <text x="32" y="74" font-size="15" fill="#8a8a86">다섯 군데. 깔판·PCB·도구 + 이번엔 진짜 Edge 박스(Jetson)까지. 결제는 형이 연구비로.</text>
 
   <!-- Card A: Adafruit -->
-  <rect x="32" y="120" width="410" height="180" rx="14" fill="#f8fafc" stroke="#0ea5e9" stroke-width="2.5"/>
-  <rect x="32" y="120" width="410" height="40" rx="14" fill="#0ea5e9"/>
-  <rect x="32" y="146" width="410" height="14" fill="#0ea5e9"/>
-  <text x="50" y="147" font-size="17" font-weight="700" fill="#ffffff">Adafruit · 미국 · DHL 4~5일</text>
-  <text x="50" y="190" font-size="14" fill="#0c4a6e">• M1 Velostat 압력 필름</text>
-  <text x="50" y="214" font-size="14" fill="#0c4a6e">• M2 전도성 천</text>
-  <text x="50" y="238" font-size="14" fill="#0c4a6e">• M3 전도성 실</text>
-  <text x="50" y="272" font-size="15" font-weight="700" fill="#0369a1">소계 ≈ $32 (₩4.4만) · 면세권</text>
+  <rect x="32" y="120" width="410" height="170" rx="14" fill="#f8fafc" stroke="#0ea5e9" stroke-width="2.5"/>
+  <rect x="32" y="120" width="410" height="38" rx="14" fill="#0ea5e9"/>
+  <rect x="32" y="144" width="410" height="14" fill="#0ea5e9"/>
+  <text x="50" y="146" font-size="16" font-weight="700" fill="#ffffff">Adafruit · 미국 · DHL 4~5일</text>
+  <text x="50" y="188" font-size="14" fill="#0c4a6e">• M1 Velostat · M2 전도성 천 · M3 전도성 실</text>
+  <text x="50" y="222" font-size="13" fill="#0c4a6e">깔판 핵심 3종, 한 번에 시켜서 배송비 1회</text>
+  <text x="50" y="262" font-size="15" font-weight="700" fill="#0369a1">소계 ≈ $32 (₩4.4만) · 면세권</text>
 
   <!-- Card B: 디바이스마트 -->
-  <rect x="478" y="120" width="410" height="180" rx="14" fill="#f7fdf9" stroke="#16a34a" stroke-width="2.5"/>
-  <rect x="478" y="120" width="410" height="40" rx="14" fill="#16a34a"/>
-  <rect x="478" y="146" width="410" height="14" fill="#16a34a"/>
-  <text x="496" y="147" font-size="17" font-weight="700" fill="#ffffff">디바이스마트 · 한국 · 익일</text>
-  <text x="496" y="190" font-size="14" fill="#14532d">• M4 Kapton 테이프</text>
-  <text x="496" y="214" font-size="14" fill="#14532d">• M7 FFC 16핀 케이블 × 2</text>
-  <text x="496" y="272" font-size="15" font-weight="700" fill="#15803d">소계 ≈ ₩1.1만 · 오후 3시 전 결제</text>
+  <rect x="478" y="120" width="410" height="170" rx="14" fill="#f7fdf9" stroke="#16a34a" stroke-width="2.5"/>
+  <rect x="478" y="120" width="410" height="38" rx="14" fill="#16a34a"/>
+  <rect x="478" y="144" width="410" height="14" fill="#16a34a"/>
+  <text x="496" y="146" font-size="16" font-weight="700" fill="#ffffff">디바이스마트 · 한국 · 익일</text>
+  <text x="496" y="188" font-size="14" fill="#14532d">• M4 Kapton 테이프</text>
+  <text x="496" y="216" font-size="14" fill="#14532d">• M7 FFC 16핀 케이블 × 2</text>
+  <text x="496" y="262" font-size="15" font-weight="700" fill="#15803d">소계 ≈ ₩1.1만 · 오후 3시 전 결제</text>
 
   <!-- Card C: 쿠팡 -->
-  <rect x="32" y="320" width="410" height="180" rx="14" fill="#faf7fe" stroke="#7c3aed" stroke-width="2.5"/>
-  <rect x="32" y="320" width="410" height="40" rx="14" fill="#7c3aed"/>
-  <rect x="32" y="346" width="410" height="14" fill="#7c3aed"/>
-  <text x="50" y="347" font-size="17" font-weight="700" fill="#ffffff">쿠팡 · 한국 · 익일 (로켓)</text>
-  <text x="50" y="390" font-size="14" fill="#4c1d95">• M5 TPU 라미네이팅 필름</text>
-  <text x="50" y="414" font-size="14" fill="#4c1d95">• M6 3M VHB 양면테이프</text>
-  <text x="50" y="438" font-size="14" fill="#4c1d95">• 도구 T1~T7 (인두·멀티미터·라미네이터…)</text>
-  <text x="50" y="472" font-size="15" font-weight="700" fill="#6d28d9">소계 ≈ ₩14만 · 로켓배송만 골라</text>
+  <rect x="32" y="310" width="410" height="170" rx="14" fill="#faf7fe" stroke="#7c3aed" stroke-width="2.5"/>
+  <rect x="32" y="310" width="410" height="38" rx="14" fill="#7c3aed"/>
+  <rect x="32" y="334" width="410" height="14" fill="#7c3aed"/>
+  <text x="50" y="336" font-size="16" font-weight="700" fill="#ffffff">쿠팡 · 한국 · 익일 (로켓)</text>
+  <text x="50" y="378" font-size="14" fill="#4c1d95">• M5 TPU 필름 · M6 VHB 테이프</text>
+  <text x="50" y="406" font-size="14" fill="#4c1d95">• 도구 T1~T7 (인두·멀티미터·라미네이터…)</text>
+  <text x="50" y="452" font-size="15" font-weight="700" fill="#6d28d9">소계 ≈ ₩14만 · 로켓배송만 골라</text>
 
   <!-- Card D: JLCPCB -->
-  <rect x="478" y="320" width="410" height="180" rx="14" fill="#fff8f3" stroke="#ea580c" stroke-width="2.5"/>
-  <rect x="478" y="320" width="410" height="40" rx="14" fill="#ea580c"/>
-  <rect x="478" y="346" width="410" height="14" fill="#ea580c"/>
-  <text x="496" y="347" font-size="17" font-weight="700" fill="#ffffff">JLCPCB · 중국 · DHL 8~10일 ★</text>
-  <text x="496" y="390" font-size="14" fill="#7c2d12">• Scanner PCB × 5 (SMT 풀턴키)</text>
-  <text x="496" y="414" font-size="13" fill="#9a3412">  부품·조립 다 포함, 완제품으로 옴</text>
-  <text x="496" y="448" font-size="13" fill="#b91c1c" font-weight="700">  제일 오래 걸림 → 그래서 제일 먼저 발주</text>
-  <text x="496" y="478" font-size="15" font-weight="700" fill="#c2410c">소계 ≈ ₩14만 · Gerber 머지 후</text>
+  <rect x="478" y="310" width="410" height="170" rx="14" fill="#fff8f3" stroke="#ea580c" stroke-width="2.5"/>
+  <rect x="478" y="310" width="410" height="38" rx="14" fill="#ea580c"/>
+  <rect x="478" y="334" width="410" height="14" fill="#ea580c"/>
+  <text x="496" y="336" font-size="16" font-weight="700" fill="#ffffff">JLCPCB · 중국 · DHL 8~10일 ★</text>
+  <text x="496" y="378" font-size="14" fill="#7c2d12">• Scanner PCB × 5 (SMT 풀턴키)</text>
+  <text x="496" y="406" font-size="13" fill="#b91c1c" font-weight="700">제일 오래 걸림 → 제일 먼저 발주</text>
+  <text x="496" y="452" font-size="15" font-weight="700" fill="#c2410c">소계 ≈ ₩14만 · Gerber 머지 후</text>
+
+  <!-- Card E: Jetson Edge (wide, NEW) -->
+  <rect x="32" y="500" width="856" height="116" rx="14" fill="#f0fdf4" stroke="#15803d" stroke-width="3"/>
+  <rect x="32" y="500" width="856" height="38" rx="14" fill="#15803d"/>
+  <rect x="32" y="524" width="856" height="14" fill="#15803d"/>
+  <text x="50" y="526" font-size="16" font-weight="700" fill="#ffffff">NVIDIA / Arrow / 국내 총판 · Jetson Edge 박스 · 1~2주 ★NEW</text>
+  <text x="50" y="568" font-size="14" fill="#14532d">• Jetson Orin Nano 8GB 개발자 키트  • NVMe SSD 256GB  • 전원어댑터 + microSD + 케이블</text>
+  <text x="50" y="596" font-size="13" fill="#166534">검색어: "Jetson Orin Nano Developer Kit" (디바이스마트·엘레파츠에도 있음)</text>
+  <text x="640" y="568" font-size="15" font-weight="700" fill="#15803d">소계 ≈ ₩78만</text>
 
   <!-- total banner -->
-  <rect x="32" y="524" width="856" height="56" rx="12" fill="#f7fee7" stroke="#84cc16" stroke-width="1.5"/>
-  <text x="48" y="550" font-size="15" fill="#3f6212"><tspan font-weight="700">합계 약 30~32만원.</tspan>  전부 네 카드로 긁고 주문내역 캡처(지출증빙).</text>
-  <text x="48" y="571" font-size="13" fill="#4d7c0f">형 인건비 환산하면 부품값은 반올림 오차임. 이 정돈 네가 내. 정당함.</text>
+  <rect x="32" y="636" width="856" height="64" rx="12" fill="#f7fee7" stroke="#84cc16" stroke-width="1.5"/>
+  <text x="48" y="664" font-size="15" fill="#3f6212"><tspan font-weight="700">합계 약 110만원</tspan> (부품 ~32만 + Edge ~78만). 형이 <tspan font-weight="700">연구비</tspan>로 결제 — 엣지까지 들어가서 네 카드론 미안하니까.</text>
+  <text x="48" y="685" font-size="13" fill="#4d7c0f">대신 너는 손 제대로 움직여라. 돈 안 내는 대신 1대는 진짜 네가 끝까지 만든다. 그게 거래야.</text>
 </svg>
