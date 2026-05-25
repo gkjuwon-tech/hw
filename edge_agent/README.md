@@ -2,8 +2,11 @@
 
 The on-device daemon that runs on every Tactile Edge appliance (Jetson Orin
 Nano class). It is the **only** code path that talks to the physical scanner
-hardware in production; the desktop dashboard and the FastAPI cloud are
-purely consumers of what this agent emits.
+hardware in production. It also serves the **on-device kiosk** to the
+appliance's integrated touch display over loopback HTTP — there is no
+separate desktop installer for operators to download. The FastAPI cloud and
+the fleet-management web console are pure consumers of what this agent
+emits.
 
 ```
                        ┌───────────────────────────────────────────┐

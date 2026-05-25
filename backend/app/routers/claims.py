@@ -2,8 +2,9 @@
 
 Two-step enrollment replaces "type any string and it works":
 
-  1. Operator generates a *claim token* via the desktop:
-     ``POST /v1/claims`` returns a one-time token + expiry.
+  1. Operator generates a *claim token* via the fleet-management console
+     or the on-device kiosk: ``POST /v1/claims`` returns a one-time
+     token + expiry.
   2. The edge appliance is physically attached. On first boot the agent
      calls ``POST /v1/claims/redeem`` with the token + its hardware serial
      + firmware hash. The server validates and creates the Edge row.

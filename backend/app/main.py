@@ -29,6 +29,7 @@ from app.routers import (
     events,
     frames,
     inspect,
+    kiosk,
     lines,
     mesh_network,
     meshes,
@@ -111,6 +112,7 @@ def create_app() -> FastAPI:
     app.include_router(inspect.router)
     app.include_router(events.router)
     app.include_router(edges.router)
+    app.include_router(kiosk.router)
     app.include_router(meshes.router)
     app.include_router(pricing.router)
     app.include_router(store.router)

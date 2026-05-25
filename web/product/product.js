@@ -1,6 +1,12 @@
 /* =====================================================================
-   Conet Tactile — product / checkout / activate / download page wiring
+   Conet Tactile — product / checkout / activate page wiring.
    No framework. Plain modules. The script auto-routes by document.body.
+
+   There is **no separate desktop installer to download**: the operator
+   UI is pre-installed on the Tactile Edge appliance's integrated touch
+   display and runs as a Chromium kiosk against the local edge_agent.
+   The old download.html page has been removed; the subscription
+   success_url now lands on activate.html instead.
    ===================================================================== */
 
 (function () {
@@ -43,9 +49,9 @@
   //
   //   We persist the synthesized session blob in sessionStorage keyed
   //   by the local session id, then route the visitor through
-  //   mock-checkout.html / activate.html / download.html with a
-  //   ?local=1 flag that tells each page to read from sessionStorage
-  //   instead of the backend.
+  //   mock-checkout.html / activate.html with a ?local=1 flag that
+  //   tells each page to read from sessionStorage instead of the
+  //   backend.
 
   function isNetworkError(err) {
     // fetch() rejects with TypeError on network failure across every
@@ -380,16 +386,19 @@
     }
 
     submit.addEventListener("click", async () => {
-      setSubmitting(submit, true, "Creating subscription…");
+      setSubmitting(submit, true, "Activating Edge Care…");
       const body = {
-        plan_id: (plan && plan.id) || "tactile_cloud_pilot",
+        plan_id: (plan && plan.id) || "edge_care_basic",
       };
       if (sessionId) body.hardware_session_id = sessionId;
       const orderEmail = document.getElementById("hw-order-email");
       if (orderEmail && orderEmail.textContent && orderEmail.textContent !== "—") {
         body.customer_email = orderEmail.textContent;
       }
-      body.success_url = new URL("download.html", window.location.href).toString();
+      // No separate download page — the on-device software ships
+      // pre-installed on the appliance's integrated touch display, so
+      // we land back on activate.html with the trial-active state.
+      body.success_url = new URL("activate.html", window.location.href).toString();
       body.cancel_url = window.location.href;
 
       if (!backendReachable || isLocalSessionId(sessionId)) {
@@ -406,68 +415,17 @@
           startOfflineSubscription(body);
           return;
         }
-        setSubmitting(submit, false, "Activate trial");
+        setSubmitting(submit, false, "Activate Edge Care");
         alert("Could not start subscription: " + err.message);
       }
     });
   }
 
-  // ── download.html ────────────────────────────────────────────
-  async function wireDownloadPage() {
-    const winLink = document.getElementById("dl-windows");
-    if (!winLink) return;
-    const sessionId = qs("session_id");
-    if (!sessionId) {
-      setText("sub-id", "no session id in URL");
-      return;
-    }
-
-    function renderOrder(order) {
-      setText("sub-id", order.subscription || order.id);
-      setText("sub-email", order.customer_email || "\u2014");
-      const trialEnd = formatTrialEnd(order.trial_days);
-      setText("sub-trial-end", trialEnd);
-      setText("meta-trial-end", trialEnd);
-      if (order.trial_days) {
-        setText("meta-trial", order.trial_days + "\u00a0days");
-      }
-      if (order.downloads) {
-        setHref("dl-windows", order.downloads.windows);
-        setHref("dl-mac", order.downloads.mac);
-        setHref("dl-linux", order.downloads.linux);
-      }
-    }
-
-    if (isLocalSessionId(sessionId)) {
-      const order = loadLocalSession(sessionId) || {};
-      // Synthesize the fields the live API would have backfilled after
-      // a successful subscription so the download page renders without
-      // an explicit `downloads` block from the backend.
-      const synthetic = Object.assign({}, order, {
-        subscription: "sub_local_" + (sessionId.split("_").pop() || "trial"),
-        trial_days: order.trial_days || 30,
-        downloads: order.downloads || {
-          windows: "#offline-windows",
-          mac: "#offline-mac",
-          linux: "#offline-linux",
-        },
-      });
-      renderOrder(synthetic);
-      return;
-    }
-
-    try {
-      const order = await getJson("/v1/store/order/" + encodeURIComponent(sessionId));
-      if (!order.downloads) {
-        setText("sub-id", "trial not active");
-        return;
-      }
-      renderOrder(order);
-    } catch (err) {
-      console.error(err);
-      setText("sub-id", isNetworkError(err) ? "backend unreachable" : "could not load");
-    }
-  }
+  // The old wireDownloadPage() that pointed at exe / dmg / AppImage
+  // installers is gone — the operator UI ships pre-installed on the
+  // Tactile Edge appliance's integrated touch display. The activate
+  // page is now the post-checkout landing page for both hardware and
+  // Edge Care subscriptions.
 
   // ── mock-checkout.html ───────────────────────────────────────
   async function wireMockCheckoutPage() {
@@ -535,8 +493,9 @@
           '<li>First ' +
           (item.trial_days || 30) +
           ' days free \u2014 cancel any time</li>' +
-          '<li>Per-line calibration, drift detection, dashboards</li>' +
-          '<li>Desktop installer link delivered on the next page</li>' +
+          '<li>Over-the-air updates to the on-device kiosk software</li>' +
+          '<li>Per-cell drift detection synced to your Tactile Cloud workspace</li>' +
+          '<li>Replacement Tactile Mesh rolls shipped on schedule</li>' +
           '<li>Card required so the line does not stop at trial end</li>';
       }
     } else {
@@ -568,7 +527,9 @@
         };
       }
       updateLocalSession(sessionId, patch);
-      const nextPage = isSubscription ? "download.html" : "activate.html";
+      // Both hardware and Edge Care flows now land on activate.html;
+      // the page picks the right copy based on session.mode.
+      const nextPage = "activate.html";
       window.location.assign(
         nextPage + "?session_id=" + encodeURIComponent(sessionId) + "&local=1"
       );
@@ -607,7 +568,7 @@
           // to sessionStorage so the activate / download pages can
           // pick up where we left off via the same local fallback.
           saveLocalSession(sessionId, Object.assign({}, session, { paid: true, status: "paid" }));
-          const nextPage = isSubscription ? "download.html" : "activate.html";
+          const nextPage = "activate.html";
           window.location.assign(
             nextPage + "?session_id=" + encodeURIComponent(sessionId) + "&local=1"
           );
@@ -636,7 +597,6 @@
     wireFooter();
     wireScannerPage();
     wireActivatePage();
-    wireDownloadPage();
     wireMockCheckoutPage();
   });
 })();

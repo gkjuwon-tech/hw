@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Activate Tactile Cloud — Conet Tactile</title>
+    <title>Activate Edge Care — Conet Tactile</title>
     <meta
       name="description"
-      content="The hardware order is in. Activate Tactile Cloud — the first month is on us."
+      content="The Tactile Edge order is in. Activate Edge Care so the on-device software stays current and the fleet stays in sync — the first month is on us."
     />
     <meta name="theme-color" content="#0b0c0a" />
 
@@ -55,21 +55,23 @@
         <div class="hero__inner">
           <p class="eyebrow eyebrow--light">
             <span class="eyebrow__dot" aria-hidden="true"></span>
-            Step 02 of 03 &mdash; Activate Tactile&nbsp;Cloud
+            Step 02 of 03 &mdash; Activate Edge&nbsp;Care
           </p>
           <h1 class="hero__title">
             The box is on the truck.<br />
-            Now turn on the&nbsp;cloud.
+            Now turn on Edge&nbsp;Care.
           </h1>
           <p class="hero__lede">
-            Your appliance is queued for fulfillment from Seoul. Tactile
-            Cloud is the part that learns: the per-cell signature, the
-            drift dashboards, the webhook delivery. The first month is on
-            us, a card is required so the line never stops on
-            day&nbsp;thirty-one.
+            Your appliance is queued for fulfillment from Seoul. The
+            calibration UI, drift dashboard, and OPC-UA bridge are
+            <strong>pre-installed on the integrated touch display</strong>
+            &mdash; no laptop, no .exe, no .dmg. Edge&nbsp;Care is the
+            recurring plan that keeps that software updated, syncs fleet
+            baselines from Tactile Cloud, and ships replacement mesh
+            rolls on schedule. First month free.
           </p>
           <div class="hero__actions">
-            <a class="link-strong" href="#activate">Activate trial</a>
+            <a class="link-strong" href="#activate">Activate Edge Care</a>
             <a class="link-quiet" href="scanner.html#specs">
               Read the specs again
               <span class="arrow" aria-hidden="true">&rarr;</span>
@@ -78,8 +80,8 @@
         </div>
 
         <div class="hero__meta">
-          <p><span class="num" id="hero-total">USD&nbsp;1,290</span><span class="unit">hardware, paid</span></p>
-          <p><span class="num">30&nbsp;days</span><span class="unit">free Tactile&nbsp;Cloud, then USD&nbsp;49&nbsp;/&nbsp;month</span></p>
+          <p><span class="num" id="hero-total">USD&nbsp;1,490</span><span class="unit">appliance + on-device software, paid</span></p>
+          <p><span class="num">30&nbsp;days</span><span class="unit">free Edge&nbsp;Care, then USD&nbsp;49&nbsp;/&nbsp;month</span></p>
           <p><span class="num" id="hero-trial-end">Jun&nbsp;24</span><span class="unit">first auto-charge, cancel anytime</span></p>
         </div>
       </section>
@@ -135,34 +137,38 @@
       >
         <div class="split split--reverse split--order">
          <div class="split__copy">
-          <p class="eyebrow">Step 02 &mdash; Tactile&nbsp;Cloud &middot; Pilot</p>
+          <p class="eyebrow">Step 02 &mdash; Edge&nbsp;Care &middot; Basic</p>
           <h2 class="h2">Thirty days, then USD&nbsp;49.</h2>
           <p class="lede">
-            Tactile&nbsp;Cloud&nbsp;&middot;&nbsp;Pilot is the direct-order
-            entry tier. Per-line calibration, drift detection, dashboards,
-            and webhook delivery. The desktop installer link arrives on the
-            next page; we also email a copy so you can install on a second
-            laptop without coming back here.
+            Edge&nbsp;Care&nbsp;&middot;&nbsp;Basic is the direct-order
+            entry plan. It keeps the on-device software updated over the
+            air, syncs the per-cell calibration baseline to your Tactile
+            Cloud workspace, delivers signed webhook events to your
+            MES/SCADA, and ships replacement mesh rolls on schedule.
+            There is no separate desktop installer &mdash; the software
+            runs on the appliance's integrated touch display.
           </p>
 
           <ul class="checks">
             <li>30-day free trial &mdash; cancel any time before day&nbsp;thirty-one</li>
-            <li>Per-cell drift detection and calibration history</li>
-            <li>Desktop installer for Windows, macOS, and Linux on the next page</li>
+            <li>Over-the-air updates to the on-device kiosk software</li>
+            <li>Per-cell drift detection and calibration history, synced to Tactile&nbsp;Cloud</li>
             <li>Webhooks &middot; REST &middot; OPC-UA bridge included</li>
+            <li>Replacement Tactile&nbsp;Mesh rolls shipped on the schedule you set</li>
           </ul>
 
           <div class="form form--inline">
             <div class="form__row form__row--wide form__row--submit">
               <button class="submit" type="button" id="activate-submit">
-                <span class="submit__label">Activate trial</span>
+                <span class="submit__label">Activate Edge Care</span>
                 <span class="arrow" aria-hidden="true">&rarr;</span>
               </button>
               <p class="form__legal">
                 Card is collected by Stripe on the next screen.
                 <br />
                 We charge USD&nbsp;<span id="sw-price">49</span>&nbsp;/&nbsp;month
-                on day&nbsp;31. Downgrade or cancel from the desktop app.
+                on day&nbsp;31. Cancel from the on-device kiosk or via
+                /v1/admin.
               </p>
             </div>
             <p class="form__mock" id="activate-mock-banner" hidden>

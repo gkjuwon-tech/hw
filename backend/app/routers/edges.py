@@ -16,7 +16,7 @@ Endpoints:
   ``POST   /v1/edges/{edge_id}/heartbeat``
                                          — agent-side telemetry tick
   ``GET    /v1/edges/{edge_id}/telemetry``
-                                         — SSE stream of heartbeats (desktop)
+                                         — SSE stream of heartbeats (fleet console)
   ``GET    /v1/edges/{edge_id}/telemetry/recent``
                                          — last N heartbeats (replay for late
                                            subscribers)
@@ -82,6 +82,8 @@ async def enroll_edge(
         serial=serial,
         model=payload.model,
         site=payload.site,
+        display_kind=payload.display_kind,
+        display_resolution=payload.display_resolution,
     )
     session.add(edge)
     try:
@@ -130,6 +132,10 @@ async def update_edge(
         edge.hostname = payload.hostname
     if payload.site is not None:
         edge.site = payload.site
+    if payload.display_kind is not None:
+        edge.display_kind = payload.display_kind
+    if payload.display_resolution is not None:
+        edge.display_resolution = payload.display_resolution
     await session.commit()
     await session.refresh(edge)
     return edge
@@ -158,9 +164,10 @@ async def heartbeat(
     """Agent-side liveness + metrics tick.
 
     Updates the persistent ``edges`` row in place AND publishes the same
-    payload to the SSE bus so subscribers (desktop) see it within ~1 RTT.
-    A heartbeat with ``frames_per_second == 0`` is treated as ``degraded``
-    rather than ``offline`` — the agent is up but the scanner is silent.
+    payload to the SSE bus so subscribers (fleet console) see it within
+    ~1 RTT. A heartbeat with ``frames_per_second == 0`` is treated as
+    ``degraded`` rather than ``offline`` — the agent is up but the
+    scanner is silent.
     """
     edge = await session.get(Edge, edge_id)
     if edge is None or edge.org_id != auth.org_id:
@@ -178,6 +185,8 @@ async def heartbeat(
     edge.inference_p50_ms = payload.inference_p50_ms
     edge.inference_p99_ms = payload.inference_p99_ms
     edge.frames_per_second = payload.frames_per_second
+    edge.display_active = payload.display_active
+    edge.display_touch_events_per_min = payload.display_touch_events_per_min
     edge.last_seen_at = datetime.now(timezone.utc)
 
     if payload.gpu_temp_c >= 90.0 or payload.cpu_temp_c >= 95.0:
@@ -208,6 +217,8 @@ async def heartbeat(
             "frames_per_second": edge.frames_per_second,
             "firmware_version": edge.firmware_version,
             "agent_version": edge.agent_version,
+            "display_active": edge.display_active,
+            "display_touch_events_per_min": edge.display_touch_events_per_min,
         },
     )
 

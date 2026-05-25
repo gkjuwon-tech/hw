@@ -23,11 +23,17 @@ async def test_catalog_lists_hardware_and_software(client: AsyncClient) -> None:
 
     hardware = {sku["id"]: sku for sku in body["hardware"]}
     assert "tactile_edge" in hardware
-    assert hardware["tactile_edge"]["unit_amount_usd"] == 1_290
+    # Software (kiosk UI, calibration, drift dashboard) is now bundled
+    # with the appliance — the unit price reflects the bundle.
+    assert hardware["tactile_edge"]["unit_amount_usd"] == 1_490
 
     software = {plan["id"]: plan for plan in body["software"]}
-    assert "tactile_cloud_pilot" in software
-    assert software["tactile_cloud_pilot"]["trial_days"] == 30
+    # Canonical id is ``edge_care_basic``; the legacy ``tactile_cloud_pilot``
+    # is kept as a checkout alias but is NOT advertised in the catalog
+    # listing (otherwise the storefront would show two cards for the
+    # same plan).
+    assert "edge_care_basic" in software
+    assert software["edge_care_basic"]["trial_days"] == 30
 
     assert "US" in body["shipping_countries"]
     assert "KR" in body["shipping_countries"]
@@ -59,6 +65,7 @@ async def test_create_software_checkout_returns_subscription_url(client: AsyncCl
     resp = await client.post(
         "/v1/store/checkout/software",
         json={
+            # Legacy plan id is still accepted at checkout for old links.
             "plan_id": "tactile_cloud_pilot",
             "hardware_session_id": "cs_test_mock_abc",
         },
@@ -99,13 +106,14 @@ async def test_full_mock_checkout_journey(client: AsyncClient) -> None:
     assert hw_order["paid"] is True
     assert hw_order["customer_email"] == "buyer@example.com"
     assert hw_order["shipping_details"]["address"]["country"] == "KR"
-    assert "downloads" not in hw_order  # hardware order, no downloads yet
+    assert "downloads" not in hw_order  # no separate desktop installer.
+    assert "appliance_setup" not in hw_order  # hardware order, not yet.
 
-    # 3. Create the software subscription, complete it (no shipping)
+    # 3. Create the maintenance subscription, complete it (no shipping)
     resp = await client.post(
         "/v1/store/checkout/software",
         json={
-            "plan_id": "tactile_cloud_pilot",
+            "plan_id": "edge_care_basic",
             "hardware_session_id": hw_session_id,
             "customer_email": "buyer@example.com",
         },
@@ -120,7 +128,9 @@ async def test_full_mock_checkout_journey(client: AsyncClient) -> None:
     )
     assert resp.status_code == 200
 
-    # 4. Fetch the software order — should be paid + carry download URLs
+    # 4. Fetch the maintenance order — paid, but no desktop downloads.
+    #    Software is pre-installed on the appliance; the order response
+    #    points the buyer at the on-device kiosk URL instead.
     resp = await client.get(f"/v1/store/order/{sw_session_id}")
     assert resp.status_code == 200, resp.text
     sw_order = resp.json()
@@ -129,11 +139,12 @@ async def test_full_mock_checkout_journey(client: AsyncClient) -> None:
     assert sw_order["trial_days"] == 30
     assert sw_order["subscription"] is not None
     assert sw_order["subscription"].startswith("sub_test_mock_")
-    assert "downloads" in sw_order
-    assert "windows" in sw_order["downloads"]
-    assert "mac" in sw_order["downloads"]
-    assert "linux" in sw_order["downloads"]
-    assert sw_order["metadata"]["plan_id"] == "tactile_cloud_pilot"
+    assert "downloads" not in sw_order
+    assert "appliance_setup" in sw_order
+    assert sw_order["appliance_setup"]["kiosk_url_local"].startswith(
+        "http://127.0.0.1"
+    )
+    assert sw_order["metadata"]["plan_id"] == "edge_care_basic"
     assert sw_order["metadata"]["hardware_session_id"] == hw_session_id
 
 
@@ -152,7 +163,7 @@ async def test_get_mock_session_round_trip(client: AsyncClient) -> None:
     assert body["id"] == sid
     assert body["mode"] == "payment"
     assert body["line_items"][0]["quantity"] == 2
-    assert body["amount_total"] == 1_290 * 100 * 2
+    assert body["amount_total"] == 1_490 * 100 * 2
     assert body["metadata"]["sku_id"] == "tactile_edge"
 
 
