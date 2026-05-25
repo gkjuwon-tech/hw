@@ -7,6 +7,7 @@
   "use strict";
 
   const API_BASE_KEY = "conet-tactile.api-base";
+  const LOCAL_SESSION_PREFIX = "conet-tactile.local-session:";
 
   // The marketing site is served statically; the backend runs on
   // localhost:8000 in dev and at https://api.conet.studio in production.
@@ -27,6 +28,135 @@
 
   function qs(name) {
     return new URLSearchParams(window.location.search).get(name);
+  }
+
+  // ── offline fallback ───────────────────────────────────────── *
+  //
+  //   The marketing site is published as a static bundle and the live
+  //   backend at api.conet.studio is not always reachable from preview
+  //   deployments, CodeSandbox embeds, the user's phone on a corporate
+  //   network with TLS interception, etc. When the checkout fetch fails
+  //   with a network-level error (Safari surfaces this as the cryptic
+  //   "Load failed") we don't want to wedge the order flow — we want to
+  //   step the visitor through a fully client-side mock so they can see
+  //   exactly what the production checkout looks like.
+  //
+  //   We persist the synthesized session blob in sessionStorage keyed
+  //   by the local session id, then route the visitor through
+  //   mock-checkout.html / activate.html / download.html with a
+  //   ?local=1 flag that tells each page to read from sessionStorage
+  //   instead of the backend.
+
+  function isNetworkError(err) {
+    // fetch() rejects with TypeError on network failure across every
+    // major engine: "Failed to fetch" (Chrome / Firefox), "Load failed"
+    // (Safari), "NetworkError" (older WebKit). Treat any TypeError or
+    // any message that doesn't look like an HTTP status as a network
+    // failure that should be retried as an offline mock.
+    if (!err) return true;
+    if (err instanceof TypeError) return true;
+    const msg = String(err.message || err);
+    if (/Failed to fetch/i.test(msg)) return true;
+    if (/Load failed/i.test(msg)) return true;
+    if (/NetworkError/i.test(msg)) return true;
+    if (/network error/i.test(msg)) return true;
+    return false;
+  }
+
+  function randomToken() {
+    if (window.crypto && typeof window.crypto.randomUUID === "function") {
+      return window.crypto.randomUUID().replace(/-/g, "").slice(0, 16);
+    }
+    return Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
+  }
+
+  function makeLocalSessionId(mode) {
+    return "cs_local_" + (mode || "x") + "_" + randomToken();
+  }
+
+  function isLocalSessionId(id) {
+    return typeof id === "string" && id.indexOf("cs_local_") === 0;
+  }
+
+  function saveLocalSession(id, blob) {
+    try {
+      window.sessionStorage.setItem(LOCAL_SESSION_PREFIX + id, JSON.stringify(blob));
+    } catch (_) {
+      // sessionStorage unavailable — the fallback is best-effort.
+    }
+  }
+
+  function loadLocalSession(id) {
+    try {
+      const raw = window.sessionStorage.getItem(LOCAL_SESSION_PREFIX + id);
+      return raw ? JSON.parse(raw) : null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function updateLocalSession(id, patch) {
+    const current = loadLocalSession(id) || {};
+    saveLocalSession(id, Object.assign({}, current, patch));
+  }
+
+  function isOfflineMode() {
+    return qs("local") === "1" || isLocalSessionId(qs("session_id"));
+  }
+
+  function offlineHardwareSession(body) {
+    const id = makeLocalSessionId("hw");
+    const unitCents = 129000;
+    const qty = body.quantity || 1;
+    const blob = {
+      id: id,
+      mode: "payment",
+      status: "open",
+      paid: false,
+      customer_email: body.customer_email || "",
+      amount_total: unitCents * qty,
+      trial_days: 30,
+      created_at: new Date().toISOString(),
+      shipping_details: null,
+      line_items: [
+        {
+          name: "Tactile\u00a0Edge",
+          quantity: qty,
+          unit_amount_usd: 1290,
+        },
+      ],
+    };
+    saveLocalSession(id, blob);
+    return blob;
+  }
+
+  function offlineSoftwareSession(body) {
+    const id = makeLocalSessionId("sw");
+    const blob = {
+      id: id,
+      mode: "subscription",
+      status: "open",
+      paid: false,
+      customer_email: body.customer_email || "",
+      hardware_session_id: body.hardware_session_id || null,
+      amount_total: 0,
+      trial_days: 30,
+      created_at: new Date().toISOString(),
+      line_items: [
+        {
+          name: "Tactile\u00a0Cloud \u00b7 Pilot",
+          quantity: 1,
+          unit_amount_usd: 49,
+          trial_days: 30,
+        },
+      ],
+    };
+    saveLocalSession(id, blob);
+    return blob;
+  }
+
+  function offlineMockUrl(id) {
+    return "mock-checkout.html?session_id=" + encodeURIComponent(id) + "&local=1";
   }
 
   function formatUsd(cents) {
@@ -94,7 +224,7 @@
     if (year) year.textContent = String(new Date().getFullYear());
   }
 
-  // ── scanner.html ─────────────────────────────────────────────
+  // ── scanner.html ──────────────────────────────
   async function wireScannerPage() {
     const submit = document.getElementById("buy-submit");
     if (!submit) return;
@@ -102,29 +232,53 @@
     const qty = document.getElementById("buy-qty");
     const mockBanner = document.getElementById("buy-mock-banner");
 
+    let backendReachable = true;
     try {
       const catalog = await getJson("/v1/store/catalog");
       if (catalog.mock_mode && mockBanner) mockBanner.hidden = false;
     } catch (err) {
       console.warn("catalog fetch failed", err);
+      if (isNetworkError(err)) {
+        backendReachable = false;
+        // When the live backend is unreachable the order flow becomes a
+        // client-only demo; surface the mock banner so the visitor
+        // knows up-front that no real card will be charged.
+        if (mockBanner) mockBanner.hidden = false;
+      }
+    }
+
+    function startOfflineCheckout(body) {
+      const session = offlineHardwareSession(body);
+      window.location.assign(offlineMockUrl(session.id));
     }
 
     submit.addEventListener("click", async () => {
       setSubmitting(submit, true, "Creating checkout…");
+      const body = {
+        sku_id: "tactile_edge",
+        quantity: parseInt(qty.value, 10) || 1,
+      };
+      if (email && email.value) body.customer_email = email.value;
+      body.success_url = new URL("activate.html", window.location.href).toString();
+      body.cancel_url = new URL("scanner.html", window.location.href).toString();
+
+      if (!backendReachable) {
+        startOfflineCheckout(body);
+        return;
+      }
+
       try {
-        const body = {
-          sku_id: "tactile_edge",
-          quantity: parseInt(qty.value, 10) || 1,
-        };
-        if (email && email.value) body.customer_email = email.value;
-        const successUrl = new URL("activate.html", window.location.href).toString();
-        const cancelUrl = new URL("scanner.html", window.location.href).toString();
-        body.success_url = successUrl;
-        body.cancel_url = cancelUrl;
         const session = await postJson("/v1/store/checkout/hardware", body);
         window.location.assign(session.url);
       } catch (err) {
         console.error(err);
+        if (isNetworkError(err)) {
+          // Backend was healthy on catalog read but is now unreachable
+          // (or never had the checkout endpoint deployed). Fall through
+          // to the client-only flow instead of stranding the visitor.
+          startOfflineCheckout(body);
+          return;
+        }
         setSubmitting(submit, false, "Continue to checkout");
         alert("Could not start checkout: " + err.message);
       }
@@ -137,75 +291,121 @@
     if (!submit) return;
 
     const sessionId = qs("session_id");
+    const offline = isOfflineMode();
     const mockBanner = document.getElementById("activate-mock-banner");
     const priceEl = document.getElementById("sw-price");
 
-    let plan;
-    try {
-      const catalog = await getJson("/v1/store/catalog");
-      plan = catalog.software[0];
-      if (priceEl) priceEl.textContent = String(plan.monthly_amount_usd);
-      if (catalog.mock_mode && mockBanner) mockBanner.hidden = false;
-    } catch (err) {
-      console.warn("catalog fetch failed", err);
+    let plan = {
+      id: "tactile_cloud_pilot",
+      monthly_amount_usd: 49,
+      trial_days: 30,
+    };
+    let backendReachable = !offline;
+
+    if (!offline) {
+      try {
+        const catalog = await getJson("/v1/store/catalog");
+        plan = catalog.software[0] || plan;
+        if (catalog.mock_mode && mockBanner) mockBanner.hidden = false;
+      } catch (err) {
+        console.warn("catalog fetch failed", err);
+        if (isNetworkError(err)) {
+          backendReachable = false;
+          if (mockBanner) mockBanner.hidden = false;
+        }
+      }
+    } else {
+      if (mockBanner) mockBanner.hidden = false;
+    }
+
+    if (priceEl && plan && plan.monthly_amount_usd != null) {
+      priceEl.textContent = String(plan.monthly_amount_usd);
+    }
+
+    function renderOrder(order) {
+      setText("hw-order-id", order.id);
+      setText("hw-order-status", order.paid ? "paid" : (order.status || "pending"));
+      setText("hw-order-email", order.customer_email || "\u2014");
+      const ship = order.shipping_details;
+      const shipText =
+        ship && ship.address
+          ? [
+              ship.name,
+              ship.address.line1,
+              ship.address.line2,
+              ship.address.city,
+              ship.address.state,
+              ship.address.postal_code,
+              ship.address.country,
+            ]
+              .filter(Boolean)
+              .join(", ")
+          : "\u2014";
+      setText("hw-order-ship", shipText);
+      if (order.amount_total) {
+        setText("hw-order-total", formatUsd(order.amount_total));
+        setText("hero-total", formatUsd(order.amount_total));
+      } else {
+        setText("hw-order-total", "\u2014");
+      }
+      if (plan && plan.trial_days) {
+        setText("hero-trial-end", formatTrialEnd(plan.trial_days));
+      }
     }
 
     if (sessionId) {
-      try {
-        const order = await getJson("/v1/store/order/" + encodeURIComponent(sessionId));
-        setText("hw-order-id", order.id);
-        setText("hw-order-status", order.paid ? "paid" : (order.status || "pending"));
-        setText("hw-order-email", order.customer_email || "\u2014");
-        const ship = order.shipping_details;
-        const shipText =
-          ship && ship.address
-            ? [
-                ship.name,
-                ship.address.line1,
-                ship.address.line2,
-                ship.address.city,
-                ship.address.state,
-                ship.address.postal_code,
-                ship.address.country,
-              ]
-                .filter(Boolean)
-                .join(", ")
-            : "\u2014";
-        setText("hw-order-ship", shipText);
-        if (order.amount_total) {
-          setText("hw-order-total", formatUsd(order.amount_total));
-          setText("hero-total", formatUsd(order.amount_total));
+      if (isLocalSessionId(sessionId)) {
+        const order = loadLocalSession(sessionId);
+        if (order) {
+          renderOrder(order);
         } else {
-          setText("hw-order-total", "\u2014");
+          setText("hw-order-status", "session not found");
         }
-        if (plan && plan.trial_days) {
-          setText("hero-trial-end", formatTrialEnd(plan.trial_days));
+      } else {
+        try {
+          const order = await getJson("/v1/store/order/" + encodeURIComponent(sessionId));
+          renderOrder(order);
+        } catch (err) {
+          console.error(err);
+          setText("hw-order-status", isNetworkError(err) ? "backend unreachable" : "could not load");
         }
-      } catch (err) {
-        console.error(err);
-        setText("hw-order-status", "could not load");
       }
     } else {
       setText("hw-order-status", "no session id in URL");
     }
 
+    function startOfflineSubscription(body) {
+      const session = offlineSoftwareSession(body);
+      window.location.assign(offlineMockUrl(session.id));
+    }
+
     submit.addEventListener("click", async () => {
       setSubmitting(submit, true, "Creating subscription…");
+      const body = {
+        plan_id: (plan && plan.id) || "tactile_cloud_pilot",
+      };
+      if (sessionId) body.hardware_session_id = sessionId;
+      const orderEmail = document.getElementById("hw-order-email");
+      if (orderEmail && orderEmail.textContent && orderEmail.textContent !== "—") {
+        body.customer_email = orderEmail.textContent;
+      }
+      body.success_url = new URL("download.html", window.location.href).toString();
+      body.cancel_url = window.location.href;
+
+      if (!backendReachable || isLocalSessionId(sessionId)) {
+        startOfflineSubscription(body);
+        return;
+      }
+
       try {
-        const body = {
-          plan_id: (plan && plan.id) || "tactile_cloud_pilot",
-        };
-        if (sessionId) body.hardware_session_id = sessionId;
-        const orderEmail = document.getElementById("hw-order-email");
-        if (orderEmail && orderEmail.textContent && orderEmail.textContent !== "—") {
-          body.customer_email = orderEmail.textContent;
-        }
-        body.success_url = new URL("download.html", window.location.href).toString();
-        body.cancel_url = window.location.href;
         const session = await postJson("/v1/store/checkout/software", body);
         window.location.assign(session.url);
       } catch (err) {
         console.error(err);
+        if (isNetworkError(err)) {
+          startOfflineSubscription(body);
+          return;
+        }
         setSubmitting(submit, false, "Activate trial");
         alert("Could not start subscription: " + err.message);
       }
@@ -222,8 +422,7 @@
       return;
     }
 
-    try {
-      const order = await getJson("/v1/store/order/" + encodeURIComponent(sessionId));
+    function renderOrder(order) {
       setText("sub-id", order.subscription || order.id);
       setText("sub-email", order.customer_email || "\u2014");
       const trialEnd = formatTrialEnd(order.trial_days);
@@ -236,12 +435,37 @@
         setHref("dl-windows", order.downloads.windows);
         setHref("dl-mac", order.downloads.mac);
         setHref("dl-linux", order.downloads.linux);
-      } else {
-        setText("sub-id", "trial not active");
       }
+    }
+
+    if (isLocalSessionId(sessionId)) {
+      const order = loadLocalSession(sessionId) || {};
+      // Synthesize the fields the live API would have backfilled after
+      // a successful subscription so the download page renders without
+      // an explicit `downloads` block from the backend.
+      const synthetic = Object.assign({}, order, {
+        subscription: "sub_local_" + (sessionId.split("_").pop() || "trial"),
+        trial_days: order.trial_days || 30,
+        downloads: order.downloads || {
+          windows: "#offline-windows",
+          mac: "#offline-mac",
+          linux: "#offline-linux",
+        },
+      });
+      renderOrder(synthetic);
+      return;
+    }
+
+    try {
+      const order = await getJson("/v1/store/order/" + encodeURIComponent(sessionId));
+      if (!order.downloads) {
+        setText("sub-id", "trial not active");
+        return;
+      }
+      renderOrder(order);
     } catch (err) {
       console.error(err);
-      setText("sub-id", "could not load");
+      setText("sub-id", isNetworkError(err) ? "backend unreachable" : "could not load");
     }
   }
 
@@ -256,13 +480,31 @@
       return;
     }
 
-    let session;
-    try {
-      session = await getJson("/v1/store/mock/session/" + encodeURIComponent(sessionId));
-    } catch (err) {
-      console.error(err);
-      showMockError("Could not load checkout session: " + err.message);
-      return;
+    const isLocal = isLocalSessionId(sessionId) || qs("local") === "1";
+
+    let session = null;
+    if (isLocal) {
+      session = loadLocalSession(sessionId);
+      if (!session) {
+        showMockError(
+          "Local session not found in this tab. Start the order from the scanner page."
+        );
+        return;
+      }
+    } else {
+      try {
+        session = await getJson("/v1/store/mock/session/" + encodeURIComponent(sessionId));
+      } catch (err) {
+        console.error(err);
+        if (isNetworkError(err)) {
+          showMockError(
+            "Backend unreachable \u2014 start the order from the scanner page to use the offline mock."
+          );
+          return;
+        }
+        showMockError("Could not load checkout session: " + err.message);
+        return;
+      }
     }
 
     const isSubscription = session.mode === "subscription";
@@ -307,10 +549,41 @@
       setText("mc-pay-label", "Pay " + formatUsd(total));
     }
 
+    function completeLocal() {
+      const email = document.getElementById("mc-email");
+      const patch = {
+        paid: true,
+        status: "paid",
+        customer_email: (email && email.value) || session.customer_email || "buyer@example.com",
+      };
+      if (!isSubscription) {
+        patch.shipping_details = {
+          name: (document.getElementById("mc-name") || {}).value || "",
+          address: {
+            line1: (document.getElementById("mc-line1") || {}).value || "",
+            city: (document.getElementById("mc-city") || {}).value || "",
+            postal_code: (document.getElementById("mc-postal") || {}).value || "",
+            country: (document.getElementById("mc-country") || {}).value || "",
+          },
+        };
+      }
+      updateLocalSession(sessionId, patch);
+      const nextPage = isSubscription ? "download.html" : "activate.html";
+      window.location.assign(
+        nextPage + "?session_id=" + encodeURIComponent(sessionId) + "&local=1"
+      );
+    }
+
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
       const payBtn = document.getElementById("mc-pay");
       setSubmitting(payBtn, true, isSubscription ? "Starting trial…" : "Processing…");
+
+      if (isLocal) {
+        completeLocal();
+        return;
+      }
+
       try {
         const body = {
           session_id: sessionId,
@@ -328,6 +601,18 @@
         window.location.assign(result.redirect_url);
       } catch (err) {
         console.error(err);
+        if (isNetworkError(err)) {
+          // The session was created against a real backend that has
+          // since dropped offline. Best-effort: persist the form data
+          // to sessionStorage so the activate / download pages can
+          // pick up where we left off via the same local fallback.
+          saveLocalSession(sessionId, Object.assign({}, session, { paid: true, status: "paid" }));
+          const nextPage = isSubscription ? "download.html" : "activate.html";
+          window.location.assign(
+            nextPage + "?session_id=" + encodeURIComponent(sessionId) + "&local=1"
+          );
+          return;
+        }
         setSubmitting(
           payBtn,
           false,

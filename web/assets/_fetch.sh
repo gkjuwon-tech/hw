@@ -22,6 +22,16 @@ declare -A PHOTOS=(
   [shipping-port.jpg]="photo-1494412651409-8963ce7935a7"
   [cloud-operator.jpg]="photo-1581091226825-a6a2a5aee158"
   [engineering-review.jpg]="photo-1581094288338-2314dddb7ece"
+  # ------ product-page hardware set (intentionally distinct from
+  #         the marketing-site factory/cargo photography) -----------
+  [hw-board.jpg]="photo-1518770660439-4636190af475"
+  [hw-appliance.jpg]="photo-1591488320449-011701bb6704"
+  [hw-rig.jpg]="photo-1581092334651-ddf26d9a09d0"
+  [hw-cad.jpg]="photo-1581092580497-e0d23cbdf1dc"
+  [hw-desk.jpg]="photo-1593642632559-0c6d3fc62b89"
+  [hw-dial.jpg]="photo-1581092335397-9583eb92d232"
+  [hw-warehouse.jpg]="photo-1586528116311-ad8dd3c8310d"
+  [hw-aerial.jpg]="photo-1565891741441-64926e441838"
 )
 
 for name in "${!PHOTOS[@]}"; do

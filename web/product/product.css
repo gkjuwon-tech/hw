@@ -4,6 +4,17 @@
    product-page-specific variants on top.
    ===================================================================== */
 
+/* ---------- viewport safety ---------- *
+ * On phones the order form + receipt grid use 2-column micro-layouts
+ * that, without min-width: 0 on their flex/grid children, can spill
+ * past the viewport and produce a horizontal scroll on the whole page.
+ * Clip at the document root so a stray overflow inside a section can
+ * never push the page sideways. */
+html,
+body {
+  overflow-x: clip;
+}
+
 /* ---------- topbar override (these pages do not have a full-bleed
    hero behind the topbar like the marketing site, so the topbar should
    show its solid state from the first paint). ---------- */
@@ -69,15 +80,27 @@
 }
 .form__mock {
   grid-column: span 2;
+  /* On a narrow viewport this paragraph contains a mix of plain text, a
+     <code> tag, and a dot icon; without flex-wrap each anonymous flex
+     item overflows the form column and pushes the whole section past
+     the right edge of the phone. Wrap them onto multiple rows and let
+     the icon land flush at the start. */
   display: flex;
-  align-items: center;
-  gap: 0.55rem;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem 0.55rem;
   margin: 0;
+  min-width: 0;
   font-size: 0.78rem;
   letter-spacing: 0.01em;
   color: var(--muted);
   border-top: 1px dashed var(--line);
   padding-top: 1.25rem;
+}
+.form__mock-dot {
+  /* Keep the dot aligned with the cap-height of the first text run even
+     after wrap kicks in. */
+  align-self: center;
 }
 .form--inline .form__mock {
   grid-column: span 1;
@@ -155,9 +178,13 @@
 .split--order .form,
 .split--specs .specs__table {
   width: 100%;
+  /* Without min-width: 0 the form/table refuses to shrink below its
+     intrinsic content width inside the .split grid track, blowing the
+     whole section past the viewport on phones. */
+  min-width: 0;
 }
 .split--order .kv--inline {
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 .split--specs .specs__table {
   margin-top: 2rem;
@@ -347,7 +374,7 @@
 /* ---------- responsive ---------- */
 @media (max-width: 920px) {
   .kv--inline {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .kv--receipt {
     grid-template-columns: 1fr;
@@ -361,5 +388,20 @@
   .faq__row {
     grid-template-columns: 1fr;
     gap: 0.6rem;
+  }
+  /* The order form's submit row is `flex-direction: row` +
+     `justify-content: space-between` on desktop, which puts the button
+     and the legal copy side-by-side. On a phone that fights the form
+     grid and pushes the legal text past the viewport. Stack them. */
+  .form__row--submit {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1.25rem;
+  }
+  .form__row--submit .submit {
+    align-self: flex-start;
+  }
+  .form__row--submit .form__legal {
+    max-width: 56ch;
   }
 }
