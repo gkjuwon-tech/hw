@@ -18,9 +18,12 @@ export interface ToolbarProps {
 const NAV: ReadonlyArray<{ id: Route; label: string }> = [
   { id: "overview", label: "Overview" },
   { id: "edges", label: "Edges" },
+  { id: "claims", label: "Claims" },
   { id: "lines", label: "Lines" },
   { id: "mesh", label: "Mesh" },
-  { id: "calibrate", label: "Calibrate" },
+  { id: "fabric", label: "Fabric" },
+  { id: "recipes", label: "Recipes" },
+  { id: "calibrate", label: "Teach" },
   { id: "settings", label: "Settings" },
   { id: "about", label: "About" },
 ];
@@ -33,6 +36,7 @@ export function Toolbar({ current, onNavigate, crumb }: ToolbarProps): JSX.Eleme
           const active =
             current === item.id ||
             (current === "line-detail" && item.id === "lines") ||
+            (current === "line-tune" && item.id === "lines") ||
             (current === "edge-detail" && item.id === "edges");
           return (
             <button

@@ -8,9 +8,13 @@ import { DeviceTree } from "./components/DeviceTree";
 import { Overview } from "./pages/Overview";
 import { EdgesList } from "./pages/EdgesList";
 import { EdgeDetail } from "./pages/EdgeDetail";
+import { ClaimsManager } from "./pages/ClaimsManager";
 import { LinesList } from "./pages/LinesList";
 import { LineDetail } from "./pages/LineDetail";
+import { LineTune } from "./pages/LineTune";
 import { MeshList } from "./pages/MeshList";
+import { MeshFabric } from "./pages/MeshFabric";
+import { RecipesList } from "./pages/RecipesList";
 import { CalibrationWizard } from "./pages/CalibrationWizard";
 import { Settings } from "./pages/Settings";
 import { About } from "./pages/About";
@@ -22,9 +26,13 @@ export type Route =
   | "overview"
   | "edges"
   | "edge-detail"
+  | "claims"
   | "lines"
   | "line-detail"
+  | "line-tune"
   | "mesh"
+  | "fabric"
+  | "recipes"
   | "calibrate"
   | "settings"
   | "about";
@@ -94,13 +102,18 @@ export function App(): JSX.Element {
 
   const navigate = useCallback((r: Route): void => {
     setRoute(r);
-    if (r !== "line-detail") setOpenLineId(null);
+    if (r !== "line-detail" && r !== "line-tune") setOpenLineId(null);
     if (r !== "edge-detail") setOpenEdgeId(null);
   }, []);
 
   const openLine = useCallback((id: string): void => {
     setOpenLineId(id);
     setRoute("line-detail");
+  }, []);
+
+  const tuneLine = useCallback((id: string): void => {
+    setOpenLineId(id);
+    setRoute("line-tune");
   }, []);
 
   const openEdge = useCallback((id: string): void => {
@@ -147,13 +160,13 @@ export function App(): JSX.Element {
       crumb = <span>OVERVIEW</span>;
       break;
     case "edges":
-      body = <EdgesList edges={edges} onOpen={openEdge} onRefresh={refresh} />;
+      body = <EdgesList edges={edges} onOpen={openEdge} onRefresh={refresh} onGoToClaims={() => navigate("claims")} />;
       crumb = <span>EDGES</span>;
       break;
     case "edge-detail":
       body =
         openEdgeId === null ? (
-          <EdgesList edges={edges} onOpen={openEdge} onRefresh={refresh} />
+          <EdgesList edges={edges} onOpen={openEdge} onRefresh={refresh} onGoToClaims={() => navigate("claims")} />
         ) : (
           <EdgeDetail
             edgeId={openEdgeId}
@@ -167,13 +180,13 @@ export function App(): JSX.Element {
       );
       break;
     case "lines":
-      body = <LinesList lines={lines} onOpen={openLine} apiError={apiStatus === "down"} />;
+      body = <LinesList lines={lines} onOpen={openLine} onTune={tuneLine} apiError={apiStatus === "down"} />;
       crumb = <span>LINES</span>;
       break;
     case "line-detail":
       body =
         openLineId === null ? (
-          <LinesList lines={lines} onOpen={openLine} apiError={apiStatus === "down"} />
+          <LinesList lines={lines} onOpen={openLine} onTune={tuneLine} apiError={apiStatus === "down"} />
         ) : (
           <LineDetail
             lineId={openLineId}
@@ -190,9 +203,34 @@ export function App(): JSX.Element {
       body = <MeshList meshes={meshes} lines={lines} edges={edges} />;
       crumb = <span>MESH SEGMENTS</span>;
       break;
+    case "fabric":
+      body = <MeshFabric edges={edges} lines={lines} meshes={meshes} onRefresh={refresh} />;
+      crumb = <span>MESH FABRIC</span>;
+      break;
+    case "claims":
+      body = <ClaimsManager onRefresh={refresh} />;
+      crumb = <span>EDGE CLAIMS</span>;
+      break;
+    case "recipes":
+      body = <RecipesList lines={lines} />;
+      crumb = <span>RECIPES</span>;
+      break;
+    case "line-tune":
+      body =
+        openLineId === null ? (
+          <LinesList lines={lines} onOpen={openLine} onTune={tuneLine} apiError={apiStatus === "down"} />
+        ) : (
+          <LineTune lineId={openLineId} onBack={() => navigate("lines")} />
+        );
+      crumb = (
+        <span>
+          TUNE · <b>{openLineId ?? "—"}</b>
+        </span>
+      );
+      break;
     case "calibrate":
-      body = <CalibrationWizard lines={lines} />;
-      crumb = <span>CALIBRATE</span>;
+      body = <CalibrationWizard lines={lines} edges={edges} />;
+      crumb = <span>TEACH</span>;
       break;
     case "settings":
       body = <Settings apiBase={apiBase} apiStatus={apiStatus} />;

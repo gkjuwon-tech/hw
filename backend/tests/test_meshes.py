@@ -94,7 +94,12 @@ async def test_mesh_link_to_edge(client: AsyncClient) -> None:
 
     r = await client.post(
         "/v1/edges",
-        json={"id": edge_id, "hostname": edge_id, "model": "jetson-orin-nano-8gb"},
+        json={
+            "id": edge_id,
+            "hostname": edge_id,
+            "model": "jetson-orin-nano-8gb",
+            "serial": "TEST-1234567890",
+        },
     )
     assert r.status_code == 201
 

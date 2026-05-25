@@ -30,6 +30,9 @@ export interface Line {
   status?: LineStatus;
   recent_score?: number | null;
   drift_z?: number | null;
+  threshold_score?: number;
+  threshold_hits?: number;
+  drift?: number;
 }
 
 export interface InspectionEvent {
@@ -113,3 +116,117 @@ export interface ApiError extends Error {
   status: number;
   body: string;
 }
+
+// ── claim/redeem flow ───────────────────────────────────────────────
+
+export interface ClaimCreated {
+  id: string;
+  token: string;
+  label: string;
+  site: string;
+  expires_at: string;
+}
+
+export interface Claim {
+  id: string;
+  label: string;
+  site: string;
+  expected_serial: string;
+  expected_model: string;
+  expires_at: string;
+  created_at: string;
+  redeemed_at: string | null;
+  redeemed_edge_id: string | null;
+  revoked: boolean;
+}
+
+// ── teach session ───────────────────────────────────────────────────
+
+export interface TeachStatus {
+  edge_id: string;
+  line_id: string | null;
+  captured: number;
+  required: number;
+  remaining: number;
+  status: "idle" | "in_progress" | "ready" | "completed" | "failed";
+  elapsed_s: number;
+}
+
+export interface TeachCaptureResult {
+  edge_id: string;
+  line_id: string;
+  captured: number;
+  remaining: number;
+  status: string;
+  message: string;
+}
+
+export interface TeachFinishResult {
+  edge_id: string;
+  line_id: string;
+  n_samples: number;
+  rows: number;
+  cols: number;
+  mean_min: number;
+  mean_max: number;
+  line_status: string;
+  message: string;
+}
+
+// ── mesh fabric ─────────────────────────────────────────────────────
+
+export interface MeshPeer {
+  edge_id: string;
+  ip: string;
+  port: number;
+  alive: boolean;
+  capacity_free_pct: number;
+  last_announce_ago_s: number;
+  latency_ms: Record<string, number>;
+}
+
+export interface MeshTopology {
+  nodes: MeshPeer[];
+  edges_count: number;
+  alive_count: number;
+}
+
+// ── recipes (per-product saved configs) ─────────────────────────────
+
+export type TriggerMode = "continuous" | "external" | "software" | "encoder";
+
+export interface Recipe {
+  id: string;
+  org_id: string;
+  line_id: string | null;
+  name: string;
+  product_sku: string;
+  description: string;
+  threshold_score: number;
+  threshold_hits: number;
+  sigma_threshold: number;
+  drift_alert_z: number;
+  roi_x0: number;
+  roi_y0: number;
+  roi_x1: number;
+  roi_y1: number;
+  gain: number;
+  gamma: number;
+  sharpen: number;
+  denoise: number;
+  blob_min_area: number;
+  blob_max_area: number;
+  rotation_tolerance_deg: number;
+  scale_tolerance_pct: number;
+  trigger_mode: TriggerMode;
+  debounce_ms: number;
+  reject_queue_depth: number;
+  strobe_duty_pct: number;
+  strobe_delay_us: number;
+  logic_dsl: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export type RecipePatch = Partial<Omit<Recipe, "id" | "org_id" | "created_at" | "updated_at">>;
+

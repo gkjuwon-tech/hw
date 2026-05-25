@@ -14,12 +14,20 @@
 
 import type {
   ApiError,
+  Claim,
+  ClaimCreated,
   Edge,
   EdgeTelemetry,
   HealthResponse,
   InspectionEvent,
   Line,
   MeshSegment,
+  MeshTopology,
+  Recipe,
+  RecipePatch,
+  TeachCaptureResult,
+  TeachFinishResult,
+  TeachStatus,
 } from "./types";
 
 let cachedBase: string | null | undefined = undefined;
@@ -171,6 +179,159 @@ export const api = {
         notes: "",
         ...payload,
       }),
+    });
+  },
+
+  // ── lines (create line) ─────────────────────────────────────────────
+  async createLine(payload: {
+    id: string;
+    customer_tag?: string;
+    rows: number;
+    cols: number;
+  }): Promise<Line> {
+    return request<Line>("/v1/lines", {
+      method: "POST",
+      body: JSON.stringify({ customer_tag: "", ...payload }),
+    });
+  },
+
+  async updateLine(
+    lineId: string,
+    payload: { customer_tag?: string; threshold_score?: number; threshold_hits?: number },
+  ): Promise<Line> {
+    return request<Line>(`/v1/lines/${encodeURIComponent(lineId)}`, {
+      method: "PATCH",
+      body: JSON.stringify(payload),
+    });
+  },
+
+  // ── claims / enrollment ─────────────────────────────────────────────
+  async listClaims(): Promise<Claim[]> {
+    return request<Claim[]>("/v1/claims");
+  },
+  async createClaim(payload: {
+    label?: string;
+    site?: string;
+    expected_serial?: string;
+    expected_model?: string;
+    ttl_hours?: number;
+  }): Promise<ClaimCreated> {
+    return request<ClaimCreated>("/v1/claims", {
+      method: "POST",
+      body: JSON.stringify({
+        label: "",
+        site: "",
+        expected_serial: "",
+        expected_model: "jetson-orin-nano-8gb",
+        ttl_hours: 24,
+        ...payload,
+      }),
+    });
+  },
+  async revokeClaim(claimId: string): Promise<void> {
+    return request<void>(`/v1/claims/${encodeURIComponent(claimId)}/revoke`, {
+      method: "POST",
+    });
+  },
+  async redeemClaim(payload: {
+    token: string;
+    edge_id: string;
+    hostname?: string;
+    serial: string;
+    model?: string;
+    firmware_version: string;
+  }): Promise<Edge> {
+    return request<Edge>("/v1/claims/redeem", {
+      method: "POST",
+      body: JSON.stringify({
+        hostname: "",
+        model: "jetson-orin-nano-8gb",
+        ...payload,
+      }),
+    });
+  },
+
+  // ── teach (5-sample wizard) ─────────────────────────────────────────
+  async teachStatus(edgeId: string): Promise<TeachStatus> {
+    return request<TeachStatus>(`/v1/edges/${encodeURIComponent(edgeId)}/teach/status`);
+  },
+  async teachStart(edgeId: string, lineId: string): Promise<TeachStatus> {
+    return request<TeachStatus>(`/v1/edges/${encodeURIComponent(edgeId)}/teach/start`, {
+      method: "POST",
+      body: JSON.stringify({ line_id: lineId }),
+    });
+  },
+  async teachCapture(edgeId: string, data: number[]): Promise<TeachCaptureResult> {
+    return request<TeachCaptureResult>(
+      `/v1/edges/${encodeURIComponent(edgeId)}/teach/capture`,
+      {
+        method: "POST",
+        body: JSON.stringify({ data }),
+      },
+    );
+  },
+  async teachFinish(edgeId: string): Promise<TeachFinishResult> {
+    return request<TeachFinishResult>(
+      `/v1/edges/${encodeURIComponent(edgeId)}/teach/finish`,
+      { method: "POST" },
+    );
+  },
+  async teachAbort(edgeId: string): Promise<void> {
+    return request<void>(`/v1/edges/${encodeURIComponent(edgeId)}/teach`, {
+      method: "DELETE",
+    });
+  },
+
+  // ── mesh fabric topology ────────────────────────────────────────────
+  async meshTopology(): Promise<MeshTopology> {
+    return request<MeshTopology>("/v1/mesh/topology");
+  },
+  async meshFailover(payload: {
+    source_edge_id: string;
+    target_edge_id: string;
+    line_id: string;
+  }): Promise<{ status: string; line_id: string; new_edge_id: string; old_edge_id: string }> {
+    return request("/v1/mesh/failover", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    });
+  },
+
+  // ── recipes (per-product configs) ───────────────────────────────────
+  async listRecipes(lineId?: string): Promise<Recipe[]> {
+    const qs = lineId ? `?line_id=${encodeURIComponent(lineId)}` : "";
+    return request<Recipe[]>(`/v1/recipes${qs}`);
+  },
+  async getRecipe(recipeId: string): Promise<Recipe> {
+    return request<Recipe>(`/v1/recipes/${encodeURIComponent(recipeId)}`);
+  },
+  async createRecipe(payload: RecipePatch & { name: string }): Promise<Recipe> {
+    return request<Recipe>("/v1/recipes", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    });
+  },
+  async updateRecipe(recipeId: string, payload: RecipePatch): Promise<Recipe> {
+    return request<Recipe>(`/v1/recipes/${encodeURIComponent(recipeId)}`, {
+      method: "PATCH",
+      body: JSON.stringify(payload),
+    });
+  },
+  async deleteRecipe(recipeId: string): Promise<void> {
+    return request<void>(`/v1/recipes/${encodeURIComponent(recipeId)}`, {
+      method: "DELETE",
+    });
+  },
+  async loadRecipe(lineId: string, recipeId: string): Promise<{
+    line_id: string;
+    recipe_id: string;
+    recipe_name: string;
+    threshold_score: number;
+    threshold_hits: number;
+  }> {
+    return request(`/v1/lines/${encodeURIComponent(lineId)}/load_recipe`, {
+      method: "POST",
+      body: JSON.stringify({ recipe_id: recipeId }),
     });
   },
 };
