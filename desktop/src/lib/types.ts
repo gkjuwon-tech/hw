@@ -7,15 +7,15 @@
  * schemas live in `backend/app/schemas.py`.
  */
 
-export interface ConetBridge {
-  getApiBase: () => Promise<string | null>;
-  openExternal: (url: string) => Promise<void>;
-  platform: NodeJS.Platform;
-}
-
 declare global {
   interface Window {
-    conet?: ConetBridge;
+    // Injected at serve time by the on-device kiosk server (edge_agent)
+    // so the bundle knows which control plane to talk to without an
+    // Electron bridge. See edge_agent/edge_agent/kiosk.py.
+    __CONET_API_BASE__?: string;
+    __CONET_API_TOKEN__?: string;
+    __CONET_EDGE_ID__?: string;
+    __CONET_LINE_ID__?: string;
   }
 }
 

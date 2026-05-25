@@ -91,6 +91,74 @@ async def test_kiosk_server_serves_index_from_static_dir(tmp_path: Path) -> None
 
 
 @pytest.mark.asyncio
+async def test_kiosk_injects_runtime_config_into_index(tmp_path: Path) -> None:
+    (tmp_path / "index.html").write_text(
+        "<!doctype html><html><head><title>op</title></head>"
+        "<body><div id=root></div></body></html>",
+        encoding="utf-8",
+    )
+    port = _free_port()
+    settings = EdgeSettings(
+        edge_id="edge-test",
+        line_id="line-test",
+        scanner_port="/dev/null",
+        cloud_url="https://cloud.example/api",
+        api_key="ctk_live_secret",
+        kiosk_enabled=True,
+        kiosk_host="127.0.0.1",
+        kiosk_port=port,
+        kiosk_static_dir=tmp_path,
+    )
+    server = KioskServer(settings)
+    await server.start()
+    try:
+        status, headers, body = await _fetch(port, "/kiosk/index.html")
+        assert status == 200
+        assert headers["content-type"].startswith("text/html")
+        text = body.decode("utf-8")
+        # Base URL + identity are injected before </head>.
+        assert 'window.__CONET_API_BASE__="https://cloud.example/api"' in text
+        assert 'window.__CONET_EDGE_ID__="edge-test"' in text
+        assert text.index("__CONET_API_BASE__") < text.index("</head>")
+        # On loopback the box token is injected for the bundle to use.
+        assert 'window.__CONET_API_TOKEN__="ctk_live_secret"' in text
+    finally:
+        await server.stop()
+
+
+@pytest.mark.asyncio
+async def test_kiosk_omits_token_when_not_loopback(tmp_path: Path) -> None:
+    (tmp_path / "index.html").write_text(
+        "<!doctype html><html><head></head><body></body></html>",
+        encoding="utf-8",
+    )
+    port = _free_port()
+    settings = EdgeSettings(
+        edge_id="edge-test",
+        line_id="line-test",
+        scanner_port="/dev/null",
+        cloud_url="https://cloud.example/api",
+        api_key="ctk_live_secret",
+        kiosk_enabled=True,
+        kiosk_host="0.0.0.0",
+        kiosk_port=port,
+        kiosk_static_dir=tmp_path,
+    )
+    server = KioskServer(settings)
+    await server.start()
+    try:
+        _status, _headers, body = await _fetch(port, "/kiosk/index.html")
+        text = body.decode("utf-8")
+        # Base URL is fine to expose; the secret token must NOT leak when
+        # the kiosk is bound to a non-loopback address.
+        assert "__CONET_API_BASE__" in text
+        assert "ctk_live_secret" not in text
+        assert "__CONET_API_TOKEN__" not in text
+    finally:
+        await server.stop()
+
+
+@pytest.mark.asyncio
 async def test_kiosk_server_status_endpoint_returns_json(tmp_path: Path) -> None:
     port = _free_port()
     sentinel = KioskStatus(

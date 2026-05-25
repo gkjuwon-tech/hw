@@ -38,8 +38,8 @@ export function Settings({ apiBase, apiStatus }: SettingsProps): JSX.Element {
   }, []);
 
   const platform =
-    typeof window !== "undefined" && window.conet?.platform
-      ? window.conet.platform
+    typeof navigator !== "undefined" && navigator.platform
+      ? navigator.platform
       : "browser";
 
   const saveToken = (): void => {

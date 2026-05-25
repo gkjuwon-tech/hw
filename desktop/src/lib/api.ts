@@ -1,15 +1,18 @@
 /**
  * Tactile Cloud HTTP client.
  *
- * The base URL is resolved once at app startup via the Electron IPC bridge
- * (`window.conet.getApiBase()`). On the dev fallback path where the bridge
- * is unavailable (e.g. running `vite dev` without Electron), we point at
- * the canonical local backend on :8000 instead, so the React app stays
- * usable during pure-frontend iteration.
+ * The base URL is resolved from, in order of precedence:
+ *   1. `window.__CONET_API_BASE__` — injected at serve time by the
+ *      on-device kiosk server (edge_agent), set to its configured
+ *      `cloud_url`. This is the production path on the appliance.
+ *   2. `localStorage["conet.api_base"]` — a manual override (Settings).
+ *   3. `FALLBACK_BASE` (local backend on :8000) for pure-frontend
+ *      iteration via `vite dev`.
  *
- * Authentication: when a bearer token is present in localStorage under
- * `conet.api_key`, it is attached as `Authorization: Bearer ...`. The
- * Settings page is the one place that writes that key.
+ * Authentication: a bearer token from `localStorage["conet.api_key"]`
+ * (written by the Settings page) is attached as `Authorization: Bearer`.
+ * On the appliance the kiosk server can also inject the box's own key as
+ * `window.__CONET_API_TOKEN__`, used when no token is stored locally.
  */
 
 import type {
@@ -30,34 +33,46 @@ import type {
   TeachStatus,
 } from "./types";
 
-let cachedBase: string | null | undefined = undefined;
+let cachedBase: string | undefined = undefined;
 
 export const FALLBACK_BASE = "http://127.0.0.1:8000";
 const TOKEN_KEY = "conet.api_key";
+const BASE_KEY = "conet.api_base";
+
+function trimTrailingSlash(url: string): string {
+  return url.endsWith("/") ? url.slice(0, -1) : url;
+}
+
+function resolveBaseSync(): string {
+  if (cachedBase !== undefined) return cachedBase;
+  let base = FALLBACK_BASE;
+  if (typeof window !== "undefined") {
+    const injected = window.__CONET_API_BASE__;
+    let stored: string | null = null;
+    try {
+      stored = window.localStorage.getItem(BASE_KEY);
+    } catch {
+      stored = null;
+    }
+    base = injected || stored || FALLBACK_BASE;
+  }
+  cachedBase = trimTrailingSlash(base);
+  return cachedBase;
+}
 
 async function resolveBase(): Promise<string> {
-  if (cachedBase !== undefined) {
-    return cachedBase ?? FALLBACK_BASE;
-  }
-  if (typeof window !== "undefined" && window.conet?.getApiBase) {
-    try {
-      cachedBase = await window.conet.getApiBase();
-    } catch {
-      cachedBase = null;
-    }
-  } else {
-    cachedBase = null;
-  }
-  return cachedBase ?? FALLBACK_BASE;
+  return resolveBaseSync();
 }
 
 function getStoredToken(): string {
   if (typeof window === "undefined") return "";
   try {
-    return window.localStorage.getItem(TOKEN_KEY) ?? "";
+    const stored = window.localStorage.getItem(TOKEN_KEY);
+    if (stored) return stored;
   } catch {
-    return "";
+    // fall through to the injected token
   }
+  return window.__CONET_API_TOKEN__ ?? "";
 }
 
 export function setApiToken(token: string): void {

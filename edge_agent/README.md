@@ -43,6 +43,31 @@ sudo systemctl daemon-reload
 sudo systemctl enable --now conet-edge-agent
 ```
 
+## On-device operator UI (kiosk)
+
+The appliance's integrated touch display is driven by Chromium in
+`--kiosk` mode (`systemd/conet-edge-kiosk.service`) pointed at this
+agent's loopback HTTP server. That server (`edge_agent/kiosk.py`) serves
+a **static bundle** out of `CONET_EDGE_KIOSK_STATIC_DIR` (default
+`/opt/conet/edge_agent/kiosk`).
+
+That bundle is the operator UI in [`desktop/`](../desktop) — a React app
+built with Vite. It is **not** an Electron installer: there is no `.exe`
+/ `.dmg` to download; the same static build is what renders on the box.
+Build and install it with:
+
+```bash
+edge_agent/scripts/install-kiosk-ui.sh        # → /opt/conet/edge_agent/kiosk
+```
+
+At serve time the kiosk server injects the control-plane base URL
+(`cloud_url`), the box identity (`edge_id` / `line_id`), and — **only when
+bound to loopback** — the box's API token into `index.html`. The bundle
+reads these as `window.__CONET_API_BASE__` etc., so the exact same build
+runs on the appliance and under `npm run dev` (which falls back to
+`http://127.0.0.1:8000`). Until the bundle is installed, the kiosk shows
+an "appliance starting…" splash served inline by the agent.
+
 ## Configure
 
 Edit `/etc/conet/edge.env` (or set env vars directly):

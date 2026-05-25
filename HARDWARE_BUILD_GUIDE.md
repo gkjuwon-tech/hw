@@ -870,6 +870,22 @@ curl -fsS http://127.0.0.1:8088/kiosk/status | jq .
 
 - 상태: `active (running)` 이고 Chromium 프로세스가 conet-kiosk 사용자로 돌고 있어야 함.
 - 8088 응답: edge_agent 가 띄운 JSON 상태 (`edge_id`, `fps`, `inference_p50_ms` 등) 가 와야 함.
+- ⚠ 이 시점엔 화면에 **"appliance starting…" 스플래시**만 뜸. 진짜 운영 화면은 7.6.4-b 에서 번들 깔아야 나옴.
+
+#### 7.6.4-b 운영 UI(키오스크 화면) 빌드 + 설치 (10분) ⚠ 이거 해야 진짜 대시보드가 뜸
+
+키오스크가 띄울 **운영 UI**는 `desktop/` 에 있는 React 앱임 — `.exe`/`.dmg` 설치파일이 아니라 그냥 정적 빌드. edge_agent 가 그 정적 번들을 서빙함. 한 줄로 빌드+설치:
+
+```bash
+# Jetson 에서 (Node 18+ 필요: 없으면 nodejs.org 의 ARM64 tarball 로 설치)
+cd /home/ubuntu/hw
+edge_agent/scripts/install-kiosk-ui.sh      # desktop 빌드 → /opt/conet/edge_agent/kiosk
+sudo systemctl restart conet-edge-agent.service conet-edge-kiosk.service
+```
+
+- 스크립트가 `desktop/` 를 `npm install && npm run build` 하고 결과(`dist/`)를 `/opt/conet/edge_agent/kiosk` 에 복사함.
+- edge_agent 가 그 `index.html` 을 서빙할 때 `CONET_EDGE_CLOUD_URL` · API 키 · `edge_id` · `line_id` 를 **자동 주입**함 → 화면이 켜지자마자 우리 클라우드에 붙음. 로그인 타이핑 없음. (API 키는 loopback 바인딩일 때만 주입돼서 박스 밖으로 안 샘.)
+- 재시작하면 스플래시 대신 **운영 대시보드**(Overview / Edges / Lines / Mesh / Teach)가 풀스크린으로 뜸. 그게 박씨 아저씨가 손가락으로 만지는 화면임.
 
 #### 7.6.5 화면 보호기 / 절전 비활성 (3분)
 

@@ -10,10 +10,8 @@ import { PageHeader } from "../components/PageHeader";
 
 export function About(): JSX.Element {
   const openExternal = (url: string): void => {
-    if (typeof window !== "undefined" && window.conet?.openExternal) {
-      void window.conet.openExternal(url);
-    } else {
-      window.open(url, "_blank");
+    if (typeof window !== "undefined") {
+      window.open(url, "_blank", "noopener,noreferrer");
     }
   };
 
