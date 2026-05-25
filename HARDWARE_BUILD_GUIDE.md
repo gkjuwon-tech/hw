@@ -263,6 +263,27 @@ hardware/pcb/conet-scanner-v1/
 
 > ⚠ **Orin Nano vs Orin NX vs Nano(구형)** 헷갈리지 마. 우리 건 **Orin Nano 8GB** (40 TOPS급). 그냥 "Orin Nano 8GB Developer Kit" 정확히 그 글자로 검색. 구형 "Jetson Nano"(2019) 사면 안 됨 — 그건 너무 약함.
 
+### 2.5 Tactile Edge 디스플레이 — **터치 화면 + 케이스, 약 14만원** ★ 이번에 새로 추가
+
+> 야 진짜 미친 거 인정한다. 우리가 한 달 전엔 ".dmg / .exe" 깔라고 했어 ㅋㅋㅋ 공장 박씨 아저씨한테. 그래서 이제부턴 **엣지박스에 화면을 박는다.** 어차피 현장에 놓을 거, 화면 같이 박으면 노트북 없이 조작 됨. Cognex In-Sight 처럼.
+>
+> 작동 방식: Jetson HDMI → 7" 또는 10" 터치 디스플레이. 부팅하면 **Chromium 키오스크 모드**로 `http://127.0.0.1:8088/kiosk/index.html` 자동 띄움. 그 페이지는 `edge_agent` 가 직접 서빙함 (외부 인터넷 필요 없음). 라미네이팅 끝난 깔판 위에 물건 올리면 화면에 verdict 가 뜸. **조작 = 손가락 터치.** 노트북 0대.
+
+| # | 부품 | 수량 | 어디서 | 단가 (대략) | 검색어 / 메모 |
+|---|------|------|--------|-----------:|---------------|
+| D1 | **7" HDMI 터치 디스플레이 1024×600** | 1 | 디바이스마트 / 알리 / Waveshare | ₩85,000 ($65) | `Waveshare 7inch HDMI LCD (H) (with case)` 또는 `7인치 HDMI 터치 디스플레이 IPS`. **정전식(capacitive)**, USB 터치, IPS 패널 골라. 저항식(resistive) 사지 마 — 글로브 안 먹음. |
+| D2 | (대안) **10.1" HDMI 터치 디스플레이 1280×800** | 1 | 디바이스마트 / Waveshare | ₩135,000 ($105) | 같은 시리즈에서 10.1형. 라인 옆에서 2m 떨어져서도 보고 싶으면 이게 나음. 7"는 작업자 1m 이내일 때 추천. |
+| D3 | **HDMI Micro→Standard 케이블** 30cm | 1 | 쿠팡 / 디바이스마트 | ₩6,000 | Jetson Orin Nano 의 HDMI 포트는 **풀사이즈**, 디스플레이는 micro/mini 인 경우 많음. 디스플레이 스펙 보고 매칭해서 사. |
+| D4 | **USB-A↔USB-Micro-B 케이블** 30cm | 1 | 쿠팡 | ₩3,000 | 디스플레이의 터치 신호를 Jetson 으로. 디스플레이 박스에 동봉되는 경우도 많음 — 박스 까보고 없으면 사. |
+| D5 | **5V 3A USB 어댑터** + USB-A↔Micro-B 케이블 | 1 | 쿠팡 | ₩12,000 | 디스플레이 백라이트용. Jetson USB 포트에서 따도 되는데 전류 부족하면 화면 깜빡임 → 별도 어댑터 권장. |
+| D6 | **VESA 75 마운트 암** 또는 **데스크 스탠드** | 1 | 쿠팡 | ₩30,000 | 컨베이어 옆에 디스플레이 띄울 거. VESA 75x75 마운트 홀 박힌 디스플레이 사야 함 (Waveshare 케이스 모델은 박혀 있음). 첫 대 데모는 그냥 책상 스탠드로도 OK. |
+
+**소계: 약 14만원** (D1+D3+D4+D5+D6). D1 대신 D2 골라도 ₩4만원 차이.
+
+> 💡 **왜 HDMI 인가, DSI 아닌가?** Raspberry Pi 라면 DSI 리본 한 줄로 끝나지만 Jetson Orin Nano 는 DSI 가 기본 비활성화 (디바이스 트리 수정 필요). HDMI는 켜자마자 됨. 첫 대는 HDMI 가 답. 양산 모드 가면 DSI / eDP 로 케이스 안에 통합.
+>
+> ⚠ **저항식 사지 마.** 저항식은 손가락 살짝 닿는 거 안 먹음. 공장에서 작업자가 면장갑 끼고 누르는데 저항식이면 누르는 힘 세팅 잘못 되면 안 눌림. 정전식(capacitive) 으로 사. 상세페이지에 "5-point capacitive" 또는 "정전식 멀티터치" 적혀 있으면 OK.
+
 ---
 
 ## 3. 발주 가이드 — **사이트별 한 페이지**
@@ -773,6 +794,112 @@ journalctl -u conet-edge-agent -f                     # 실시간 로그 (Ctrl+C
 
 > 💡 **여기까지 왔으면 너 진짜 엣지 디바이스 엔지니어 됨.** 한 달 전엔 LED 극성도 몰랐는데, 지금 압력센서 만들고 → Jetson 플래시하고 → 데몬 띄우고 → AI에 연결했음. 형이 인정함. (이번엔 두 번 인정. 진짜 고생했다.)
 
+### 7.6 터치 디스플레이 + 키오스크 모드 (30분) ⚠ **이걸 해야 진짜 "공장 모드"**
+
+> 7.5까지가 "박스가 알아서 돈다" 였다면, 7.6은 "**박스에 화면 박아서 박씨 아저씨가 손가락으로 조작한다**" 임. .exe / .dmg 다 잊어. Cognex 박스처럼 디스플레이가 박스 일부가 됨.
+
+![Edge 키오스크 7.6 한 장 요약: HDMI/USB 꽂기 → conet-kiosk 사용자 + 자동로그인 → systemd 키오스크 유닛 활성화 → 부팅하면 Chromium 키오스크 자동 진입. edge_agent가 8088 포트로 직접 서빙. 외부 인터넷 0.](docs/img/10-kiosk-flow.svg)
+
+> 👆 다이어그램 위에서 아래로. 한 번만 해두면 끝.
+
+#### 7.6.1 디스플레이 물리 연결 (10분)
+
+1. 디스플레이 박스를 깐다. **HDMI 케이블(D3)** + **터치용 USB(D4)** + **전원 USB(D5)** 세 줄 들어있는지 확인.
+2. Jetson 끔: `sudo poweroff`. 전원 빠진 다음에 케이블 꽂아 (Jetson HDMI 핫플러그가 가끔 무서움).
+3. Jetson HDMI → D3 → 디스플레이 HDMI 입력.
+4. Jetson USB-A → D4 → 디스플레이 "Touch" / "USB" 포트. (디스플레이 박스에 라벨 있음.)
+5. **디스플레이 전원** = 별도 5V 3A 어댑터(D5). Jetson USB로 따려는 유혹 참고 어댑터로 가. (전류 부족하면 화면 깜빡임.)
+6. VESA 75 마운트나 데스크 스탠드(D6)에 디스플레이 박아. 첫 대 데모는 책상 스탠드도 OK.
+7. Jetson 켜.
+
+부팅 후 Ubuntu 데스크탑이 디스플레이에 떠야 정상. 안 뜨면 8.13.
+
+#### 7.6.2 터치 캘리브레이션 (5분, 한 번만)
+
+대부분 디스플레이는 꽂자마자 멀티터치 인식. 확인:
+
+```bash
+xinput list   # 출력에 "WingCool Inc." 또는 "Touchscreen" 같은 게 보여야 함
+```
+
+손가락으로 데스크탑 터치 → 마우스 커서가 그 자리로 점프하면 OK. 안 가면:
+
+- HDMI/USB 둘 다 꽂혔는지 확인 (한쪽만 꽂으면 영상은 나오는데 터치 안 됨 함정).
+- 멀티 디스플레이일 때 터치가 노트북 화면을 따라가는 경우 있음: `xinput map-to-output <touch-id> HDMI-0` 으로 강제 매핑.
+- 7" / 10" 둘 다 USB 1.1 HID 라서 드라이버 따로 안 깔아도 됨.
+
+#### 7.6.3 kiosk 사용자 + 자동 로그인 (5분)
+
+```bash
+sudo adduser --disabled-password --gecos "" conet-kiosk
+sudo mkdir -p /var/lib/conet/kiosk-profile
+sudo chown -R conet-kiosk:conet-kiosk /var/lib/conet/kiosk-profile
+```
+
+자동 로그인 (Ubuntu LightDM 기준):
+
+```bash
+sudo nano /etc/lightdm/lightdm.conf
+# 아래 두 줄 추가
+[Seat:*]
+autologin-user=conet-kiosk
+autologin-user-timeout=0
+```
+
+저장 → 재부팅 → 로그인 화면 거치지 않고 conet-kiosk 데스크탑으로 바로 부팅되면 성공.
+
+> 💡 GNOME 쓰는 JetPack 이미지는 `gnome-control-center` → Users → Automatic Login 으로 GUI에서도 할 수 있음.
+
+#### 7.6.4 conet-edge-kiosk systemd 유닛 (5분)
+
+```bash
+sudo apt-get install -y chromium-browser curl
+sudo cp /home/ubuntu/hw/edge_agent/systemd/conet-edge-kiosk.service \
+    /etc/systemd/system/
+sudo install -d -o conet-kiosk -g conet-kiosk /var/lib/conet/kiosk-profile
+sudo systemctl daemon-reload
+sudo systemctl enable --now conet-edge-kiosk.service
+```
+
+확인:
+
+```bash
+systemctl status conet-edge-kiosk.service
+curl -fsS http://127.0.0.1:8088/kiosk/status | jq .
+```
+
+- 상태: `active (running)` 이고 Chromium 프로세스가 conet-kiosk 사용자로 돌고 있어야 함.
+- 8088 응답: edge_agent 가 띄운 JSON 상태 (`edge_id`, `fps`, `inference_p50_ms` 등) 가 와야 함.
+
+#### 7.6.5 화면 보호기 / 절전 비활성 (3분)
+
+24시간 가동이니까 디스플레이가 절전 모드 들어가면 안 됨:
+
+```bash
+# X11 절전 끄기 (autologin 세션에서 한 번만)
+sudo -u conet-kiosk DISPLAY=:0 xset s off
+sudo -u conet-kiosk DISPLAY=:0 xset -dpms
+sudo -u conet-kiosk DISPLAY=:0 xset s noblank
+
+# 부팅마다 적용되려면 /home/conet-kiosk/.xprofile 에 위 세 줄 영구 등록
+```
+
+#### 7.6.6 동작 확인 (2분)
+
+1. 재부팅: `sudo reboot`.
+2. 부팅 끝나면 **로그인 화면 없이** 바로 검은 Chromium 키오스크가 풀스크린으로 뜬다. 화면에:
+   - 좌상단: `Conet Tactile` + 초록 점 + `edge-...` / `line-...`
+   - 가운데: "Last verdict — score 0.00"
+   - 아래쪽: `Calibrate` / `Switch recipe` / `Acknowledge` 큰 버튼
+3. 깔판 위에 정상품 올려보면 verdict 가 `pass` 로 바뀌고 score 가 실시간 갱신.
+4. 손가락으로 `Calibrate` 눌러보면 버튼이 짙어지면서 "Calibrate · queued" 로 바뀜 (v0.1에서는 큐만 됨, 실제 호출은 v0.2).
+
+이 시점 = **공장에 그대로 들고 갈 수 있는 박스 완성.** 노트북 0대. .exe 0개. .dmg 0개. 박씨 아저씨가 손가락으로 다 함. Cognex 박스에 비교해도 안 부끄러움.
+
+> 💡 **왜 별도 키오스크 HTTP 서버야? FastAPI 백엔드 두면 안 됨?** edge_agent 는 일부러 의존성 가볍게 가는 중. 키오스크용으로 `uvicorn` + `fastapi` 또 끌고 들어가는 건 양산용 이미지에서 메모리/부팅시간 낭비. stdlib `asyncio` HTTP 만으로 충분함. 그래서 `edge_agent/kiosk.py` 에 자체 서버.
+
+> 🚨 **다음 라인(2호기)부터는** D6 스탠드 말고 진짜 **VESA 75 산업용 암** 으로 함체에 박아라. 컨베이어 진동 + 기름 환경이라 책상 스탠드는 1주일 만에 흔들림. 첫 대 데모만 책상 OK.
+
 ---
 
 ## 8. 트러블슈팅 — **반드시 한 번은 겪는 문제들**
@@ -857,6 +984,18 @@ journalctl -u conet-edge-agent -f                     # 실시간 로그 (Ctrl+C
 - `inspect` 가 조용히 무시됨 → 라인 캘리브 안 됨(409). 7.4 다시. `CONET_EDGE_LINE_ID` 와 캘리브 때 쓴 `LINE` 이 똑같은지 글자 대조.
 - `enroll_failed` / 401 → API 키 틀림. 6.4 재발급 후 edge.env 갱신 → `sudo systemctl restart conet-edge-agent`.
 - edge.env 고쳤으면 **항상 `sudo systemctl restart conet-edge-agent`** 해야 반영됨.
+
+### 8.13 "디스플레이 / 키오스크 가 이상함" (7.6 관련)
+
+| 증상 | 해결 |
+|------|------|
+| HDMI 꽂아도 화면 깜깜 | Jetson 끄고 → 디스플레이 전원(D5) 먼저 켜고 → HDMI 꽂고 → Jetson 켜. 1280×720 / 1024×600 모드 매뉴얼로 잡으려면 `xrandr --output HDMI-0 --mode 1024x600` (모드 없으면 `cvt` 로 만든 다음 `xrandr --newmode`). |
+| 터치는 되는데 마우스가 노트북 화면 가서 박힘 | 멀티 디스플레이 매핑 안 됨. `xinput list` 로 터치 디바이스 ID 확인 후 `xinput map-to-output <id> HDMI-0`. |
+| Chromium 키오스크는 떴는데 "Site can't be reached" | `curl -fsS http://127.0.0.1:8088/kiosk/status` 가 200 인지 먼저. 안 되면 `systemctl status conet-edge-agent` 가 active 인지 확인 → 키오스크 유닛은 그 다음. |
+| 키오스크 풀스크린이 아닌 일반 창으로 뜸 | 자동로그인 사용자가 `conet-kiosk` 가 아닐 확률 (다른 유저로 로그인 됨). `/etc/lightdm/lightdm.conf` 다시 확인 후 재부팅. |
+| 부팅 후 10초쯤 "Site can't be reached" 보이다가 정상화 | 정상. `conet-edge-agent` 가 부팅 후 8088 잡는 데 약간 시간 걸림. 키오스크 유닛 `ExecStartPre` 가 최대 30초 기다림. |
+| 화면이 30분 뒤에 검게 꺼짐 | 7.6.5 절전 비활성 안 함. `xset s off; xset -dpms; xset s noblank` 다시 + `.xprofile` 에 영구 등록. |
+| 터치가 안 먹는데 영상은 나옴 | 저항식(resistive) 디스플레이 산 거. 정전식(capacitive)으로 환불·교체. 첫 대 데모는 일단 마우스 꽂아서 진행. |
 
 ---
 

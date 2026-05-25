@@ -65,12 +65,12 @@ jobs:
       - name: Pytest
         run: pytest -q
 
-  desktop:
-    name: desktop — lint + typecheck + build
+  edge-api:
+    name: edge_api — typecheck + tests (Cloudflare Workers)
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: desktop
+        working-directory: edge_api
     steps:
       - uses: actions/checkout@v4
 
@@ -79,19 +79,16 @@ jobs:
         with:
           node-version: "20"
           cache: "npm"
-          cache-dependency-path: desktop/package-lock.json
+          cache-dependency-path: edge_api/package-lock.json
 
       - name: Install
         run: npm ci
 
-      - name: Lint
-        run: npm run lint
-
       - name: Typecheck
         run: npm run typecheck
 
-      - name: Build renderer (smoke)
-        run: npm run build:renderer
+      - name: Test
+        run: npm test --silent
 
   firmware-software-sim:
     # Software-mode scenarios for the tactile-scanner firmware. Runs on every
@@ -160,49 +157,6 @@ jobs:
 
       - name: Run wokwi-mode scenarios
         run: python3 run_tests.py --mode wokwi
-
-  desktop-build-win:
-    name: desktop — build windows exe
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-          cache: "npm"
-          cache-dependency-path: desktop/package-lock.json
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-          cache: "pip"
-
-      - name: Install Backend & PyInstaller
-        run: |
-          python -m pip install --upgrade pip
-          pip install -e ".\backend"
-          pip install pyinstaller
-
-      - name: Install Node deps
-        working-directory: desktop
-        run: npm ci
-
-      - name: Build Sidecar
-        working-directory: desktop
-        run: npm run build:sidecar
-
-      - name: Build Windows Executable
-        working-directory: desktop
-        run: npm run dist:win
-
-      - name: Upload Windows Setup
-        uses: actions/upload-artifact@v4
-        with:
-          name: Conet-Tactile-Windows-Setup
-          path: desktop/release/*.exe
 
   pcb-reality-check:
     # Reality-check gate for the PCB manufacturing artifacts. Runs every push.

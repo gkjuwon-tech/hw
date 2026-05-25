@@ -1,0 +1,200 @@
+/* Conet Tactile — on-device kiosk stylesheet.
+
+   Targets the integrated 7" / 10" touch display (1024×600 default,
+   1280×800 on the bigger panel). Designed for glance-from-2m
+   readability, glove-tap-sized hit areas, and zero scroll.        */
+
+:root {
+  --bg: #0b0c0a;
+  --bg-elev: #14150f;
+  --ink: #f4f3ee;
+  --ink-mute: #b3b3a3;
+  --accent: #b0c948;
+  --ok: #6ad17a;
+  --warn: #e7b14c;
+  --bad: #e16060;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, "Inter", "Segoe UI", "Pretendard", "Apple SD Gothic Neo", sans-serif;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  overflow: hidden;
+}
+
+.kiosk {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  height: 100vh;
+}
+
+.kiosk__header {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  padding: .8rem 1.4rem;
+  border-bottom: 1px solid rgba(255, 255, 255, .06);
+  font-size: .95rem;
+}
+
+.kiosk__brand {
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+  font-weight: 600;
+  letter-spacing: .02em;
+}
+
+.kiosk__dot {
+  width: .55rem;
+  height: .55rem;
+  border-radius: 50%;
+  background: var(--ok);
+  box-shadow: 0 0 .35rem var(--ok);
+}
+
+.kiosk__dot--warn { background: var(--warn); box-shadow: 0 0 .35rem var(--warn); }
+.kiosk__dot--bad  { background: var(--bad);  box-shadow: 0 0 .35rem var(--bad); }
+
+.kiosk__id {
+  color: var(--ink-mute);
+  font-variant-numeric: tabular-nums;
+  font-size: .85rem;
+}
+
+.kiosk__sep { padding: 0 .35rem; opacity: .5; }
+.kiosk__clock { justify-self: end; font-variant-numeric: tabular-nums; }
+
+.kiosk__main {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 1.1rem;
+  padding: 1.2rem 1.4rem;
+}
+
+.kiosk__verdict {
+  background: var(--bg-elev);
+  border-radius: 1rem;
+  padding: 1.1rem 1.4rem;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: baseline;
+  gap: 1rem;
+}
+
+.kiosk__verdict-label {
+  margin: 0;
+  color: var(--ink-mute);
+  font-size: .85rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.kiosk__verdict-value {
+  margin: 0;
+  font-size: 2.6rem;
+  font-weight: 600;
+  letter-spacing: -.01em;
+}
+
+.kiosk__verdict-value[data-verdict="pass"] { color: var(--ok); }
+.kiosk__verdict-value[data-verdict="fail"] { color: var(--bad); }
+
+.kiosk__verdict-score {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-mute);
+}
+
+.kiosk__metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.kiosk__metric {
+  background: var(--bg-elev);
+  border-radius: 1rem;
+  padding: 1rem 1.1rem;
+}
+
+.kiosk__metric-label {
+  margin: 0 0 .4rem;
+  color: var(--ink-mute);
+  font-size: .75rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.kiosk__metric-value {
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.kiosk__metric-value--small { font-size: 1.05rem; }
+
+.kiosk__metric-unit {
+  margin-left: .35rem;
+  color: var(--ink-mute);
+  font-size: .9rem;
+  font-weight: 400;
+}
+
+.kiosk__metric-sub {
+  margin: .35rem 0 0;
+  font-size: .82rem;
+  color: var(--ink-mute);
+  font-variant-numeric: tabular-nums;
+}
+
+.kiosk__actions {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: .8rem;
+}
+
+.kiosk__btn {
+  appearance: none;
+  border: none;
+  border-radius: .8rem;
+  padding: 1.1rem 1.2rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: -.005em;
+  color: var(--bg);
+  background: var(--accent);
+  cursor: pointer;
+  min-height: 64px;
+}
+
+.kiosk__btn--quiet {
+  background: var(--bg-elev);
+  color: var(--ink);
+  border: 1px solid rgba(255, 255, 255, .08);
+}
+
+.kiosk__btn:active { transform: translateY(1px); }
+
+.kiosk__footer {
+  display: flex;
+  justify-content: space-between;
+  padding: .7rem 1.4rem;
+  border-top: 1px solid rgba(255, 255, 255, .06);
+  color: var(--ink-mute);
+  font-size: .8rem;
+}
+
+@media (min-width: 1100px) {
+  .kiosk__verdict-value { font-size: 3rem; }
+  .kiosk__metric-value { font-size: 1.8rem; }
+}

@@ -142,8 +142,10 @@ class Edge(Base):
     One Edge handles one or more Lines. The Edge agent (``edge_agent/``) calls
     ``POST /v1/edges/{edge_id}/heartbeat`` at a regular cadence to report
     liveness and the current hardware metrics (CPU/GPU temp, load, power
-    draw). The desktop subscribes to the per-edge SSE stream to render a
-    live status panel.
+    draw). Operators interact with the box directly via the integrated
+    touch display, which runs a Chromium kiosk against the on-device
+    ``edge_agent`` HTTP server; the cloud SSE stream is for the optional
+    fleet-management web console.
     """
 
     __tablename__ = "edges"
@@ -179,6 +181,19 @@ class Edge(Base):
     inference_p50_ms: Mapped[float] = mapped_column(Float, default=0.0)
     inference_p99_ms: Mapped[float] = mapped_column(Float, default=0.0)
     frames_per_second: Mapped[float] = mapped_column(Float, default=0.0)
+
+    # ── integrated touch display ────────────────────────────────────
+    display_kind: Mapped[str] = mapped_column(String(40), default="hdmi-touch-7in")
+    """Model identifier for the integrated display, e.g. ``hdmi-touch-7in``,
+    ``dsi-touch-10in``. ``none`` for headless deployments where a remote
+    operator drives the box from the fleet console."""
+    display_resolution: Mapped[str] = mapped_column(String(20), default="1024x600")
+    """Pixel resolution of the integrated display, ``WxH``."""
+    display_active: Mapped[bool] = mapped_column(Boolean, default=False)
+    """True when the on-device Chromium kiosk is rendering. False when the
+    display is asleep, disconnected, or the kiosk service is stopped."""
+    display_touch_events_per_min: Mapped[float] = mapped_column(Float, default=0.0)
+    """Touch events / minute, reported by the kiosk to the heartbeat. 0 = idle."""
 
 
 class MeshSegment(Base):

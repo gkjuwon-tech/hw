@@ -3,17 +3,22 @@
 Two flows:
 
 *   ``POST /v1/store/checkout/hardware`` — one-time-payment Stripe Checkout
-    Session for the Tactile Edge appliance. Shipping address is collected
-    by Stripe Checkout itself; the buyer never touches our forms. Returns
-    the Stripe-hosted URL the marketing site redirects to.
+    Session for the Tactile Edge appliance (bundled hardware + on-device
+    software). Shipping address is collected by Stripe Checkout itself;
+    the buyer never touches our forms. Returns the Stripe-hosted URL the
+    marketing site redirects to.
 *   ``POST /v1/store/checkout/software`` — subscription Checkout Session
-    for the Tactile Cloud plan, with a configurable free-trial window.
+    for the **Edge Care** maintenance plan, with a configurable
+    free-trial window. (Endpoint name kept for back-compat — the plan is
+    a maintenance fee, not a software subscription.)
 
 After Stripe completes either session it redirects to a page on the
 marketing site, which calls ``GET /v1/store/order/{session_id}`` to
-display the receipt + (for software) the download links. A webhook at
-``POST /v1/store/webhook`` records ``checkout.session.completed`` events
-for accounting / reconciliation.
+display the receipt. There is **no software download** in the response:
+the on-device software is pre-installed on the appliance, and the Edge
+Care plan provides updates over the air via the cloud sync channel. A
+webhook at ``POST /v1/store/webhook`` records
+``checkout.session.completed`` events for accounting / reconciliation.
 
 In **mock mode** (no Stripe key) the same endpoints power a local fake
 Checkout page rendered by the marketing site, so the entire customer
@@ -42,6 +47,11 @@ from app.core.stripe_client import (
     is_mock_mode,
     verify_stripe_signature,
 )
+
+# ``SOFTWARE_PLANS`` is kept in the import list so other modules can
+# re-export it from ``app.routers.store``; it's not used directly here
+# anymore now that download links are gone.
+_ = SOFTWARE_PLANS
 
 router = APIRouter(prefix="/v1/store", tags=["store"])
 logger = get_logger("conet.store")
@@ -276,14 +286,28 @@ async def get_order(session_id: str) -> dict[str, Any]:
     }
 
     if data.get("mode") == "subscription" and paid:
-        response["downloads"] = {
-            "windows": settings.store_download_url_windows,
-            "mac": settings.store_download_url_mac,
-            "linux": settings.store_download_url_linux,
-        }
         plan_id = (data.get("metadata") or {}).get("plan_id")
-        if plan_id and plan_id in SOFTWARE_PLANS:
-            response["trial_days"] = SOFTWARE_PLANS[plan_id].trial_days
+        # ``SOFTWARE_PLANS`` only lists current plans — fall back to
+        # ``get_software_plan`` which handles legacy aliases too.
+        try:
+            plan = get_software_plan(plan_id) if plan_id else None
+        except KeyError:
+            plan = None
+        if plan is not None:
+            response["trial_days"] = plan.trial_days
+            response["plan_label"] = plan.label
+        response["appliance_setup"] = {
+            "summary": (
+                "Your Tactile Edge ships with the on-device software "
+                "pre-installed. Power it on, connect the integrated touch "
+                "display, and the kiosk will appear automatically."
+            ),
+            "kiosk_url_local": "http://127.0.0.1:8088/kiosk/index.html",
+            "build_guide_url": (
+                "https://github.com/gkjuwon-tech/hw/blob/main/"
+                "HARDWARE_BUILD_GUIDE.md"
+            ),
+        }
 
     return response
 

@@ -1,0 +1,38 @@
+# Conet Tactile — edge_api Cloudflare Workers project.
+#
+# This Worker proxies the *read-only, idempotent* endpoints of the
+# FastAPI control plane (catalog, pricing quotes, kiosk config) and
+# caches them at the Cloudflare PoP closest to the Tactile Edge
+# appliance. Everything else (auth-bearing endpoints, write paths,
+# inspect, heartbeat, store checkout) continues to hit the origin
+# directly — the Worker is *not* a generic reverse proxy.
+#
+# Origin selection:
+#   ORIGIN_URL = production https://api.conet.studio
+#   ORIGIN_URL = preview    https://api.staging.conet.studio
+#
+# Cache budget:
+#   /catalog → 5 min stale-while-revalidate (24 h)
+#   /pricing → 1 min stale-while-revalidate (10 min)
+#   /kiosk/* → no cache (per-edge config)
+
+name = "conet-edge-api"
+main = "src/index.ts"
+compatibility_date = "2024-06-01"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+ORIGIN_URL = "https://api.conet.studio"
+CACHE_TTL_CATALOG_S = "300"
+CACHE_TTL_PRICING_S = "60"
+
+[env.preview]
+[env.preview.vars]
+ORIGIN_URL = "https://api.staging.conet.studio"
+CACHE_TTL_CATALOG_S = "30"
+CACHE_TTL_PRICING_S = "10"
+
+# Future: KV namespace for per-fleet baseline cache.
+# [[kv_namespaces]]
+# binding = "FLEET_BASELINES"
+# id = "TBD"

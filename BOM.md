@@ -57,9 +57,13 @@ All prices are **prototype quantities (1–10 units)** in USD. Pilot quantities 
 | 8 | Status LED + photopipe | tri-color | Bivar / Würth | 1 | $1.80 | |
 | 9 | Mounting magnets | rare-earth, 25 mm | K&J Magnetics D8X0 | 4 | $1.50 | Magnetic-base mount option. |
 | 10 | Carrier PCB | 4-layer, 100 × 80 mm | JLCPCB | 1 | $12.00 | Connects Orin SOM to I/O. |
+| 11 | 7" HDMI capacitive touch display | 1024 × 600 IPS, USB touch | Waveshare 7inch HDMI LCD (H) | 1 | $65.00 | **Integrated kiosk display.** No more .exe / .dmg — operators interact with this directly on the line. 10.1" 1280×800 option is $105 for far-from-line use. |
+| 12 | HDMI Micro-to-Standard cable | 30 cm | generic | 1 | $5.00 | Jetson HDMI is full-size; most 7" panels use micro. Match the panel SKU. |
+| 13 | Display power adapter | 5 V 3 A USB-A, with micro-B cable | generic | 1 | $9.00 | Powers panel backlight. Sharing Jetson USB causes brightness flicker. |
+| 14 | VESA-75 industrial mount arm | with line-side clamp | Ergotron / generic | 1 | $24.00 | First-unit demo can use a desk stand; production lines need the arm. |
 
-**Edge sub-total (prototype):** ≈ **$660** loaded BOM.
-**At 500 quantities with bare Orin Nano module:** ≈ **$420** loaded BOM. Sell at $1,290 list, $0 bundled with 24-mo SaaS → blended margin healthy.
+**Edge sub-total (prototype):** ≈ **$763** loaded BOM (display + arm bundled — every appliance ships with a kiosk display).
+**At 500 quantities with bare Orin Nano module + 7" panel:** ≈ **$490** loaded BOM. Sell at **$1,490** list, software bundled — there is no separate desktop-app SKU. The recurring **Edge Care** plan covers fleet baseline sync, OTA updates, and replacement mesh rolls.
 
 ---
 

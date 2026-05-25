@@ -1,0 +1,22 @@
+{
+  "name": "@conet/edge-api",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Cloudflare Workers edge cache for Conet Tactile catalog + pricing. Sits in front of the FastAPI control plane so the Tactile Edge appliance and the marketing site see <50ms p99 globally.",
+  "license": "UNLICENSED",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test --import=tsx __tests__/*.test.ts",
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240605.0",
+    "@types/node": "^20.12.7",
+    "tsx": "^4.7.0",
+    "typescript": "^5.4.5"
+  }
+}

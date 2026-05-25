@@ -6,14 +6,14 @@ from fastapi import APIRouter, HTTPException, status
 
 from app.core.pricing import (
     BELT_WIDTHS,
-    CLOUD_TIERS,
     EDGE_APPLIANCE_KRW,
+    EDGE_CARE_TIERS,
     LineSpec,
     build_quote,
     to_usd,
 )
 from app.schemas import (
-    PricingCloudBreakdown,
+    PricingCareBreakdown,
     PricingLineBreakdown,
     PricingMoney,
     PricingQuoteRequest,
@@ -27,9 +27,27 @@ def _money(krw: float) -> PricingMoney:
     return PricingMoney(krw=int(round(krw)), usd=to_usd(krw))
 
 
+def _normalize_tier(tier_id: str) -> str:
+    """``pilot`` is the legacy alias for ``basic``."""
+    return "basic" if tier_id == "pilot" else tier_id
+
+
 @router.get("/catalog")
 async def get_catalog() -> dict:
     """Public rate card — used by the marketing site."""
+    care_tiers = [
+        {
+            "id": tier.id,
+            "label": tier.label,
+            "monthly_krw": tier.monthly_krw,
+            "monthly_usd": to_usd(tier.monthly_krw),
+            "included_lines": tier.included_lines,
+            "included_inspections_per_month": tier.included_inspections_per_month,
+            "overage_krw_per_inspection": tier.overage_krw_per_inspection,
+            "extra_line_monthly_krw": tier.extra_line_monthly_krw,
+        }
+        for tier in EDGE_CARE_TIERS
+    ]
     return {
         "belt_widths": [
             {
@@ -43,20 +61,16 @@ async def get_catalog() -> dict:
         "edge": {
             "krw": EDGE_APPLIANCE_KRW,
             "usd": to_usd(EDGE_APPLIANCE_KRW),
+            "bundled_software": True,
+            "note": (
+                "On-device software (calibration UI, drift dashboard, OPC-UA "
+                "bridge) is pre-installed on the integrated touch display. "
+                "No separate desktop-app purchase."
+            ),
         },
-        "cloud_tiers": [
-            {
-                "id": tier.id,
-                "label": tier.label,
-                "monthly_krw": tier.monthly_krw,
-                "monthly_usd": to_usd(tier.monthly_krw),
-                "included_lines": tier.included_lines,
-                "included_inspections_per_month": tier.included_inspections_per_month,
-                "overage_krw_per_inspection": tier.overage_krw_per_inspection,
-                "extra_line_monthly_krw": tier.extra_line_monthly_krw,
-            }
-            for tier in CLOUD_TIERS
-        ],
+        "care_tiers": care_tiers,
+        # Back-compat for v0 clients that still read ``cloud_tiers``.
+        "cloud_tiers": care_tiers,
     }
 
 
@@ -74,7 +88,7 @@ async def post_quote(payload: PricingQuoteRequest) -> PricingQuoteResponse:
                 )
                 for spec in payload.lines
             ],
-            cloud_tier_id=payload.cloud_tier,
+            care_tier_id=_normalize_tier(payload.care_tier),
             monthly_inspections_override=payload.monthly_inspections_override,
         )
     except ValueError as exc:
@@ -92,19 +106,19 @@ async def post_quote(payload: PricingQuoteRequest) -> PricingQuoteResponse:
         )
         for line in quote.lines
     ]
-    cloud = PricingCloudBreakdown(
-        tier_id=quote.cloud.tier.id,
-        tier_label=quote.cloud.tier.label,
-        base=_money(quote.cloud.base_monthly_krw),
-        extra_lines=quote.cloud.extra_lines,
-        extra_lines_total=_money(quote.cloud.extra_lines_monthly_krw),
-        overage_inspections=quote.cloud.overage_inspections,
-        overage_total=_money(quote.cloud.overage_monthly_krw),
-        total_monthly=_money(quote.cloud.total_monthly_krw),
+    care = PricingCareBreakdown(
+        tier_id=quote.care.tier.id,
+        tier_label=quote.care.tier.label,
+        base=_money(quote.care.base_monthly_krw),
+        extra_lines=quote.care.extra_lines,
+        extra_lines_total=_money(quote.care.extra_lines_monthly_krw),
+        overage_inspections=quote.care.overage_inspections,
+        overage_total=_money(quote.care.overage_monthly_krw),
+        total_monthly=_money(quote.care.total_monthly_krw),
     )
     return PricingQuoteResponse(
         lines=lines,
-        cloud=cloud,
+        care=care,
         one_time_total=_money(quote.one_time_total_krw),
         monthly_total=_money(quote.monthly_total_krw),
         annual_total=_money(quote.annual_total_krw),

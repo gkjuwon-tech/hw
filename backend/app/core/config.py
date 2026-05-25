@@ -131,23 +131,28 @@ class Settings(BaseSettings):
         description="Where Stripe redirects if the customer abandons checkout.",
     )
     store_software_success_url: str = Field(
-        default="http://localhost:5173/product/download.html",
+        # After a successful Edge Care subscription, route the buyer back
+        # to the activation page where they can pair the appliance with
+        # their workspace — there is no separate installer to download.
+        default="http://localhost:5173/product/activate.html",
     )
     store_software_cancel_url: str = Field(
         default="http://localhost:5173/product/activate.html",
     )
     store_software_trial_days: int = Field(default=30, ge=0, le=365)
     store_software_monthly_usd: int = Field(default=49, ge=0, le=10_000)
-    store_download_url_windows: str = Field(
-        default="https://github.com/gkjuwon-tech/hw/actions/workflows/ci.yml",
-        description="URL to the latest Windows installer (default: GH Actions artifacts).",
+
+    # ── kiosk (on-device touch display) ────────────────────────────────
+    kiosk_default_index_url: str = Field(
+        default="http://127.0.0.1:8088/kiosk/index.html",
+        description=(
+            "URL the on-device Chromium kiosk loads at boot. Defaults to "
+            "the edge_agent's loopback HTTP server so the kiosk renders "
+            "without any cloud connectivity."
+        ),
     )
-    store_download_url_mac: str = Field(
-        default="https://github.com/gkjuwon-tech/hw/actions/workflows/ci.yml",
-    )
-    store_download_url_linux: str = Field(
-        default="https://github.com/gkjuwon-tech/hw/actions/workflows/ci.yml",
-    )
+    kiosk_default_locale: str = Field(default="ko-KR", min_length=2, max_length=10)
+    kiosk_default_poll_interval_s: int = Field(default=15, ge=1, le=3600)
 
     # ── observability ──────────────────────────────────────────────────
     metrics_enabled: bool = True

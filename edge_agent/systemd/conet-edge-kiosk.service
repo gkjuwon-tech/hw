@@ -1,0 +1,87 @@
+# Conet Tactile — on-device Chromium kiosk
+#
+# This unit boots Chromium in full-screen kiosk mode against the
+# edge_agent's loopback HTTP server. It is what turns the integrated
+# 7" touch display into the operator UI — no laptop, no .exe, no .dmg.
+#
+# Boot order:
+#   1. conet-edge-agent.service comes up and starts serving
+#      http://127.0.0.1:8088/kiosk/index.html.
+#   2. graphical.target reaches the autologin'd kiosk user.
+#   3. this unit waits for the kiosk URL to respond 200, then launches
+#      Chromium with --kiosk so the operator only ever sees the app.
+#
+# Install:
+#   sudo install -m 0644 conet-edge-kiosk.service \
+#       /etc/systemd/system/conet-edge-kiosk.service
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable --now conet-edge-kiosk.service
+#
+# The unit runs as the unprivileged ``conet-kiosk`` user, which must be
+# created and configured for automatic graphical login (see
+# HARDWARE_BUILD_GUIDE.md → "Touch display & kiosk setup").
+
+[Unit]
+Description=Conet Tactile — on-device Chromium kiosk
+After=graphical.target conet-edge-agent.service network-online.target
+Wants=conet-edge-agent.service
+PartOf=graphical.target
+
+[Service]
+Type=simple
+User=conet-kiosk
+Group=conet-kiosk
+
+# Display + Wayland/X11 environment for the kiosk user. ``DISPLAY=:0``
+# matches the default LightDM autologin session on Ubuntu / JetPack;
+# override via /etc/conet/kiosk.env if the box ships with Wayland.
+EnvironmentFile=-/etc/conet/kiosk.env
+Environment=DISPLAY=:0
+Environment=XAUTHORITY=/home/conet-kiosk/.Xauthority
+Environment=KIOSK_URL=http://127.0.0.1:8088/kiosk/index.html
+
+# Wait for the edge_agent's kiosk HTTP endpoint before starting
+# Chromium — otherwise the kiosk shows a "Site can't be reached" page
+# for the first ~10 seconds of every boot. The loop is bounded so the
+# unit eventually starts even if the edge_agent is wedged; the kiosk
+# itself renders an "Appliance starting…" splash from its app cache.
+ExecStartPre=/usr/bin/bash -c '\
+    for i in $(seq 1 30); do \
+        if /usr/bin/curl -fsS -o /dev/null "$KIOSK_URL"; then exit 0; fi; \
+        sleep 1; \
+    done; \
+    exit 0'
+
+# The kiosk uses a dedicated user-data dir so it never inherits a
+# logged-in Google profile, never prompts to restore tabs, and never
+# offers to translate the page. ``--noerrdialogs`` and
+# ``--disable-session-crashed-bubble`` keep crash recovery dialogs from
+# obscuring the operator UI.
+ExecStart=/usr/bin/chromium \
+    --kiosk \
+    --start-fullscreen \
+    --noerrdialogs \
+    --disable-session-crashed-bubble \
+    --disable-infobars \
+    --no-first-run \
+    --disable-features=TranslateUI \
+    --autoplay-policy=no-user-gesture-required \
+    --check-for-update-interval=31536000 \
+    --user-data-dir=/var/lib/conet/kiosk-profile \
+    --app=$KIOSK_URL
+
+Restart=on-failure
+RestartSec=3
+StandardOutput=journal
+StandardError=journal
+
+# Hardening — Chromium needs DRI, sound, and the kiosk profile dir, but
+# nothing else writable on the rootfs.
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/var/lib/conet/kiosk-profile
+PrivateTmp=true
+
+[Install]
+WantedBy=graphical.target

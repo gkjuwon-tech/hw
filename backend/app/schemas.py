@@ -107,7 +107,10 @@ class PricingLineSpec(BaseModel):
 
 class PricingQuoteRequest(BaseModel):
     lines: list[PricingLineSpec] = Field(min_length=1, max_length=64)
-    cloud_tier: Literal["pilot", "production", "fleet"] = "production"
+    # ``pilot`` is kept for back-compat with v0 clients — it is normalized
+    # to ``basic`` server-side. ``basic | production | fleet`` is the
+    # current public set of Edge Care tiers.
+    care_tier: Literal["basic", "production", "fleet", "pilot"] = "production"
     monthly_inspections_override: int | None = Field(default=None, ge=0, le=10**12)
 
 
@@ -126,7 +129,7 @@ class PricingLineBreakdown(BaseModel):
     total: PricingMoney
 
 
-class PricingCloudBreakdown(BaseModel):
+class PricingCareBreakdown(BaseModel):
     tier_id: str
     tier_label: str
     base: PricingMoney
@@ -137,9 +140,13 @@ class PricingCloudBreakdown(BaseModel):
     total_monthly: PricingMoney
 
 
+# Back-compat alias — v0 clients deserialize against ``PricingCloudBreakdown``.
+PricingCloudBreakdown = PricingCareBreakdown
+
+
 class PricingQuoteResponse(BaseModel):
     lines: list[PricingLineBreakdown]
-    cloud: PricingCloudBreakdown
+    care: PricingCareBreakdown
     one_time_total: PricingMoney
     monthly_total: PricingMoney
     annual_total: PricingMoney
@@ -244,11 +251,15 @@ class EdgeCreate(BaseModel):
     serial: str = Field(default="", max_length=64)
     model: str = Field(default="jetson-orin-nano-8gb", max_length=80)
     site: str = Field(default="", max_length=120)
+    display_kind: str = Field(default="hdmi-touch-7in", max_length=40)
+    display_resolution: str = Field(default="1024x600", max_length=20)
 
 
 class EdgeUpdate(BaseModel):
     hostname: str | None = Field(default=None, max_length=120)
     site: str | None = Field(default=None, max_length=120)
+    display_kind: str | None = Field(default=None, max_length=40)
+    display_resolution: str | None = Field(default=None, max_length=20)
 
 
 class EdgeHeartbeat(BaseModel):
@@ -266,6 +277,18 @@ class EdgeHeartbeat(BaseModel):
     inference_p50_ms: float = Field(default=0.0, ge=0.0, le=60_000.0)
     inference_p99_ms: float = Field(default=0.0, ge=0.0, le=60_000.0)
     frames_per_second: float = Field(default=0.0, ge=0.0, le=10_000.0)
+    display_active: bool = Field(
+        default=False,
+        description=(
+            "True when the on-device Chromium kiosk is rendering the operator UI "
+            "on the integrated touch display. False when the display is asleep, "
+            "disconnected, or the kiosk service is stopped."
+        ),
+    )
+    display_touch_events_per_min: float = Field(
+        default=0.0, ge=0.0, le=10_000.0,
+        description="Touch events / minute on the integrated display. 0 = idle.",
+    )
 
 
 class EdgeOut(BaseModel):
@@ -292,6 +315,42 @@ class EdgeOut(BaseModel):
     inference_p50_ms: float
     inference_p99_ms: float
     frames_per_second: float
+    display_kind: str
+    display_resolution: str
+    display_active: bool
+    display_touch_events_per_min: float
+
+
+# ── kiosk (on-device touch display) ──────────────────────────────────
+
+
+class KioskConfig(BaseModel):
+    """Configuration handed to the on-device Chromium kiosk on startup.
+
+    The kiosk fetches this once at boot and re-polls every
+    ``poll_interval_s`` seconds. The values below are the only things the
+    kiosk needs to render a useful operator UI — the actual live data is
+    streamed from the local ``edge_agent`` over loopback.
+    """
+
+    edge_id: str
+    line_id: str | None = None
+    line_label: str = ""
+    site: str = ""
+    brand_color: str = Field(default="#0b0c0a", pattern=r"^#[0-9A-Fa-f]{6}$")
+    locale: Literal["ko-KR", "en-US", "ja-JP", "de-DE"] = "ko-KR"
+    poll_interval_s: int = Field(default=15, ge=1, le=3600)
+    show_drift: bool = True
+    show_calibration_button: bool = True
+    show_recipe_picker: bool = True
+    kiosk_index_url: str = Field(
+        default="http://127.0.0.1:8088/kiosk/index.html",
+        description=(
+            "URL the on-device Chromium loads at boot. Defaults to the "
+            "edge_agent's loopback HTTP server so the kiosk works without "
+            "any cloud connectivity."
+        ),
+    )
 
 
 # ── mesh segments (installed roll-mesh pieces) ───────────────────────

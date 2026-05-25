@@ -220,6 +220,13 @@ async def heartbeat_loop(
             "inference_p50_ms": p50,
             "inference_p99_ms": p99,
             "frames_per_second": state.fps.fps,
+            # Integrated touch display. ``display_active`` is always True
+            # in v0.1 — we don't yet probe the actual /sys/class/drm
+            # state. ``display_touch_events_per_min`` will be wired up
+            # once the kiosk reports interactions back via
+            # /kiosk/touch-event.
+            "display_active": True,
+            "display_touch_events_per_min": 0.0,
         }
         try:
             await client.heartbeat(settings.edge_id, payload)
@@ -278,6 +285,33 @@ async def run_agent(
 
     sampler = sampler or sample_tegrastats
 
+    # The on-device kiosk HTTP server. ``conet-edge-kiosk.service``
+    # Chromium connects to this over loopback to render the operator UI
+    # on the integrated touch display.
+    from edge_agent.kiosk import KioskServer, KioskStatus
+
+    def _kiosk_status() -> KioskStatus:
+        p50, p99 = state.inference.percentiles()
+        return KioskStatus(
+            agent_version=__version__,
+            edge_id=settings.edge_id,
+            line_id=settings.line_id,
+            fps=state.fps.fps,
+            frames_total=state.frames_total,
+            frames_dropped=state.frames_dropped,
+            inference_p50_ms=p50,
+            inference_p99_ms=p99,
+            last_verdict=state.last_verdict,
+            last_score=state.last_score,
+            scanner_port=settings.scanner_port,
+        )
+
+    kiosk_server = KioskServer(settings, status_provider=_kiosk_status)
+    try:
+        await kiosk_server.start()
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("kiosk.start_failed", extra={"err": str(exc)})
+
     tasks: list[asyncio.Task[None]] = [
         asyncio.create_task(
             scanner_loop(settings, queue, open_port, state=state, stop=stop),
@@ -309,6 +343,7 @@ async def run_agent(
             task.cancel()
         await asyncio.gather(*pending, return_exceptions=True)
     finally:
+        await kiosk_server.stop()
         await cloud.close()
 
 

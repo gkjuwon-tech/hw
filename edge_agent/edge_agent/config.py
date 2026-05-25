@@ -71,11 +71,41 @@ class EdgeSettings(BaseSettings):
     inspect_include_heatmap: bool = Field(
         default=True,
         description=(
-            "If True, request the cloud to echo the per-cell anomaly heatmap so "
-            "the desktop's live mesh view has something to render. Set False if "
-            "you only need pass/fail."
+            "If True, request the cloud to echo the per-cell anomaly heatmap "
+            "so the on-device kiosk's live mesh view has something to render. "
+            "Set False if you only need pass/fail."
         ),
     )
+
+    # ── on-device kiosk (Chromium full-screen UI) ──
+    kiosk_enabled: bool = Field(
+        default=True,
+        description=(
+            "Serve the on-device kiosk HTTP endpoint at "
+            "``http://127.0.0.1:{kiosk_port}/`` so the systemd "
+            "``conet-edge-kiosk.service`` Chromium can render the operator UI "
+            "without any cloud connectivity. Disable on headless / fleet-only "
+            "deployments where no display is attached."
+        ),
+    )
+    kiosk_host: str = Field(
+        default="127.0.0.1",
+        description=(
+            "Bind address for the kiosk HTTP server. Defaults to loopback so "
+            "the kiosk is never exposed off-box. Override to ``0.0.0.0`` only "
+            "if you also put a firewall in front of the appliance."
+        ),
+    )
+    kiosk_port: int = Field(default=8088, ge=1, le=65535)
+    kiosk_static_dir: Path = Field(
+        default=Path("/opt/conet/edge_agent/kiosk"),
+        description=(
+            "Directory the kiosk HTTP server serves static files from. "
+            "Defaults to the system install path; override during local "
+            "development to point at the source tree."
+        ),
+    )
+    kiosk_default_locale: str = Field(default="ko-KR", min_length=2, max_length=10)
 
     # ── heartbeat / telemetry ──
     heartbeat_period_s: float = Field(default=2.0, gt=0.0, le=60.0)
