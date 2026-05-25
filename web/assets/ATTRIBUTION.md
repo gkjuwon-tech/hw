@@ -21,6 +21,9 @@ Attribution is provided here as a courtesy.
 | `quote-machine.jpg` | `1485827404703-89b55fcc595e` | Unsplash |
 | `pricing-shipping.jpg` | `1553413077-190dd305871c` | Unsplash |
 | `company-floor.jpg` | `1532187863486-abf9dbad1b69` | Unsplash |
+| `shipping-port.jpg` | `1494412651409-8963ce7935a7` | chuttersnap |
+| `cloud-operator.jpg` | `1581091226825-a6a2a5aee158` | ThisisEngineering |
+| `engineering-review.jpg` | `1581094288338-2314dddb7ece` | ThisisEngineering |
 
 `_fetch.sh` is the reference script used to populate this directory; it pulls
 from `images.unsplash.com`, which is the CDN entry point for the Unsplash

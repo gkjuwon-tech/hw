@@ -94,6 +94,44 @@ class Settings(BaseSettings):
     # ── pricing (in KRW; USD derived at quote time) ────────────────────
     pricing_usd_per_krw: float = Field(default=1 / 1360.0, gt=0)
 
+    # ── store / stripe checkout ────────────────────────────────────────
+    # Live mode requires CONET_STRIPE_SECRET_KEY. If unset OR
+    # CONET_STRIPE_MOCK_MODE=true, the store runs in mock mode: no Stripe
+    # calls are made, a local pretend-checkout page is used, and the
+    # success flow is fully driven by the backend. Mock mode lets the
+    # marketing site demo the full purchase journey without secrets.
+    stripe_secret_key: str | None = Field(default=None)
+    stripe_publishable_key: str | None = Field(default=None)
+    stripe_webhook_secret: str | None = Field(default=None)
+    stripe_mock_mode: bool = Field(default=True)
+    store_default_currency: str = Field(default="usd", min_length=3, max_length=3)
+    store_success_url: str = Field(
+        default="http://localhost:5173/product/activate.html",
+        description="Where Stripe redirects after the hardware checkout succeeds.",
+    )
+    store_cancel_url: str = Field(
+        default="http://localhost:5173/product/scanner.html",
+        description="Where Stripe redirects if the customer abandons checkout.",
+    )
+    store_software_success_url: str = Field(
+        default="http://localhost:5173/product/download.html",
+    )
+    store_software_cancel_url: str = Field(
+        default="http://localhost:5173/product/activate.html",
+    )
+    store_software_trial_days: int = Field(default=30, ge=0, le=365)
+    store_software_monthly_usd: int = Field(default=49, ge=0, le=10_000)
+    store_download_url_windows: str = Field(
+        default="https://github.com/gkjuwon-tech/hw/actions/workflows/ci.yml",
+        description="URL to the latest Windows installer (default: GH Actions artifacts).",
+    )
+    store_download_url_mac: str = Field(
+        default="https://github.com/gkjuwon-tech/hw/actions/workflows/ci.yml",
+    )
+    store_download_url_linux: str = Field(
+        default="https://github.com/gkjuwon-tech/hw/actions/workflows/ci.yml",
+    )
+
     # ── observability ──────────────────────────────────────────────────
     metrics_enabled: bool = True
     cors_origins: list[str] = Field(default_factory=lambda: ["*"])

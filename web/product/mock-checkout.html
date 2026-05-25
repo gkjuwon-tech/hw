@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Mock checkout — Conet Tactile</title>
+    <meta name="theme-color" content="#0b0c0a" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="../styles.css" />
+    <link rel="stylesheet" href="product.css" />
+  </head>
+
+  <body class="mock-checkout-body">
+    <header class="topbar mock-checkout__topbar">
+      <div class="topbar__inner">
+        <a class="brand" href="../index.html" aria-label="Conet Tactile, home">
+          <span class="brand__mark" aria-hidden="true"></span>
+          <span class="brand__word">Conet&nbsp;Tactile</span>
+        </a>
+        <p class="mock-checkout__badge">
+          <span class="form__mock-dot" aria-hidden="true"></span>
+          Mock checkout &middot; no real card charged
+        </p>
+        <a class="cta-link" href="scanner.html">
+          Cancel
+          <span aria-hidden="true" class="arrow">&rarr;</span>
+        </a>
+      </div>
+    </header>
+
+    <main class="mock-checkout">
+      <section class="mock-checkout__inner">
+        <header class="mock-checkout__head">
+          <p class="eyebrow" id="mc-mode-kicker">
+            <span class="eyebrow__dot" aria-hidden="true"></span>
+            Order &middot; one-time
+          </p>
+          <h1 class="h2 mock-checkout__title" id="mc-item-name">
+            Tactile&nbsp;Edge
+          </h1>
+          <p class="mock-checkout__amount" id="mc-amount">USD&nbsp;1,290.00</p>
+          <p class="mock-checkout__line-unit" id="mc-line-unit">
+            1&nbsp;&times;&nbsp;USD&nbsp;1,290.00
+          </p>
+        </header>
+
+        <div class="mock-checkout__grid">
+          <aside class="mock-checkout__summary" aria-label="Order summary">
+            <p class="buy__kicker">In this order</p>
+            <ul class="mock-checkout__bullets" id="mc-bullets">
+              <li>One Tactile&nbsp;Edge appliance, pre-flashed and provisioned</li>
+              <li>One 350&nbsp;mm &times; 1&nbsp;m starter Tactile&nbsp;Mesh roll</li>
+              <li>Rotary cutter, termination clips, install jig</li>
+              <li>Customs and freight quoted on this screen</li>
+            </ul>
+          </aside>
+
+          <form class="form mock-checkout__form" id="mc-form" novalidate>
+            <h2 class="mock-checkout__section-title">Card</h2>
+            <div class="form__row form__row--wide">
+              <label for="mc-card">Card number</label>
+              <input
+                id="mc-card"
+                name="card"
+                type="text"
+                autocomplete="cc-number"
+                placeholder="4242 4242 4242 4242"
+                value="4242 4242 4242 4242"
+              />
+            </div>
+            <div class="form__row">
+              <label for="mc-exp">Expiry</label>
+              <input id="mc-exp" name="exp" type="text" placeholder="12 / 32" value="12 / 32" />
+            </div>
+            <div class="form__row">
+              <label for="mc-cvc">CVC</label>
+              <input id="mc-cvc" name="cvc" type="text" placeholder="123" value="123" />
+            </div>
+
+            <h2 class="mock-checkout__section-title" id="mc-ship-title">
+              Shipping address
+            </h2>
+
+            <div class="form__row form__row--wide">
+              <label for="mc-email">Email</label>
+              <input
+                id="mc-email"
+                name="email"
+                type="email"
+                autocomplete="email"
+                placeholder="you@line.kr"
+                required
+              />
+            </div>
+
+            <div class="form__row form__row--wide" id="mc-name-row">
+              <label for="mc-name">Full name</label>
+              <input id="mc-name" name="name" type="text" autocomplete="name" />
+            </div>
+
+            <div class="form__row" id="mc-phone-row">
+              <label for="mc-phone">Phone</label>
+              <input id="mc-phone" name="phone" type="tel" autocomplete="tel" />
+            </div>
+
+            <div class="form__row" id="mc-country-row">
+              <label for="mc-country">Country</label>
+              <select id="mc-country" name="country">
+                <option value="KR" selected>Korea</option>
+                <option value="US">United States</option>
+                <option value="JP">Japan</option>
+                <option value="DE">Germany</option>
+                <option value="GB">United Kingdom</option>
+                <option value="FR">France</option>
+                <option value="CA">Canada</option>
+              </select>
+            </div>
+
+            <div class="form__row form__row--wide" id="mc-line1-row">
+              <label for="mc-line1">Address line</label>
+              <input id="mc-line1" name="line1" type="text" autocomplete="address-line1" />
+            </div>
+
+            <div class="form__row" id="mc-city-row">
+              <label for="mc-city">City</label>
+              <input id="mc-city" name="city" type="text" autocomplete="address-level2" />
+            </div>
+
+            <div class="form__row" id="mc-postal-row">
+              <label for="mc-postal">Postal code</label>
+              <input id="mc-postal" name="postal" type="text" autocomplete="postal-code" />
+            </div>
+
+            <div class="form__row form__row--wide form__row--submit">
+              <button class="submit" type="submit" id="mc-pay">
+                <span class="submit__label" id="mc-pay-label">Pay USD&nbsp;1,290.00</span>
+                <span class="arrow" aria-hidden="true">&rarr;</span>
+              </button>
+              <p class="form__legal">
+                This screen emulates Stripe&nbsp;Checkout. In live mode the
+                marketing site redirects to
+                <a href="https://checkout.stripe.com">checkout.stripe.com</a>
+                instead.
+              </p>
+            </div>
+
+            <p class="form__error" id="mc-error" hidden></p>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <script src="../script.js" defer></script>
+    <script src="product.js" defer></script>
+  </body>
+</html>

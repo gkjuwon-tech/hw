@@ -18,6 +18,7 @@ from app.core.middleware import (
     RateLimitMiddleware,
     RequestContextMiddleware,
 )
+from app.core.stripe_client import shutdown_client as shutdown_stripe_client
 from app.core.webhooks import dispatcher
 from app.db import dispose_engine, init_db
 from app.routers import (
@@ -31,6 +32,7 @@ from app.routers import (
     meshes,
     meta,
     pricing,
+    store,
     webhooks,
 )
 
@@ -54,6 +56,7 @@ async def lifespan(_: FastAPI) -> AsyncIterator[None]:
         yield
     finally:
         await dispatcher.stop()
+        await shutdown_stripe_client()
         await dispose_engine()
         logger.info("service_stopped")
 
@@ -106,6 +109,7 @@ def create_app() -> FastAPI:
     app.include_router(edges.router)
     app.include_router(meshes.router)
     app.include_router(pricing.router)
+    app.include_router(store.router)
     app.include_router(webhooks.router)
     app.include_router(admin.router)
     return app

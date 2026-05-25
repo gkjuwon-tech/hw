@@ -1,0 +1,365 @@
+/* =====================================================================
+   Conet Tactile — product / activate / download / mock-checkout pages
+   Most styles come from ../styles.css. This file only adds the
+   product-page-specific variants on top.
+   ===================================================================== */
+
+/* ---------- topbar override (these pages do not have a full-bleed
+   hero behind the topbar like the marketing site, so the topbar should
+   show its solid state from the first paint). ---------- */
+.topbar:not(.is-stuck) {
+  background: rgba(11, 12, 10, 0.92);
+  border-bottom-color: rgba(245, 245, 241, 0.12);
+}
+.topbar:not(.is-stuck) .nav a {
+  color: var(--paper);
+}
+.topbar:not(.is-stuck) .cta-link {
+  color: var(--paper);
+  border-bottom-color: rgba(245, 245, 241, 0.4);
+}
+
+/* ---------- hero ---------- */
+.hero--product .hero__inner .hero__title {
+  max-width: 22ch;
+}
+.hero--narrow {
+  min-height: 64vh;
+}
+.hero--narrow .hero__inner {
+  padding-top: clamp(7rem, 14vw, 11rem);
+  padding-bottom: clamp(3rem, 7vw, 5rem);
+}
+
+/* ---------- inline kv (used inside .form to summarize the order) ---------- */
+.kv--inline {
+  margin-top: 0.5rem;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 1.5rem 0;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem 2rem;
+}
+.kv--inline > div {
+  gap: 0.4rem;
+}
+
+/* ---------- receipt kv on activate / download pages ---------- */
+.kv--receipt {
+  margin-top: 2.5rem;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.75rem 3rem;
+}
+.kv--receipt .kv__wide {
+  grid-column: span 2;
+}
+.kv--receipt dd {
+  font-variant-numeric: tabular-nums;
+  word-break: break-word;
+}
+
+/* ---------- form variants ---------- */
+.form--inline {
+  margin-top: 2.5rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+  border-top: 1px solid var(--line);
+  padding-top: 2rem;
+}
+.form__mock {
+  grid-column: span 2;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin: 0;
+  font-size: 0.78rem;
+  letter-spacing: 0.01em;
+  color: var(--muted);
+  border-top: 1px dashed var(--line);
+  padding-top: 1.25rem;
+}
+.form--inline .form__mock {
+  grid-column: span 1;
+}
+.form__mock code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9em;
+  color: var(--ink);
+}
+.form__mock-dot {
+  display: inline-block;
+  width: 0.45rem;
+  height: 0.45rem;
+  background: var(--lime-deep);
+  border-radius: 50%;
+}
+.form__legal--wide {
+  margin-top: 2rem;
+  max-width: 56ch;
+  font-size: 0.85rem;
+}
+.form__error {
+  grid-column: span 2;
+  margin: 0;
+  font-size: 0.85rem;
+  color: #b03b1f;
+  border-left: 2px solid #b03b1f;
+  padding: 0.6rem 0.85rem;
+  background: rgba(176, 59, 31, 0.06);
+}
+.submit:disabled {
+  background: var(--muted-2);
+  cursor: progress;
+}
+.submit__label {
+  white-space: nowrap;
+}
+
+/* select looks like the hairline inputs */
+.form__row select {
+  font: inherit;
+  font-weight: 400;
+  color: var(--ink);
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  padding: 0.6rem 0;
+  appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, var(--ink) 50%),
+    linear-gradient(135deg, var(--ink) 50%, transparent 50%);
+  background-position: right 0.2rem center, right 0.55rem center;
+  background-size: 6px 6px;
+  background-repeat: no-repeat;
+}
+.form__row select:focus {
+  outline: none;
+  border-bottom-color: var(--ink);
+}
+.form__row input[type="number"] {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- split variants on product pages (form / specs in copy column) ---------- */
+.section--contact-split {
+  padding: 0;
+}
+.split--order,
+.split--specs {
+  min-height: 0;
+}
+.split--order .split__copy,
+.split--specs .split__copy {
+  padding: clamp(4rem, 8vw, 7rem) clamp(2rem, 5vw, 5rem);
+}
+.split--order .form,
+.split--specs .specs__table {
+  width: 100%;
+}
+.split--order .kv--inline {
+  grid-template-columns: repeat(2, 1fr);
+}
+.split--specs .specs__table {
+  margin-top: 2rem;
+}
+.split--specs .specs__table th,
+.split--specs .specs__table td {
+  font-size: 0.92rem;
+}
+
+@media (max-width: 920px) {
+  .split--order,
+  .split--specs {
+    grid-template-columns: 1fr;
+  }
+  .split--order .split__photo,
+  .split--specs .split__photo {
+    min-height: 38vh;
+  }
+}
+
+/* ---------- platforms (download page) ---------- */
+.steps--platforms .step {
+  gap: 1rem;
+}
+.step__link {
+  margin-top: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  align-self: flex-start;
+  font-size: 0.95rem;
+  color: var(--lime);
+  border-bottom: 1px solid rgba(181, 232, 83, 0.4);
+  padding-bottom: 0.2rem;
+  transition: color var(--tr), border-bottom-color var(--tr);
+}
+.step__link:hover {
+  color: var(--paper);
+  border-bottom-color: var(--paper);
+}
+
+/* ---------- FAQ on a photo section ---------- */
+.section--faq {
+  padding-top: clamp(4.5rem, 9vw, 7rem);
+  padding-bottom: clamp(4.5rem, 9vw, 7rem);
+}
+.faq {
+  margin: 2.5rem 0 0;
+  display: grid;
+  gap: 0;
+  border-top: 1px solid rgba(245, 245, 241, 0.22);
+}
+.faq__row {
+  padding: 1.6rem 0;
+  display: grid;
+  grid-template-columns: 1fr 1.6fr;
+  gap: 2rem;
+  border-bottom: 1px solid rgba(245, 245, 241, 0.18);
+  color: var(--paper);
+}
+.faq__row dt {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 400;
+  letter-spacing: -0.005em;
+  color: var(--paper);
+}
+.faq__row dd {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 300;
+  line-height: 1.6;
+  color: rgba(245, 245, 241, 0.82);
+}
+.faq__row dd a {
+  color: var(--lime);
+  border-bottom: 1px solid rgba(181, 232, 83, 0.4);
+}
+
+/* ---------- mock-checkout layout ---------- */
+.mock-checkout-body {
+  background: var(--paper-2);
+}
+.mock-checkout__topbar {
+  background: var(--ink);
+}
+.mock-checkout__topbar .topbar__inner .mock-checkout__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin: 0;
+  font-size: 0.74rem;
+  letter-spacing: 0.04em;
+  color: var(--paper);
+}
+.mock-checkout {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: clamp(2.5rem, 6vw, 4.5rem) var(--gutter) 4rem;
+}
+.mock-checkout__inner {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2rem, 4vw, 3rem);
+}
+.mock-checkout__head {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: clamp(1.5rem, 3vw, 2.5rem);
+}
+.mock-checkout__title {
+  margin: 0.25rem 0 0.4rem;
+  max-width: 18ch;
+}
+.mock-checkout__amount {
+  margin: 0;
+  font-size: clamp(2.4rem, 4.5vw, 3.4rem);
+  font-weight: 250;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+.mock-checkout__line-unit {
+  margin: 0;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+.mock-checkout__grid {
+  display: grid;
+  grid-template-columns: 0.8fr 1.2fr;
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: start;
+}
+.mock-checkout__summary .buy__kicker {
+  margin: 0 0 1.5rem;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.mock-checkout__bullets {
+  list-style: none;
+  margin: 0;
+  padding: 1.5rem 0 0;
+  display: grid;
+  gap: 0.7rem;
+  border-top: 1px solid var(--line);
+}
+.mock-checkout__bullets li {
+  position: relative;
+  padding-left: 1.25rem;
+  font-size: 0.92rem;
+  color: var(--ink-2);
+  line-height: 1.55;
+}
+.mock-checkout__bullets li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.78em;
+  width: 0.6rem;
+  height: 1px;
+  background: var(--lime-deep);
+}
+.mock-checkout__form {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
+.mock-checkout__section-title {
+  grid-column: span 2;
+  margin: 0.5rem 0 -0.3rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  font-weight: 500;
+}
+.mock-checkout__section-title:first-of-type {
+  margin-top: 0;
+}
+
+/* ---------- responsive ---------- */
+@media (max-width: 920px) {
+  .kv--inline {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .kv--receipt {
+    grid-template-columns: 1fr;
+  }
+  .kv--receipt .kv__wide {
+    grid-column: span 1;
+  }
+  .mock-checkout__grid {
+    grid-template-columns: 1fr;
+  }
+  .faq__row {
+    grid-template-columns: 1fr;
+    gap: 0.6rem;
+  }
+}
