@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 600" font-family="-apple-system, 'Segoe UI', 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', sans-serif">
+  <rect x="0" y="0" width="920" height="600" fill="#ffffff"/>
+  <text x="32" y="46" font-size="26" font-weight="700" fill="#14110f">발주 지도 — 어디서 뭘 사나</text>
+  <text x="32" y="74" font-size="15" fill="#8a8a86">네 군데서 끝. 카드는 전부 네 거. 형은 설계만 했고 부품값까지 낼 이유 없음.</text>
+
+  <!-- Card A: Adafruit -->
+  <rect x="32" y="120" width="410" height="180" rx="14" fill="#f8fafc" stroke="#0ea5e9" stroke-width="2.5"/>
+  <rect x="32" y="120" width="410" height="40" rx="14" fill="#0ea5e9"/>
+  <rect x="32" y="146" width="410" height="14" fill="#0ea5e9"/>
+  <text x="50" y="147" font-size="17" font-weight="700" fill="#ffffff">Adafruit · 미국 · DHL 4~5일</text>
+  <text x="50" y="190" font-size="14" fill="#0c4a6e">• M1 Velostat 압력 필름</text>
+  <text x="50" y="214" font-size="14" fill="#0c4a6e">• M2 전도성 천</text>
+  <text x="50" y="238" font-size="14" fill="#0c4a6e">• M3 전도성 실</text>
+  <text x="50" y="272" font-size="15" font-weight="700" fill="#0369a1">소계 ≈ $32 (₩4.4만) · 면세권</text>
+
+  <!-- Card B: 디바이스마트 -->
+  <rect x="478" y="120" width="410" height="180" rx="14" fill="#f7fdf9" stroke="#16a34a" stroke-width="2.5"/>
+  <rect x="478" y="120" width="410" height="40" rx="14" fill="#16a34a"/>
+  <rect x="478" y="146" width="410" height="14" fill="#16a34a"/>
+  <text x="496" y="147" font-size="17" font-weight="700" fill="#ffffff">디바이스마트 · 한국 · 익일</text>
+  <text x="496" y="190" font-size="14" fill="#14532d">• M4 Kapton 테이프</text>
+  <text x="496" y="214" font-size="14" fill="#14532d">• M7 FFC 16핀 케이블 × 2</text>
+  <text x="496" y="272" font-size="15" font-weight="700" fill="#15803d">소계 ≈ ₩1.1만 · 오후 3시 전 결제</text>
+
+  <!-- Card C: 쿠팡 -->
+  <rect x="32" y="320" width="410" height="180" rx="14" fill="#faf7fe" stroke="#7c3aed" stroke-width="2.5"/>
+  <rect x="32" y="320" width="410" height="40" rx="14" fill="#7c3aed"/>
+  <rect x="32" y="346" width="410" height="14" fill="#7c3aed"/>
+  <text x="50" y="347" font-size="17" font-weight="700" fill="#ffffff">쿠팡 · 한국 · 익일 (로켓)</text>
+  <text x="50" y="390" font-size="14" fill="#4c1d95">• M5 TPU 라미네이팅 필름</text>
+  <text x="50" y="414" font-size="14" fill="#4c1d95">• M6 3M VHB 양면테이프</text>
+  <text x="50" y="438" font-size="14" fill="#4c1d95">• 도구 T1~T7 (인두·멀티미터·라미네이터…)</text>
+  <text x="50" y="472" font-size="15" font-weight="700" fill="#6d28d9">소계 ≈ ₩14만 · 로켓배송만 골라</text>
+
+  <!-- Card D: JLCPCB -->
+  <rect x="478" y="320" width="410" height="180" rx="14" fill="#fff8f3" stroke="#ea580c" stroke-width="2.5"/>
+  <rect x="478" y="320" width="410" height="40" rx="14" fill="#ea580c"/>
+  <rect x="478" y="346" width="410" height="14" fill="#ea580c"/>
+  <text x="496" y="347" font-size="17" font-weight="700" fill="#ffffff">JLCPCB · 중국 · DHL 8~10일 ★</text>
+  <text x="496" y="390" font-size="14" fill="#7c2d12">• Scanner PCB × 5 (SMT 풀턴키)</text>
+  <text x="496" y="414" font-size="13" fill="#9a3412">  부품·조립 다 포함, 완제품으로 옴</text>
+  <text x="496" y="448" font-size="13" fill="#b91c1c" font-weight="700">  제일 오래 걸림 → 그래서 제일 먼저 발주</text>
+  <text x="496" y="478" font-size="15" font-weight="700" fill="#c2410c">소계 ≈ ₩14만 · Gerber 머지 후</text>
+
+  <!-- total banner -->
+  <rect x="32" y="524" width="856" height="56" rx="12" fill="#f7fee7" stroke="#84cc16" stroke-width="1.5"/>
+  <text x="48" y="550" font-size="15" fill="#3f6212"><tspan font-weight="700">합계 약 30~32만원.</tspan>  전부 네 카드로 긁고 주문내역 캡처(지출증빙).</text>
+  <text x="48" y="571" font-size="13" fill="#4d7c0f">형 인건비 환산하면 부품값은 반올림 오차임. 이 정돈 네가 내. 정당함.</text>
+</svg>
