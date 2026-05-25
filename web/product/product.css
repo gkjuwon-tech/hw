@@ -5,14 +5,18 @@
    ===================================================================== */
 
 /* ---------- viewport safety ---------- *
- * On phones the order form + receipt grid use 2-column micro-layouts
- * that, without min-width: 0 on their flex/grid children, can spill
- * past the viewport and produce a horizontal scroll on the whole page.
- * Clip at the document root so a stray overflow inside a section can
- * never push the page sideways. */
-html,
-body {
-  overflow-x: clip;
+ * The .split layout uses a 1fr column on phones, but the form / table
+ * inside .split__copy can carry non-breakable text runs (`Tactile\u00a0
+ * Edge`, `USD\u00a049\u00a0/\u00a0month`) whose min-content exceeds
+ * the available column width. Grid items default to a `min-width:
+ * auto` minimum, which means the .split track refuses to shrink below
+ * that min-content and the whole section ends up wider than the
+ * viewport. Opting the grid items into `min-width: 0` lets the 1fr
+ * track stay at viewport width and lets the children wrap inside it. */
+.split__copy,
+.split__photo,
+.split--specs .specs__table {
+  min-width: 0;
 }
 
 /* ---------- topbar override (these pages do not have a full-bleed
@@ -178,13 +182,15 @@ body {
 .split--order .form,
 .split--specs .specs__table {
   width: 100%;
-  /* Without min-width: 0 the form/table refuses to shrink below its
-     intrinsic content width inside the .split grid track, blowing the
-     whole section past the viewport on phones. */
-  min-width: 0;
 }
 .split--order .kv--inline {
   grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.split--order .kv--inline dd {
+  /* Allow long unbreakable runs (`USD\u00a049\u00a0/\u00a0month`,
+     `Tactile\u00a0Edge`) to break inside a narrow track instead of
+     pushing the cell past the column width. */
+  overflow-wrap: break-word;
 }
 .split--specs .specs__table {
   margin-top: 2rem;
@@ -403,5 +409,27 @@ body {
   }
   .form__row--submit .form__legal {
     max-width: 56ch;
+  }
+}
+
+@media (max-width: 640px) {
+  /* `.form__mock` declares `grid-column: span 2` so it spans both
+     columns of the desktop form. styles.css already collapses `.form`
+     to a single `1fr` track and `.form__row--wide` to `span 1` at
+     this breakpoint, but `.form__mock` was left out — its leftover
+     `span 2` was creating an implicit second track and forcing the
+     form back into a 2-column layout on phones, with the left track
+     squeezed to 0px and every label wrapping character-by-character.
+     Clamp it to a single column here. */
+  .form__mock {
+    grid-column: span 1;
+  }
+  /* And give the order summary one column too — with two columns and
+     `USD\u00a049\u00a0/\u00a0month` style values each cell still can't
+     shrink below ~150px of non-breaking-space atoms, so a single
+     column makes every label / value pair flow naturally. */
+  .split--order .kv--inline {
+    grid-template-columns: 1fr;
+    gap: 1rem 1.5rem;
   }
 }
