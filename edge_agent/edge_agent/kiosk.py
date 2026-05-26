@@ -219,7 +219,41 @@ class KioskServer:
         ctype = mimetypes.guess_type(candidate.name)[0] or "application/octet-stream"
         if ctype.startswith("text/") and "charset" not in ctype:
             ctype = ctype + "; charset=utf-8"
+        if candidate.name == "index.html" and ctype.startswith("text/html"):
+            body = self._inject_runtime_config(body)
         self._write_response(writer, 200, body, content_type=ctype)
+
+    @staticmethod
+    def _is_loopback(host: str) -> bool:
+        return host in {"127.0.0.1", "localhost", "::1"}
+
+    def _inject_runtime_config(self, html: bytes) -> bytes:
+        """Inject the control-plane base URL + box identity into index.html.
+
+        The restored operator bundle reads these globals
+        (``window.__CONET_API_BASE__`` …) instead of an Electron bridge, so
+        the very same static build runs on the appliance and under
+        ``vite dev``. The API token is injected **only** when the kiosk is
+        bound to loopback, so a box deliberately exposed on a LAN
+        (``kiosk_host=0.0.0.0``) never leaks its key into served HTML.
+        """
+        s = self._settings
+        cfg: dict[str, str] = {
+            "__CONET_API_BASE__": s.cloud_url,
+            "__CONET_EDGE_ID__": s.edge_id,
+            "__CONET_LINE_ID__": s.line_id,
+        }
+        if self._is_loopback(s.kiosk_host) and s.api_key:
+            cfg["__CONET_API_TOKEN__"] = s.api_key
+        assigns = "".join(f"window.{k}={json.dumps(v)};" for k, v in cfg.items())
+        script = (
+            "<script>/* injected by edge_agent kiosk server */" + assigns + "</script>"
+        ).encode("utf-8")
+        marker = b"</head>"
+        idx = html.find(marker)
+        if idx != -1:
+            return html[:idx] + script + html[idx:]
+        return script + html
 
     def _write_simple(
         self, writer: asyncio.StreamWriter, status: int, body: bytes
