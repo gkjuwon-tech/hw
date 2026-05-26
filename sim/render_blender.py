@@ -70,8 +70,8 @@ bpy.ops.wm.read_factory_settings(use_empty=True)
 M_FLOOR  = mat("floor", (0.10, 0.11, 0.13), rough=0.5)
 M_BELT   = mat("belt", (0.05, 0.05, 0.06), rough=0.7)
 M_METAL  = mat("metal", (0.55, 0.57, 0.60), metallic=1.0, rough=0.3)
-M_PART   = mat("part", (0.80, 0.64, 0.40), rough=0.55, coat=0.1)
-M_PELLET = mat("pellet", (0.10, 0.10, 0.11), metallic=0.6, rough=0.4)
+M_PILL   = mat("pill", (0.92, 0.92, 0.94), rough=0.35, coat=0.25)      # white tablet
+M_CAVITY = mat("cavity", (0.04, 0.04, 0.05), rough=0.9)                  # void interior (reads dark)
 M_GRAPH  = mat("graphite", (0.03, 0.033, 0.038), rough=0.5, coat=0.18)
 M_ALU    = mat("alu", (0.66, 0.685, 0.71), metallic=1.0, rough=0.24)
 M_SCREEN = mat("screen", (0.01, 0.02, 0.015), rough=0.08, coat=1.0, emit=(0.03, 0.42, 0.22), emit_s=2.2)
@@ -106,26 +106,44 @@ nt.links.new(mp.outputs["Vector"], chk.inputs["Vector"])
 nt.links.new(chk.outputs["Color"], bsdf.inputs["Base Color"])
 mat_obj.data.materials.append(gm)
 
-# ── parts riding the belt: good + defective ──
-pw, pd, ph = PART
-pz = MAT_TOP + ph/2
-xs = [-0.46, -0.16, 0.16, 0.44]
+# ── pills riding the belt: externally identical, some hollow inside ──
+# The whole point: a camera (Cognex) can't see an internal void — they all
+# look the same from outside. The tactile mat catches the hollow one because
+# it's lighter / presses differently. Featured cut-aways show the difference.
+import random
+random.seed(2)
+TAB_R, TAB_H = 0.009, 0.005
 
-# 0: nominal
-box("part_ok_0", PART, (xs[0], 0, pz), M_PART)
-# 1: chipped corner (boolean difference)
-p1 = box("part_chip", PART, (xs[1], 0, pz), M_PART)
-cutter = box("cutter", (0.05, 0.05, 0.05), (xs[1] + pw/2, pd/2, pz + ph/2), M_PART)
-mod = p1.modifiers.new("chip", 'BOOLEAN'); mod.operation = 'DIFFERENCE'; mod.object = cutter
-bpy.context.view_layer.objects.active = p1
-bpy.ops.object.modifier_apply(modifier="chip")
-bpy.data.objects.remove(cutter, do_unlink=True)
-# 2: nominal
-box("part_ok_2", PART, (xs[2], 0, pz), M_PART)
-# 3: foreign object (a dark pellet sitting on the part)
-box("part_foreign", PART, (xs[3], 0, pz), M_PART)
-bpy.ops.mesh.primitive_uv_sphere_add(radius=0.010, location=(xs[3], 0.0, pz + ph/2 + 0.006))
-pel = bpy.context.active_object; pel.name = "pellet"; pel.data.materials.append(M_PELLET); bpy.ops.object.shade_smooth()
+def tablet(name, loc, r=TAB_R, h=TAB_H, hollow=False, cutaway=False):
+    bpy.ops.mesh.primitive_cylinder_add(radius=r, depth=h, location=loc)
+    o = bpy.context.active_object; o.name = name
+    tools = []
+    if hollow:                                   # sealed internal cavity
+        bpy.ops.mesh.primitive_cylinder_add(radius=r*0.62, depth=h*0.66, location=loc)
+        tools.append(bpy.context.active_object)
+    if cutaway:                                  # slice the near (-y) half toward the camera
+        bpy.ops.mesh.primitive_cube_add(size=1, location=(loc[0], loc[1]-r, loc[2]))
+        cb = bpy.context.active_object; cb.scale = (r*1.6, r, h*2)
+        bpy.ops.object.transform_apply(scale=True); tools.append(cb)
+    for t in tools:
+        md = o.modifiers.new("b", 'BOOLEAN'); md.operation = 'DIFFERENCE'; md.object = t; md.solver = 'EXACT'
+        bpy.context.view_layer.objects.active = o
+        bpy.ops.object.modifier_apply(modifier="b")
+        bpy.data.objects.remove(t, do_unlink=True)
+    o.data.materials.append(M_PILL)
+    bpy.ops.object.shade_smooth()
+    return o
+
+pz = MAT_TOP + TAB_H/2
+i = 0
+for x in [-0.54, -0.42, -0.30, 0.12, 0.26, 0.40, 0.52]:
+    for y in [-0.10, -0.02, 0.07]:
+        tablet(f"pill_{i}", (x + random.uniform(-0.008, 0.008), y, pz)); i += 1
+
+# featured cut-aways (enlarged) — solid vs hollow, side by side
+FR, FH = 0.022, 0.012
+tablet("cut_solid",  (-0.08, -0.04, MAT_TOP + FH/2), r=FR, h=FH, cutaway=True)
+tablet("cut_hollow", ( 0.02, -0.04, MAT_TOP + FH/2), r=FR, h=FH, hollow=True, cutaway=True)
 
 # ── Edge box on a stand beside the belt ──
 if os.path.exists(ENCL_BODY) and os.path.exists(ENCL_BEZEL):
@@ -171,10 +189,10 @@ area("fill", (-1.2, -0.4, 0.8), 150, 1.8)
 area("rim", (-0.6, 1.2, 1.0), 260, 1.2)
 
 # ── camera ──
-cam_d = bpy.data.cameras.new("cam"); cam_d.lens = 40
+cam_d = bpy.data.cameras.new("cam"); cam_d.lens = 52
 cam = bpy.data.objects.new("cam", cam_d); bpy.context.collection.objects.link(cam)
-cam.location = (1.15, -0.95, 0.62)
-cam.rotation_euler = (Vector((-0.1, 0.0, 0.02)) - Vector(cam.location)).to_track_quat('-Z', 'Y').to_euler()
+cam.location = (0.62, -0.66, 0.40)
+cam.rotation_euler = (Vector((-0.06, -0.01, 0.01)) - Vector(cam.location)).to_track_quat('-Z', 'Y').to_euler()
 bpy.context.scene.camera = cam
 
 # ── render ──
