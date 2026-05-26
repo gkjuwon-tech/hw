@@ -11,7 +11,18 @@ unit reads as "floating". All styling is *subtractive* (chamfers, fillets,
 slots) — no thin protruding decoration to snap off. Two printed parts screw
 together with M3 heat-set inserts.
 
-![Product render straight from edge_enclosure.scad — chamfered black body, proud silver bezel with countersunk corner screws, recessed 7" display, side vent grille, cable port.](preview.png)
+![Studio product render — matte-graphite body, anodized-aluminium bezel, emissive screen, soft key/fill/rim lighting with reflections on a dark sweep.](preview.png)
+
+`preview.png` is a **Blender Cycles** studio render (PBR materials + a
+softbox light rig + reflections), produced by [`render.py`](render.py):
+
+```bash
+pip install bpy                                   # Blender as a Python module
+OPENSCAD=/path/to/openscad python3 render.py      # exports the parts, renders preview.png
+```
+
+No HDRI file is needed — the studio environment (key/fill/rim area lights +
+a vertical-gradient world + a reflective floor) is built in the scene.
 
 ```
    front  ┌───────────────────────┐
