@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 520" font-family="-apple-system, 'Segoe UI', 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', sans-serif">
+  <rect x="0" y="0" width="960" height="520" fill="#ffffff"/>
+  <text x="32" y="46" font-size="26" font-weight="700" fill="#14110f">3D 프린트 함체 — 알몸 기판 → 제품 박스</text>
+  <text x="32" y="74" font-size="15" fill="#8a8a86">전면 베젤에 디스플레이 끼우고, 본체에 Jetson 넣고, M3 4개로 조이면 끝. 뒤엔 VESA-75 + 통풍구.</text>
+
+  <defs>
+    <marker id="dn" markerWidth="10" markerHeight="10" refX="3" refY="7" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L6,0 L3,7 Z" fill="#15803d"/>
+    </marker>
+  </defs>
+
+  <!-- ===== LEFT: exploded stack ===== -->
+  <!-- 1 front bezel -->
+  <rect x="120" y="104" width="300" height="56" rx="10" fill="#eef2f7" stroke="#475569" stroke-width="2.5"/>
+  <rect x="156" y="116" width="228" height="32" rx="4" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+  <text x="270" y="136" font-size="13" fill="#334155" text-anchor="middle" font-weight="700">① 전면 베젤 (디스플레이 창)</text>
+  <line x1="270" y1="164" x2="270" y2="180" stroke="#15803d" stroke-width="2.5" marker-end="url(#dn)"/>
+
+  <!-- 2 display -->
+  <rect x="140" y="184" width="260" height="44" rx="8" fill="#0f172a" stroke="#334155" stroke-width="2"/>
+  <rect x="158" y="194" width="224" height="24" rx="3" fill="#16a34a" opacity="0.25"/>
+  <text x="270" y="211" font-size="13" fill="#e2e8f0" text-anchor="middle" font-weight="700">② 7" 터치 디스플레이 (D1)</text>
+  <line x1="270" y1="232" x2="270" y2="248" stroke="#15803d" stroke-width="2.5" marker-end="url(#dn)"/>
+
+  <!-- 3 body with jetson -->
+  <rect x="120" y="252" width="300" height="74" rx="10" fill="#f8fafc" stroke="#475569" stroke-width="2.5"/>
+  <rect x="150" y="268" width="150" height="44" rx="6" fill="#052e16" stroke="#14532d" stroke-width="2"/>
+  <text x="225" y="294" font-size="12.5" fill="#bbf7d0" text-anchor="middle" font-weight="700">Jetson (+SSD)</text>
+  <!-- standoff dots -->
+  <circle cx="160" cy="278" r="3" fill="#84cc16"/><circle cx="290" cy="278" r="3" fill="#84cc16"/>
+  <circle cx="160" cy="302" r="3" fill="#84cc16"/><circle cx="290" cy="302" r="3" fill="#84cc16"/>
+  <text x="360" y="284" font-size="12.5" fill="#334155" text-anchor="middle" font-weight="700">③ 본체</text>
+  <text x="360" y="301" font-size="10.5" fill="#64748b" text-anchor="middle">스탠드오프</text>
+  <text x="360" y="314" font-size="10.5" fill="#64748b" text-anchor="middle">+ 통풍구</text>
+  <line x1="270" y1="330" x2="270" y2="346" stroke="#15803d" stroke-width="2.5" marker-end="url(#dn)"/>
+
+  <!-- 4 back plate -->
+  <rect x="120" y="350" width="300" height="52" rx="10" fill="#eef2f7" stroke="#475569" stroke-width="2.5"/>
+  <!-- vesa pattern -->
+  <g fill="#94a3b8"><circle cx="246" cy="366" r="3"/><circle cx="294" cy="366" r="3"/><circle cx="246" cy="386" r="3"/><circle cx="294" cy="386" r="3"/></g>
+  <text x="180" y="372" font-size="12.5" fill="#334155" font-weight="700">④ 백플레이트</text>
+  <text x="180" y="389" font-size="10.5" fill="#64748b">VESA-75 + 케이블 출구</text>
+
+  <!-- screws note -->
+  <text x="440" y="240" font-size="12" fill="#65a30d" font-weight="700">M3 ×4</text>
+  <text x="440" y="256" font-size="11" fill="#65a30d">베젤→본체</text>
+
+  <!-- ===== big arrow ===== -->
+  <text x="512" y="280" font-size="46" fill="#84cc16" font-weight="700" text-anchor="middle">→</text>
+  <text x="512" y="312" font-size="13" fill="#65a30d" font-weight="700" text-anchor="middle">조립</text>
+
+  <!-- ===== RIGHT: finished product ===== -->
+  <rect x="600" y="120" width="300" height="250" rx="16" fill="#1f2937" stroke="#0f172a" stroke-width="3"/>
+  <rect x="624" y="146" width="252" height="160" rx="8" fill="#0b1220"/>
+  <rect x="638" y="160" width="224" height="132" rx="5" fill="#16a34a" opacity="0.20"/>
+  <text x="750" y="222" font-size="16" fill="#e2e8f0" text-anchor="middle" font-weight="700">PASS</text>
+  <text x="750" y="248" font-size="12.5" fill="#86efac" text-anchor="middle">verdict · fps · 온도</text>
+  <!-- bezel speaker/led row -->
+  <circle cx="636" cy="330" r="5" fill="#84cc16"/>
+  <rect x="700" y="324" width="120" height="12" rx="6" fill="#374151"/>
+  <text x="750" y="392" font-size="13.5" fill="#15803d" text-anchor="middle" font-weight="700">= Edge 박스 (Cognex 처럼 제품답게)</text>
+  <text x="750" y="412" font-size="11.5" fill="#64748b" text-anchor="middle">먼지·기름·지게차로부터 기판 보호 + 손가락 터치 조작</text>
+
+  <!-- bottom note -->
+  <rect x="32" y="450" width="896" height="48" rx="10" fill="#f7fee7" stroke="#84cc16" stroke-width="1.5"/>
+  <text x="48" y="472" font-size="13" fill="#3f6212">설계: hardware/edge_enclosure/edge_enclosure.scad (파라메트릭). PETG 권장. 주의 — 프린트 전 디스플레이·보드 나사구멍 치수 measure 해서 test-fit.</text>
+  <text x="48" y="490" font-size="13" fill="#3f6212">조립은 7.0.5 — 인서트 박고 → Jetson 본체에 → 디스플레이 베젤에 → M3로 닫기 → 뒤 VESA로 라인 옆 거치.</text>
+</svg>
