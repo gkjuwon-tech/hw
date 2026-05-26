@@ -297,7 +297,9 @@ hardware/pcb/conet-scanner-v1/
 
 **소계: 약 3만원** (프린터 자가 출력 기준. 출력소 맡기면 +3~5만원). VESA 마운트/스탠드는 2.5 의 D6 재사용.
 
-> ⚠ **프린트 전 치수 확인 필수.** `.scad` 안의 숫자는 다 *임시 nominal 값*임. 네 디스플레이 + 특히 **보드 나사구멍 패턴(`jet_holes`)** 실측해서 고치고, **베젤 한 장 먼저 뽑아 test-fit** 한 다음 본체 긴 출력 돌려. 상세는 `hardware/edge_enclosure/README.md`.
+> ✅ 설계는 OpenSCAD로 **렌더 + 2-manifold STL 검증 완료** (`hardware/edge_enclosure/preview.png` 그 렌더임). 베젤·본체 둘 다 깨끗하게 출력됨.
+>
+> ⚠ **단, 물리 출력/핏은 아직임 — 프린트 전 치수 확인 필수.** `.scad` 의 숫자는 *nominal 값*이라, 네 디스플레이 + 특히 **보드 나사구멍 패턴(`jet_holes`)** 실측해서 고치고, **베젤 한 장 먼저 뽑아 test-fit** 한 다음 본체 긴 출력 돌려. 상세는 `hardware/edge_enclosure/README.md`.
 
 ---
 

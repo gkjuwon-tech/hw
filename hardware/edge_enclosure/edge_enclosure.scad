@@ -66,7 +66,9 @@ outer_w = disp_w + 2*gap + 2*wall;
 outer_h = disp_h + 2*gap + 2*wall;
 depth   = bezel_th + disp_th + clearance_z + jet_standoff_h + jet_h + back_th;
 
-edge_inset = wall + 4;
+// inset the bezel-screw bosses far enough that the ~Ø8 boss clears the
+// inner wall face — touching it tangentially makes the union non-manifold.
+edge_inset = wall + 6;
 bx = outer_w/2 - edge_inset;
 by = outer_h/2 - edge_inset;
 boss_pos = [[bx, by], [-bx, by], [bx, -by], [-bx, -by]];
@@ -99,21 +101,25 @@ module vesa_holes() {
       cylinder(h = back_th + 2, d = vesa_hole);
 }
 
+// `emb` sinks the posts into the back plate so they share volume with it
+// (a coincident face would otherwise make the union non-manifold).
+embed = 0.8;
+
 module jet_standoffs() {
   for (p = jet_holes)
-    translate([p[0], p[1], 0]) difference() {
-      cylinder(h = jet_standoff_h, d = insert_d + 3.5);
-      translate([0, 0, -1]) cylinder(h = jet_standoff_h + 2, d = insert_d);
+    translate([p[0], p[1], -embed]) difference() {
+      cylinder(h = jet_standoff_h + embed, d = insert_d + 3.5);
+      translate([0, 0, 1]) cylinder(h = jet_standoff_h + embed, d = insert_d);
     }
 }
 
 module bezel_bosses() {
   h = depth - back_th - bezel_th;
   for (p = boss_pos)
-    translate([p[0], p[1], back_th]) difference() {
-      cylinder(h = h, d = insert_d + 4);
+    translate([p[0], p[1], back_th - embed]) difference() {
+      cylinder(h = h + embed, d = insert_d + 4);
       // insert pocket opens toward the FRONT (top here)
-      translate([0, 0, h - 8]) cylinder(h = 9, d = insert_d);
+      translate([0, 0, h + embed - 8]) cylinder(h = 9, d = insert_d);
     }
 }
 
@@ -154,10 +160,28 @@ module bezel() {
 // =====================================================================
 //  output selector
 // =====================================================================
+// Render-only mock-ups so the preview reads as a *product*, not a box.
+// These are NOT exported — only `body` and `bezel` are printable parts.
+module mock_jetson() {
+  color("#0b3d1f")
+    translate([0, 0, back_th + jet_standoff_h])
+      rbox(jet_w, jet_d, jet_h, 3);
+  color("#9aa0a6")                    // a couple of "ports" on the back edge
+    for (dx = [-20, 0, 20])
+      translate([dx, -jet_d/2, back_th + jet_standoff_h + 8])
+        rbox(12, 4, 7, 1);
+}
+module mock_screen() {
+  color("#10331f")                    // dark green "live" panel behind the window
+    translate([0, win_off_y, depth - 1]) rbox(win_w - 1, win_h - 1, 2, 2);
+}
+
 module preview() {
-  color("DimGray") body();
-  // place the bezel at the front of the body, flipped to face outward
-  color("Gainsboro")
+  mock_jetson();
+  mock_screen();
+  color("#2b2f33") body();
+  // bezel capping the front face (the box opens toward +Z = the display side)
+  color("#e6e8ea")
     translate([0, 0, depth + (bezel_th + disp_pocket)])
       rotate([180, 0, 0]) bezel();
 }

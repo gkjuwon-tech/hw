@@ -7,6 +7,8 @@ tucks into the **body** behind it; the back plate carries a **VESA-75**
 mount, cooling **vents**, and a **cable exit**. Two printed parts screw
 together with M3 heat-set inserts.
 
+![Assembled preview rendered from edge_enclosure.scad — black body, silver bezel with corner screws, the 7" display behind the window, cable exit on the front.](preview.png)
+
 ```
    front  ┌───────────────────────┐
    bezel  │  ┌─────────────────┐  │   ← window over the active area
@@ -37,6 +39,9 @@ openscad -D 'part="body"'  -o edge_body.stl  edge_enclosure.scad
 openscad -D 'part="bezel"' -o edge_bezel.stl edge_enclosure.scad
 # or open the file and set part="preview" to eyeball the assembly first
 ```
+
+Both parts export as clean **2-manifold** STL — verified with OpenSCAD 2021.01.
+The `preview.png` above is rendered straight from this `.scad`.
 
 **Recommended print settings**
 
@@ -69,6 +74,7 @@ Measure your actual hardware and update them, then test-fit:
 - Print a **bezel-corner test coupon** (or just the bezel) first to dial in
   the insert/screw fit before committing to the multi-hour body print.
 
-This model is a tweakable starting point, not a guaranteed drop-in — it has
-not been print-verified in this repo yet. See `HARDWARE_BUILD_GUIDE.md` §2.6
+The geometry is **render- and manifold-verified** (OpenSCAD 2021.01), but it
+has **not been physically printed / test-fit** yet — so it's a tweakable
+starting point, not a guaranteed drop-in. See `HARDWARE_BUILD_GUIDE.md` §2.6
 and §7.0 for where it slots into the build.
