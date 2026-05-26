@@ -104,14 +104,21 @@ def main():
         comp = torch.clamp((rest_z - z) * TS.TAXEL_K, min=0.0)
         return comp.cpu().numpy()
 
-    # zero-load baseline (no pills touching): lift pills away, settle, record rest_z
-    far = pills.get_world_poses()[0].clone()
-    far[:, 2] += 0.5
-    pills.set_world_poses(positions=far)
-    for _ in range(60):
+    # zero-load baseline: gravity off so pills float (no contact) and the taxels
+    # settle to their unloaded spring rest -> record rest_z. Restore gravity after.
+    ctx = world.get_physics_context()
+    try:
+        ctx.set_gravity(0.0)
+    except Exception:
+        ctx.set_gravity([0.0, 0.0, 0.0])
+    for _ in range(40):
         world.step(render=False)
     pos, _ = taxels.get_world_poses()
     rest_z = pos[:, 2].reshape(N, ROWS, COLS)
+    try:
+        ctx.set_gravity(-9.81)
+    except Exception:
+        ctx.set_gravity([0.0, 0.0, -9.81])
 
     rng = np.random.default_rng(7)
     GOOD_J, VOID_R, P_VOID, NOISE = 0.04, (0.55, 0.78), 0.25, 0.012
@@ -119,7 +126,7 @@ def main():
     done = 0
     batch = 0
     init_pos = pills.get_world_poses()[0].clone()
-    init_pos[:, 2] = TS.M0 * 0 + 0.012   # drop height above the mesh
+    init_pos[:, 2] = 0.012   # drop height just above the mesh
 
     while done < a.pills:
         # domain-randomized masses + labels per pill per env
@@ -152,8 +159,10 @@ def main():
         frames_all.append(frame); press_all.append(pp); lab_all.append(labels)
         done += N * NPILL
         batch += 1
-        print(f"  batch {batch}: {done}/{a.pills} pills "
-              f"(good~{frame[labels==0].mean() if (labels==0).any() else 0:.2f})")
+        gmean = pp[labels == 0].mean() if (labels == 0).any() else 0.0
+        vmean = pp[labels == 1].mean() if (labels == 1).any() else 0.0
+        print(f"  batch {batch}: {done}/{a.pills} pills  "
+              f"good~{gmean:.2f}N  void~{vmean:.2f}N")
 
     frames = np.concatenate(frames_all)[: a.pills // NPILL + 1]
     press = np.concatenate(press_all)[: len(frames)]
