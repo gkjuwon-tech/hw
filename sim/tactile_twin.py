@@ -116,6 +116,36 @@ def press(height_map: np.ndarray) -> np.ndarray:
     return read_pressure(m, d, rows, cols)
 
 
+class TwinSim:
+    """Fast repeated presses for dataset generation.
+
+    Compiling a 256-spring model is the slow part, so we compile ONCE and
+    then just move the object's feet (the height map) between samples — no
+    recompile. ~100x faster than rebuilding per sample.
+    """
+
+    def __init__(self, rows=16, cols=16):
+        self.rows, self.cols = rows, cols
+        self.m = build_model(np.zeros((rows, cols)))
+        self.d = mujoco.MjData(self.m)
+        gid = lambda n: mujoco.mj_name2id(self.m, mujoco.mjtObj.mjOBJ_GEOM, n)
+        jid = lambda n: mujoco.mj_name2id(self.m, mujoco.mjtObj.mjOBJ_JOINT, n)
+        self.foot = {(r, c): gid(f"f_{r}_{c}") for r in range(rows) for c in range(cols)}
+        self.jadr = {(r, c): self.m.jnt_qposadr[jid(f"j_{r}_{c}")]
+                     for r in range(rows) for c in range(cols)}
+
+    def press(self, height_map: np.ndarray, settle=600) -> np.ndarray:
+        mujoco.mj_resetData(self.m, self.d)
+        for (r, c), g in self.foot.items():
+            self.m.geom_pos[g, 2] = float(height_map[r, c]) + FOOT_HZ
+        for _ in range(settle):
+            mujoco.mj_step(self.m, self.d)
+        f = np.zeros((self.rows, self.cols))
+        for (r, c), adr in self.jadr.items():
+            f[r, c] = max(0.0, -TAXEL_K * self.d.qpos[adr])
+        return f
+
+
 # ── object / defect generators (height maps; 0 = full contact) ───────────
 
 def nominal(rows=16, cols=16, noise=0.00005):
