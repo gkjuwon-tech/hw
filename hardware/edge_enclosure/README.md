@@ -1,13 +1,17 @@
 # Tactile Edge — 3D-printed enclosure
 
-A line-side "product" shell for the Edge box so we ship an *appliance*, not
-a bare NVIDIA dev kit zip-tied to a stand. The 7" touch display sits in the
-front **bezel**; the Jetson Orin Nano Developer Kit (heatsink/fan and all)
-tucks into the **body** behind it; the back plate carries a **VESA-75**
-mount, cooling **vents**, and a **cable exit**. Two printed parts screw
+A line-side vision-sensor "product" shell (Cognex/Keyence register) so we
+ship an *appliance*, not a bare NVIDIA dev kit zip-tied to a stand. The 7"
+touch display sits behind a crisp **chamfered bezel** that stands slightly
+proud of the **body** (the monitor-frame look); the Jetson Orin Nano
+Developer Kit (heatsink/fan and all) tucks into the body behind it; the
+**sides** carry a machined **vent grille**; the **back plate** carries a
+**VESA-75** mount and a **cable exit**; the back edge is chamfered so the
+unit reads as "floating". All styling is *subtractive* (chamfers, fillets,
+slots) — no thin protruding decoration to snap off. Two printed parts screw
 together with M3 heat-set inserts.
 
-![Assembled preview rendered from edge_enclosure.scad — black body, silver bezel with corner screws, the 7" display behind the window, cable exit on the front.](preview.png)
+![Product render straight from edge_enclosure.scad — chamfered black body, proud silver bezel with countersunk corner screws, recessed 7" display, side vent grille, cable port.](preview.png)
 
 ```
    front  ┌───────────────────────┐
