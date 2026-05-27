@@ -113,6 +113,26 @@ def _mat(stage, path, diffuse, metallic=0.0, rough=0.5, emissive=None, opacity=1
     return mat
 
 
+def _omnipbr(stage, path, diffuse, metallic=0.0, rough=0.5, specular=0.5,
+             emissive=None, emit=0.0):
+    """A real OmniPBR (MDL) material — metals reflect the HDRI, so chamfers and
+    brushed surfaces actually read (UsdPreviewSurface metals look flat/black)."""
+    mat = UsdShade.Material.Define(stage, path)
+    sh = UsdShade.Shader.Define(stage, path + "/Shader")
+    sh.SetSourceAsset("OmniPBR.mdl", "mdl")
+    sh.SetSourceAssetSubIdentifier("OmniPBR", "mdl")
+    sh.CreateInput("diffuse_color_constant", Sdf.ValueTypeNames.Color3f).Set(Gf.Vec3f(*diffuse))
+    sh.CreateInput("metallic_constant", Sdf.ValueTypeNames.Float).Set(metallic)
+    sh.CreateInput("reflection_roughness_constant", Sdf.ValueTypeNames.Float).Set(rough)
+    sh.CreateInput("specular_level", Sdf.ValueTypeNames.Float).Set(specular)
+    if emissive is not None:
+        sh.CreateInput("enable_emission", Sdf.ValueTypeNames.Bool).Set(True)
+        sh.CreateInput("emissive_color", Sdf.ValueTypeNames.Color3f).Set(Gf.Vec3f(*emissive))
+        sh.CreateInput("emissive_intensity", Sdf.ValueTypeNames.Float).Set(emit)
+    mat.CreateSurfaceOutput("mdl").ConnectToSource(sh.ConnectableAPI(), "out")
+    return mat
+
+
 def _bind(prim, mat):
     UsdShade.MaterialBindingAPI.Apply(prim).Bind(mat)
 
@@ -308,12 +328,14 @@ def build_edge_appliance(stage, root, M):
         _mesh(stage, f"{base}/bezel", zp, zi, (0, 0, half_d), 0.001, M["alu"])
         build_jetson(stage, f"{base}/jetson", M)
         _xform(stage.GetPrimAtPath(f"{base}/jetson"), pos=(0, 0, -half_d + 0.012))
-        scr_z = half_d + 0.005                  # inside the bezel window, behind its front
+        scr_z = half_d - 0.001                  # recessed at the bezel back (frame stands proud)
     else:
         _box(stage, f"{base}/body", (S.ENCL_W, S.ENCL_D, 2 * half_d), (0, 0, 0), M["graphite"])
-        scr_z = half_d + 0.002
-    # emissive kiosk screen (7" active area), showing through the bezel window
-    _box(stage, f"{base}/screen", (S.DISP_ACT_W, S.DISP_ACT_H, 0.002), (0, 0, scr_z), M["screen"])
+        scr_z = half_d - 0.001
+    # emissive display, recessed inside the bezel window (slightly smaller so the
+    # polished-aluminium frame reads around it, like the product render)
+    _box(stage, f"{base}/screen", (S.DISP_ACT_W * 0.97, S.DISP_ACT_H * 0.97, 0.0015),
+         (0, 0, scr_z), M["screen"])
 
 
 # ── scene assembly ─────────────────────────────────────────────────────────
@@ -322,31 +344,32 @@ def build(stage):
     root = "/World"
     UsdGeom.Xform.Define(stage, root)
     UsdGeom.Xform.Define(stage, root + "/M")
+    P = lambda n, *a, **k: _omnipbr(stage, root + "/M/" + n, *a, **k)
     M = dict(
-        belt=_mat(stage, root + "/M/belt", (0.04, 0.04, 0.05), 0.0, 0.85),
-        metal=_mat(stage, root + "/M/metal", (0.62, 0.64, 0.67), 0.95, 0.3),
-        frame=_mat(stage, root + "/M/frame", (0.70, 0.72, 0.75), 0.85, 0.38),
-        motor=_mat(stage, root + "/M/motor", (0.20, 0.21, 0.24), 0.6, 0.4),
-        velostat=_mat(stage, root + "/M/velostat", (0.06, 0.20, 0.15), 0.0, 0.6),
-        cell=_mat(stage, root + "/M/cell", (0.10, 0.42, 0.30), 0.1, 0.45),
-        ffc=_mat(stage, root + "/M/ffc", (0.55, 0.42, 0.12), 0.3, 0.4),
-        pcb=_mat(stage, root + "/M/pcb", (0.06, 0.32, 0.18), 0.15, 0.5),
-        chip=_mat(stage, root + "/M/chip", (0.06, 0.06, 0.07), 0.2, 0.45),
-        conn=_mat(stage, root + "/M/conn", (0.85, 0.85, 0.88), 0.7, 0.35),
-        pill=_mat(stage, root + "/M/pill", (0.92, 0.90, 0.84), 0.0, 0.40),
-        pillR=_mat(stage, root + "/M/pillR", (0.80, 0.28, 0.24), 0.0, 0.4),
-        pillB=_mat(stage, root + "/M/pillB", (0.30, 0.45, 0.80), 0.0, 0.4),
-        graphite=_mat(stage, root + "/M/graphite", (0.04, 0.045, 0.05), 0.1, 0.5),
-        alu=_mat(stage, root + "/M/alu", (0.68, 0.70, 0.73), 1.0, 0.22),
-        heatsink=_mat(stage, root + "/M/heatsink", (0.74, 0.76, 0.79), 1.0, 0.28),
-        screen=_mat(stage, root + "/M/screen", (0.02, 0.06, 0.05), 0.0, 0.12,
-                    emissive=(0.02, 0.20, 0.13)),
-        floor=_mat(stage, root + "/M/floor", (0.14, 0.15, 0.17), 0.0, 0.55),
+        belt=P("belt", (0.05, 0.05, 0.055), 0.0, 0.55, specular=0.4),       # dark PU rubber
+        metal=P("metal", (0.80, 0.81, 0.83), 1.0, 0.18, specular=0.8),      # stainless rollers
+        frame=P("frame", (0.78, 0.79, 0.81), 1.0, 0.30, specular=0.7),      # anodized aluminium
+        motor=P("motor", (0.18, 0.19, 0.22), 0.6, 0.4),
+        velostat=P("velostat", (0.05, 0.18, 0.13), 0.0, 0.45, specular=0.5),# Velostat mat
+        cell=P("cell", (0.10, 0.45, 0.32), 0.0, 0.40, specular=0.6),
+        ffc=P("ffc", (0.62, 0.46, 0.12), 0.4, 0.4),
+        pcb=P("pcb", (0.05, 0.30, 0.16), 0.1, 0.5),
+        chip=P("chip", (0.05, 0.05, 0.06), 0.2, 0.45),
+        conn=P("conn", (0.85, 0.86, 0.88), 0.9, 0.3),
+        pill=P("pill", (0.93, 0.91, 0.86), 0.0, 0.35, specular=0.5),
+        pillR=P("pillR", (0.82, 0.26, 0.22), 0.0, 0.35),
+        pillB=P("pillB", (0.28, 0.45, 0.82), 0.0, 0.35),
+        graphite=P("graphite", (0.035, 0.038, 0.043), 0.1, 0.42, specular=0.5),  # matte body
+        alu=P("alu", (0.85, 0.86, 0.88), 1.0, 0.12, specular=0.9),          # polished bezel
+        heatsink=P("heatsink", (0.80, 0.81, 0.83), 1.0, 0.25, specular=0.8),
+        screen=P("screen", (0.02, 0.05, 0.04), 0.0, 0.08, specular=0.9,     # dark glass
+                 emissive=(0.04, 0.32, 0.20), emit=120.0),
+        floor=P("floor", (0.20, 0.20, 0.22), 0.0, 0.30, specular=0.5),      # polished concrete
     )
 
-    # factory floor
+    # factory floor (large, blends into the HDRI horizon)
     fl = UsdGeom.Mesh.Define(stage, root + "/floor")
-    s = 3.0
+    s = 8.0
     fl.CreatePointsAttr([Gf.Vec3f(-s, -s, FLOOR_Z), Gf.Vec3f(s, -s, FLOOR_Z),
                          Gf.Vec3f(s, s, FLOOR_Z), Gf.Vec3f(-s, s, FLOOR_Z)])
     fl.CreateFaceVertexIndicesAttr([0, 1, 2, 3]); fl.CreateFaceVertexCountsAttr([4])
@@ -359,20 +382,36 @@ def build(stage):
     build_edge_appliance(stage, root, M)
 
 
+HDRI = os.environ.get("SCENE_HDRI", "/workspace/hdri.hdr")
+
+
 def setup_lighting(stage):
     UsdGeom.Xform.Define(stage, "/World/Lights")
+    # factory HDRI dome — provides the environment + the reflections that make
+    # the metals (bezel, rollers, frame) read. Falls back to a tinted sky.
     dome = UsdLux.DomeLight.Define(stage, "/World/Lights/dome")
-    dome.CreateIntensityAttr(700.0); dome.CreateColorAttr(Gf.Vec3f(0.6, 0.65, 0.78))
+    dome.CreateIntensityAttr(1100.0)
+    if HDRI and os.path.exists(HDRI):
+        dome.CreateTextureFileAttr(HDRI)
+        dome.CreateTextureFormatAttr("latlong")
+    else:
+        dome.CreateColorAttr(Gf.Vec3f(0.55, 0.6, 0.72))
+    _xform(dome.GetPrim(), euler=(90, 0, -35))         # bring the horizon level + frame a nice angle
+    # warm key
     key = UsdLux.DistantLight.Define(stage, "/World/Lights/key")
-    key.CreateIntensityAttr(2400.0); key.CreateColorAttr(Gf.Vec3f(1.0, 0.97, 0.92))
-    key.CreateAngleAttr(1.2)
-    _xform(key.GetPrim(), euler=(-48, 18, 25))
+    key.CreateIntensityAttr(1800.0); key.CreateColorAttr(Gf.Vec3f(1.0, 0.96, 0.9))
+    key.CreateAngleAttr(1.0)
+    _xform(key.GetPrim(), euler=(-42, 16, 22))
+    # cool rim/back light to catch the chamfered edges
+    rim = UsdLux.DistantLight.Define(stage, "/World/Lights/rim")
+    rim.CreateIntensityAttr(2600.0); rim.CreateColorAttr(Gf.Vec3f(0.7, 0.8, 1.0))
+    rim.CreateAngleAttr(0.6)
+    _xform(rim.GetPrim(), euler=(-28, 200, 0))
+    # soft overhead fill (factory ceiling light)
     rect = UsdLux.RectLight.Define(stage, "/World/Lights/overhead")
-    rect.CreateIntensityAttr(9000.0); rect.CreateWidthAttr(1.2); rect.CreateHeightAttr(0.5)
-    _xform(rect.GetPrim(), pos=(0, 0, 0.9), euler=(0, 0, 0))
-    rim = UsdLux.SphereLight.Define(stage, "/World/Lights/rim")
-    rim.CreateIntensityAttr(28000.0); rim.CreateRadiusAttr(0.08)
-    _xform(rim.GetPrim(), pos=(-0.6, 0.7, 0.6))
+    rect.CreateIntensityAttr(4500.0); rect.CreateWidthAttr(1.6); rect.CreateHeightAttr(0.8)
+    rect.CreateColorAttr(Gf.Vec3f(0.95, 0.97, 1.0))
+    _xform(rect.GetPrim(), pos=(0.0, -0.1, 1.0), euler=(0, 0, 0))
 
 
 VIEWS = {
