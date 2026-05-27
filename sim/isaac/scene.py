@@ -365,10 +365,8 @@ def setup_lighting(stage):
 
 VIEWS = {
     # name: (camera position, look_at, focal_length)
-    "twin_overview": ((1.05, -1.05, 0.70), (0.00, 0.00, -0.02), 20.0),   # whole line (known-good)
-    "hero_a":        ((0.50, -0.50, 0.40), (0.0, 0.0, 0.0), 30.0),       # diagonal, like overview but close
-    "hero_b":        ((0.40, -0.45, 0.55), (0.0, 0.0, 0.0), 30.0),       # higher look-down
-    "hero_c":        ((0.05, -0.55, 0.48), (0.0, 0.0, 0.0), 28.0),       # front, elevated
+    "twin_scene":    ((0.62, -0.72, 0.34), (0.10, -0.13, 0.02), 30.0),   # hero: inspection station
+    "twin_overview": ((1.05, -1.05, 0.70), (0.00, 0.00, -0.02), 20.0),   # whole line
 }
 
 
