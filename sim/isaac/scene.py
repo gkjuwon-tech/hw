@@ -46,11 +46,13 @@ from PIL import Image
 
 import sim.specs as S
 
+BELT_LEN    = 2.40          # full QC line section (specs.BELT_LENGTH is one short bench)
+MESH_BELT_W = 0.30          # tactile mat width on the belt (covers it, inside the rails)
 BELT_TOP    = -S.MESH_THICK
 BELT_CZ     = BELT_TOP - S.BELT_THICK / 2
 BELT_BOTTOM = BELT_CZ - S.BELT_THICK / 2
 FLOOR_Z     = -0.36
-HX, HY      = S.BELT_LENGTH / 2, S.BELT_WIDTH / 2
+HX, HY      = BELT_LEN / 2, S.BELT_WIDTH / 2
 
 
 # ── enclosure STL (export from the .scad if missing) ─────────────────────
@@ -165,9 +167,9 @@ def _mesh(stage, path, pts, idx, pos, scale, mat, euler=None):
 
 def build_conveyor(stage, root, M):
     # belt top run + bottom return run (suggests the loop around the rollers)
-    _box(stage, f"{root}/belt_top", (S.BELT_LENGTH, S.BELT_WIDTH, S.BELT_THICK),
+    _box(stage, f"{root}/belt_top", (BELT_LEN, S.BELT_WIDTH, S.BELT_THICK),
          (0, 0, BELT_CZ), M["belt"])
-    _box(stage, f"{root}/belt_bot", (S.BELT_LENGTH, S.BELT_WIDTH, S.BELT_THICK),
+    _box(stage, f"{root}/belt_bot", (BELT_LEN, S.BELT_WIDTH, S.BELT_THICK),
          (0, 0, BELT_TOP - S.ROLLER_DIA - S.BELT_THICK / 2), M["belt"])
     sgn = lambda v: "p" if v > 0 else "n"
     # end rollers (axis Y) with the belt tangent to their tops
@@ -179,11 +181,11 @@ def build_conveyor(stage, root, M):
          M["motor"], axis="Y")
     # extruded-aluminium side frame beams under the belt edges
     for sy in (-1, 1):
-        _box(stage, f"{root}/frame_{sgn(sy)}", (S.BELT_LENGTH + 0.04, 0.03, 0.05),
+        _box(stage, f"{root}/frame_{sgn(sy)}", (BELT_LEN + 0.04, 0.03, 0.05),
              (0, sy * (HY + 0.02), BELT_TOP - 0.05), M["frame"])
     # guide rails
     for sy in (-1, 1):
-        _box(stage, f"{root}/rail_{sgn(sy)}", (S.BELT_LENGTH, 0.008, S.RAIL_H),
+        _box(stage, f"{root}/rail_{sgn(sy)}", (BELT_LEN, 0.008, S.RAIL_H),
              (0, sy * (HY + 0.004), BELT_TOP + S.RAIL_H / 2), M["frame"])
     # legs + feet
     legh = (BELT_TOP - 0.07) - FLOOR_Z
@@ -196,25 +198,28 @@ def build_conveyor(stage, root, M):
 
 
 def build_mesh_sensor(stage, root, M):
-    # laminated Velostat sheet, top at z=0
-    _box(stage, f"{root}/mesh_pad", (S.MESH_W + 0.012, S.MESH_H + 0.012, S.MESH_THICK),
+    # The Velostat tactile mat is laminated along the WHOLE belt so every part
+    # that rides past is inspected (not one fixed spot). Drawn as a full-length
+    # sheet + a 10 mm cell grid (the real cell pitch), top at z=0.
+    _box(stage, f"{root}/mesh_pad", (BELT_LEN, MESH_BELT_W, S.MESH_THICK),
          (0, 0, -S.MESH_THICK / 2), M["velostat"])
     cell = S.CELL_PITCH
-    grid = UsdGeom.Xform.Define(stage, f"{root}/cells")
-    for r in range(S.MESH_ROWS):
-        for c in range(S.MESH_COLS):
-            x = -(S.MESH_COLS - 1) * cell / 2 + c * cell
-            y = -(S.MESH_ROWS - 1) * cell / 2 + r * cell
-            _box(stage, f"{root}/cells/c_{r}_{c}", (cell * 0.8, cell * 0.8, 0.0008),
-                 (x, y, 0.0003), M["cell"])
-    # FFC ribbon from the mesh edge to the scanner PCB (a few flat segments)
-    ry0 = S.MESH_H / 2
-    seg = [(0.0, ry0 + 0.01, 0.0006, 0.03, 0.02),
-           (0.0, ry0 + 0.03, -0.002, 0.03, 0.02),
-           (0.0, ry0 + 0.05, -0.006, 0.03, 0.02)]
-    for i, (x, y, z, w, l) in enumerate(seg):
-        _box(stage, f"{root}/ffc_{i}", (w, l, 0.0006), (x, y, z), M["ffc"],
-             euler=(20 * i, 0, 0))
+    UsdGeom.Xform.Define(stage, f"{root}/mesh_grid")
+    ny = int(round(MESH_BELT_W / cell))
+    for j in range(ny + 1):                      # longitudinal lines (run the belt)
+        y = -MESH_BELT_W / 2 + j * cell
+        _box(stage, f"{root}/mesh_grid/lx_{j}", (BELT_LEN, 0.0010, 0.0012),
+             (0, y, 0.0005), M["cell"])
+    nx = int(round(BELT_LEN / cell))
+    for i in range(nx + 1):                      # transverse lines (10 mm pitch)
+        x = -BELT_LEN / 2 + i * cell
+        _box(stage, f"{root}/mesh_grid/ly_{i}", (0.0010, MESH_BELT_W, 0.0012),
+             (x, 0, 0.0005), M["cell"])
+    # FFC ribbon from the mat edge down to the scanner PCB
+    ry0 = MESH_BELT_W / 2
+    for i in range(3):
+        _box(stage, f"{root}/ffc_{i}", (0.03, 0.02, 0.0006),
+             (HY * 0.0, ry0 + 0.01 + i * 0.02, 0.001 - i * 0.004), M["ffc"], euler=(20 * i, 0, 0))
 
 
 def build_scanner_pcb(stage, root, M):
@@ -232,24 +237,29 @@ def build_scanner_pcb(stage, root, M):
 
 
 def build_pills(stage, root, M):
-    """4x4 tray of biconvex tablets / capsules resting on the mesh top (z=0)."""
-    spacing = 0.036
-    o = -(4 - 1) * spacing / 2
+    """Tablets/capsules riding the mat along the whole belt (every part inspected)."""
     rng = np.random.default_rng(3)
-    for i in range(4):
-        for k in range(4):
-            x, y = o + i * spacing, o + k * spacing
-            idx = i * 4 + k
-            col = M["pill"] if rng.random() < 0.7 else M[rng.choice(["pillR", "pillB"])]
-            if rng.random() < 0.45:  # capsule
-                _capsule(stage, f"{root}/pill_{idx}", 0.005, 0.012, (x, y, 0.005),
-                         col, axis="X")
-            else:                    # biconvex tablet (flattened sphere)
-                _sphere(stage, f"{root}/pill_{idx}", 0.013, (x, y, 0.0035), col,
-                        scale=(1.0, 1.0, 0.28))
-    # a few tablets riding in on the belt toward the station
-    for k, bx in enumerate((-0.34, -0.27, -0.20)):
-        _sphere(stage, f"{root}/feed_{k}", 0.013, (bx, 0.0, 0.0035 + BELT_TOP),
+    spacing = 0.036
+    idx = 0
+    # several 3x3 trays spaced along the belt + scattered singles between them
+    for cx in (-0.85, -0.40, 0.05, 0.50, 0.95):
+        n = 3
+        o = -(n - 1) * spacing / 2
+        for i in range(n):
+            for k in range(n):
+                x, y = cx + o + i * spacing, o + k * spacing
+                idx += 1
+                col = M["pill"] if rng.random() < 0.7 else M[rng.choice(["pillR", "pillB"])]
+                if rng.random() < 0.45:
+                    _capsule(stage, f"{root}/pill_{idx}", 0.005, 0.012, (x, y, 0.005),
+                             col, axis="X")
+                else:
+                    _sphere(stage, f"{root}/pill_{idx}", 0.013, (x, y, 0.0035), col,
+                            scale=(1.0, 1.0, 0.28))
+    for k in range(8):                            # scattered singles down the line
+        x = rng.uniform(-HX + 0.1, HX - 0.1); y = rng.uniform(-0.10, 0.10)
+        idx += 1
+        _sphere(stage, f"{root}/pill_{idx}", 0.013, (x, y, 0.0035),
                 M["pill"], scale=(1.0, 1.0, 0.28))
 
 
@@ -273,8 +283,9 @@ def build_jetson(stage, base, M):
 
 
 def build_edge_appliance(stage, root, M):
-    # kiosk on a VESA stand beside the belt, downstream of the inspection station
-    bx, by = 0.34, -(HY + 0.14)
+    # kiosk on a VESA stand beside the belt, well downstream of the station
+    # (clear of the hero frame on the mesh)
+    bx, by = 0.46, -(HY + 0.15)
     cz = BELT_TOP + 0.20                       # device CENTRE height above floor
     _box(stage, f"{root}/stand_base", (0.18, 0.14, 0.012), (bx, by, FLOOR_Z + 0.006), M["frame"])
     post_h = cz - FLOOR_Z
@@ -292,15 +303,16 @@ def build_edge_appliance(stage, root, M):
     if body_stl:
         bp, bi = _read_stl(body_stl)
         zp, zi = _read_stl(bezel_stl)
+        # body spans local z in [-half_d, +half_d]; bezel sits ON the front face
         _mesh(stage, f"{base}/body", bp, bi, (0, 0, -half_d), 0.001, M["graphite"])
-        _mesh(stage, f"{base}/bezel", zp, zi, (0, 0, half_d - 0.009), 0.001, M["alu"])
+        _mesh(stage, f"{base}/bezel", zp, zi, (0, 0, half_d), 0.001, M["alu"])
         build_jetson(stage, f"{base}/jetson", M)
         _xform(stage.GetPrimAtPath(f"{base}/jetson"), pos=(0, 0, -half_d + 0.012))
-        scr_z = half_d + 0.0015
+        scr_z = half_d + 0.005                  # inside the bezel window, behind its front
     else:
         _box(stage, f"{base}/body", (S.ENCL_W, S.ENCL_D, 2 * half_d), (0, 0, 0), M["graphite"])
-        scr_z = half_d + 0.0015
-    # emissive kiosk screen (7" active area), just proud of the bezel front face
+        scr_z = half_d + 0.002
+    # emissive kiosk screen (7" active area), showing through the bezel window
     _box(stage, f"{base}/screen", (S.DISP_ACT_W, S.DISP_ACT_H, 0.002), (0, 0, scr_z), M["screen"])
 
 
@@ -327,8 +339,8 @@ def build(stage):
         graphite=_mat(stage, root + "/M/graphite", (0.04, 0.045, 0.05), 0.1, 0.5),
         alu=_mat(stage, root + "/M/alu", (0.68, 0.70, 0.73), 1.0, 0.22),
         heatsink=_mat(stage, root + "/M/heatsink", (0.74, 0.76, 0.79), 1.0, 0.28),
-        screen=_mat(stage, root + "/M/screen", (0.02, 0.07, 0.05), 0.0, 0.1,
-                    emissive=(0.05, 0.55, 0.32)),
+        screen=_mat(stage, root + "/M/screen", (0.02, 0.06, 0.05), 0.0, 0.12,
+                    emissive=(0.02, 0.20, 0.13)),
         floor=_mat(stage, root + "/M/floor", (0.14, 0.15, 0.17), 0.0, 0.55),
     )
 
@@ -365,8 +377,9 @@ def setup_lighting(stage):
 
 VIEWS = {
     # name: (camera position, look_at, focal_length)
-    "twin_scene":    ((0.62, -0.72, 0.34), (0.10, -0.13, 0.02), 30.0),   # hero: inspection station
-    "twin_overview": ((1.05, -1.05, 0.70), (0.00, 0.00, -0.02), 20.0),   # whole line
+    "twin_scene":    ((0.70, -0.80, 0.42), (0.05, -0.05, 0.0), 27.0),    # hero: a belt section + mat
+    "twin_overview": ((1.70, -1.55, 1.15), (0.00, 0.00, -0.03), 17.0),   # whole 2.4 m line
+    "twin_line":     ((-1.35, -0.60, 0.42), (0.35, 0.0, 0.0), 22.0),     # down the belt: mat full length
 }
 
 
