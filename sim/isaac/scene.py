@@ -46,7 +46,8 @@ from PIL import Image
 
 import sim.specs as S
 
-BELT_LEN    = 2.40          # full QC line section (specs.BELT_LENGTH is one short bench)
+BELT_LEN    = 3.20          # full QC line section (specs.BELT_LENGTH is one short bench)
+DRUM_R      = 0.045         # head/tail pulley radius — the belt wraps these (natural ends)
 MESH_BELT_W = 0.30          # tactile mat width on the belt (covers it, inside the rails)
 BELT_TOP    = -S.MESH_THICK
 BELT_CZ     = BELT_TOP - S.BELT_THICK / 2
@@ -186,19 +187,26 @@ def _mesh(stage, path, pts, idx, pos, scale, mat, euler=None):
 # ── sub-assemblies ───────────────────────────────────────────────────────
 
 def build_conveyor(stage, root, M):
-    # belt top run + bottom return run (suggests the loop around the rollers)
-    _box(stage, f"{root}/belt_top", (BELT_LEN, S.BELT_WIDTH, S.BELT_THICK),
-         (0, 0, BELT_CZ), M["belt"])
-    _box(stage, f"{root}/belt_bot", (BELT_LEN, S.BELT_WIDTH, S.BELT_THICK),
-         (0, 0, BELT_TOP - S.ROLLER_DIA - S.BELT_THICK / 2), M["belt"])
     sgn = lambda v: "p" if v > 0 else "n"
-    # end rollers (axis Y) with the belt tangent to their tops
+    bz = BELT_TOP - DRUM_R                        # pulley axis height (belt tangent on top)
+    # the belt is a continuous loop: top run, bottom return, and a wrap (half
+    # cylinder) around each end pulley -> it ends naturally, not a chopped slab.
+    _box(stage, f"{root}/belt_top", (2 * HX, S.BELT_WIDTH, S.BELT_THICK),
+         (0, 0, BELT_CZ), M["belt"])
+    _box(stage, f"{root}/belt_bot", (2 * HX, S.BELT_WIDTH, S.BELT_THICK),
+         (0, 0, BELT_TOP - 2 * DRUM_R - S.BELT_THICK / 2), M["belt"])
     for sx in (-1, 1):
-        _cyl(stage, f"{root}/roller_{sgn(sx)}", S.ROLLER_DIA / 2, S.BELT_WIDTH + 0.03,
-             (sx * HX, 0, BELT_TOP - S.ROLLER_DIA / 2), M["metal"], axis="Y")
-    # drive motor at the head roller
-    _cyl(stage, f"{root}/motor", 0.035, 0.09, (HX + 0.02, HY + 0.06, BELT_TOP - S.ROLLER_DIA / 2),
-         M["motor"], axis="Y")
+        # belt skin wrapping the pulley (slightly larger radius than the drum)
+        _cyl(stage, f"{root}/beltwrap_{sgn(sx)}", DRUM_R + S.BELT_THICK, S.BELT_WIDTH,
+             (sx * HX, 0, bz), M["belt"], axis="Y")
+        # the steel drum pulley inside
+        _cyl(stage, f"{root}/drum_{sgn(sx)}", DRUM_R, S.BELT_WIDTH + 0.04,
+             (sx * HX, 0, bz), M["metal"], axis="Y")
+        # stub shaft
+        _cyl(stage, f"{root}/shaft_{sgn(sx)}", 0.01, S.BELT_WIDTH + 0.16,
+             (sx * HX, 0, bz), M["metal"], axis="Y")
+    # drive motor on the head pulley
+    _cyl(stage, f"{root}/motor", 0.04, 0.10, (HX, HY + 0.10, bz), M["motor"], axis="Y")
     # extruded-aluminium side frame beams under the belt edges
     for sy in (-1, 1):
         _box(stage, f"{root}/frame_{sgn(sy)}", (BELT_LEN + 0.04, 0.03, 0.05),
@@ -416,9 +424,10 @@ def setup_lighting(stage):
 
 VIEWS = {
     # name: (camera position, look_at, focal_length)
-    "twin_scene":    ((0.70, -0.80, 0.42), (0.05, -0.05, 0.0), 27.0),    # hero: a belt section + mat
-    "twin_overview": ((1.70, -1.55, 1.15), (0.00, 0.00, -0.03), 17.0),   # whole 2.4 m line
-    "twin_line":     ((-1.35, -0.60, 0.42), (0.35, 0.0, 0.0), 22.0),     # down the belt: mat full length
+    "twin_scene":    ((0.95, -0.95, 0.46), (0.22, -0.05, 0.03), 30.0),   # hero: station + pills
+    "twin_overview": ((2.60, -2.30, 1.65), (0.05, -0.05, 0.0), 24.0),    # whole 3.2 m line, 3/4
+    "twin_line":     ((-2.05, -0.85, 0.52), (0.55, 0.0, 0.02), 24.0),    # down the belt
+    "edgebox":       ((0.80, -0.66, 0.34), (0.46, -0.31, 0.19), 50.0),   # Edge box close-up
 }
 
 
