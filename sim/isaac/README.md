@@ -58,5 +58,32 @@ python sim/isaac/sllm/export_edge.py                               # INT4 for Or
 - AI training uses the system PyTorch (2.4.1+cu124, Python 3.11) so Isaac's
   pinned deps stay isolated from `transformers`/`peft`.
 
+## A6000 RunPod handoff notes from PR #28
+
+This branch was originally started on `extended_orange_stoat`, an RTX A6000 pod:
+
+- GPU: NVIDIA RTX A6000, 49,140 MiB
+- Driver: 570.195.03; CUDA reported by driver: 12.8
+- Python: 3.11.10 in the template image
+- Durable workspace: `/workspace`
+
+Important compatibility notes:
+
+- Python 3.11 cannot install Isaac Sim 4.5 from NVIDIA's pip index. The existing
+  `run.sh`/`pod_setup.sh` path intentionally uses Python 3.10 for Isaac 4.5.
+- Isaac's pip boot asks for the NVIDIA Omniverse EULA. Run scripts should set
+  `OMNI_KIT_ACCEPT_EULA=YES` only if the pod operator accepts NVIDIA's terms.
+- Before scene work, verify RTX/Vulkan, not just CUDA:
+
+```bash
+VK_ICD_FILENAMES=/etc/vulkan/icd.d/nvidia_icd.json vulkaninfo --summary
+```
+
+Expected: NVIDIA RTX A6000. Bad state observed on the first pod: CUDA/NVML saw
+the A6000, but Vulkan only exposed `llvmpipe`; Isaac installed, started, and then
+failed to create an NVIDIA Vulkan GPU device. Avoid blindly installing Ubuntu
+`libnvidia-gl-*` packages on this template: one attempt pulled 580 userspace
+libraries over a 570.195 host driver and caused an NVML mismatch until reverted.
+
 Metrics from the latest run are printed by `detect.py`; the CPU MuJoCo baseline
 to beat is ROC-AUC 99.5%.
