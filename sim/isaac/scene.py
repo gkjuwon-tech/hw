@@ -199,9 +199,9 @@ def build_conveyor(stage, root, M):
         # belt skin wrapping the pulley (slightly larger radius than the drum)
         _cyl(stage, f"{root}/beltwrap_{sgn(sx)}", DRUM_R + S.BELT_THICK, S.BELT_WIDTH,
              (sx * HX, 0, bz), M["belt"], axis="Y")
-        # the steel drum pulley inside
+        # the steel drum pulley inside (rotate op for the running animation)
         _cyl(stage, f"{root}/drum_{sgn(sx)}", DRUM_R, S.BELT_WIDTH + 0.04,
-             (sx * HX, 0, bz), M["metal"], axis="Y")
+             (sx * HX, 0, bz), M["metal"], axis="Y", euler=(0, 0, 0))
         # stub shaft
         _cyl(stage, f"{root}/shaft_{sgn(sx)}", 0.01, S.BELT_WIDTH + 0.16,
              (sx * HX, 0, bz), M["metal"], axis="Y")
@@ -232,7 +232,8 @@ def build_mesh_sensor(stage, root, M):
     _box(stage, f"{root}/mesh_pad", (BELT_LEN, MESH_BELT_W, S.MESH_THICK),
          (0, 0, -S.MESH_THICK / 2), M["velostat"])
     cell = S.CELL_PITCH
-    UsdGeom.Xform.Define(stage, f"{root}/mesh_grid")
+    grid = UsdGeom.Xform.Define(stage, f"{root}/mesh_grid")
+    grid.AddTranslateOp().Set(Gf.Vec3d(0, 0, 0))   # animated: scrolls with the belt
     ny = int(round(MESH_BELT_W / cell))
     for j in range(ny + 1):                      # longitudinal lines (run the belt)
         y = -MESH_BELT_W / 2 + j * cell
@@ -424,10 +425,8 @@ def setup_lighting(stage):
 
 VIEWS = {
     # name: (camera position, look_at, focal_length)
-    "twin_scene":    ((0.95, -0.95, 0.46), (0.22, -0.05, 0.03), 30.0),   # hero: station + pills
-    "twin_overview": ((2.60, -2.30, 1.65), (0.05, -0.05, 0.0), 24.0),    # whole 3.2 m line, 3/4
-    "twin_line":     ((-2.05, -0.85, 0.52), (0.55, 0.0, 0.02), 24.0),    # down the belt
-    "edgebox":       ((0.80, -0.66, 0.34), (0.46, -0.31, 0.19), 50.0),   # Edge box close-up
+    "twin_overview": ((2.15, -1.95, 1.20), (0.00, -0.04, 0.02), 27.0),   # whole 3.2 m line, 3/4
+    "twin_line":     ((-1.95, -1.05, 0.66), (0.45, 0.0, 0.05), 26.0),    # down the belt
 }
 
 
@@ -457,7 +456,60 @@ def render(steps=140):
         print(f"[scene] rendered -> {path}  shape={img.shape}  mean={img.mean():.1f}")
 
 
+def render_anim(cam="twin_line", frames=90, fps=30, substeps=6):
+    """Render the belt *running*: the mat grid scrolls, pills ride along and
+    wrap, the drum pulleys spin. Frames -> mp4 via ffmpeg."""
+    import math, subprocess
+    from isaacsim.core.api import World
+    world = World(stage_units_in_meters=1.0)
+    stage = world.stage
+    build(stage); setup_lighting(stage); world.reset()
+    pos, look, fl = VIEWS[cam]
+    c = rep.create.camera(position=pos, look_at=look, focal_length=fl)
+    rp = rep.create.render_product(c, (_W, _H))
+    ann = rep.AnnotatorRegistry.get_annotator("rgb"); ann.attach(rp)
+
+    cell = S.CELL_PITCH; speed = S.BELT_SPEED
+    grid_op = UsdGeom.Xformable(stage.GetPrimAtPath("/World/mesh_grid")).GetOrderedXformOps()[0]
+    pills = []
+    for prim in stage.Traverse():
+        if prim.GetName().startswith("pill_"):
+            t = UsdGeom.Xformable(prim).GetOrderedXformOps()[0]
+            b = t.Get()
+            pills.append((t, float(b[0]), float(b[1]), float(b[2])))
+    drums = []
+    for nm in ("drum_p", "drum_n"):
+        ops = UsdGeom.Xformable(stage.GetPrimAtPath(f"/World/{nm}")).GetOrderedXformOps()
+        drums += [o for o in ops if "rotate" in o.GetOpName().lower()]
+
+    fdir = os.path.join(OUT, f"anim_{cam}"); os.makedirs(fdir, exist_ok=True)
+    dt = 1.0 / fps
+    for f in range(frames):
+        d = speed * (f * dt)
+        grid_op.Set(Gf.Vec3d(d % cell, 0, 0))
+        for (op, bx, by, bz) in pills:
+            op.Set(Gf.Vec3d(-HX + ((bx + d + HX) % (2 * HX)), by, bz))
+        ang = -math.degrees(d / DRUM_R) % 360
+        for rot in drums:
+            rot.Set(Gf.Vec3f(0, ang, 0))
+        for _ in range(substeps):
+            world.step(render=True)
+        img = np.asarray(ann.get_data())[..., :3].astype(np.uint8)
+        Image.fromarray(img).save(os.path.join(fdir, f"f_{f:04d}.png"))
+        if f % 15 == 0:
+            print(f"[anim] frame {f}/{frames}")
+    mp4 = os.path.join(OUT, f"{cam}_running.mp4")
+    subprocess.run(["ffmpeg", "-y", "-framerate", str(fps), "-i",
+                    os.path.join(fdir, "f_%04d.png"), "-c:v", "libx264",
+                    "-pix_fmt", "yuv420p", "-crf", "20", mp4], check=False)
+    print(f"[scene] anim -> {mp4}")
+
+
 if __name__ == "__main__":
-    render()
+    import sys as _s
+    if "--anim" in _s.argv:
+        render_anim()
+    else:
+        render()
     sim_app.close()
     print("[scene] OK")
