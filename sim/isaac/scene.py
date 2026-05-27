@@ -365,7 +365,7 @@ def setup_lighting(stage):
 
 VIEWS = {
     # name: (camera position, look_at, focal_length)
-    "twin_scene":    ((0.22, -0.30, 0.26), (0.0, 0.0, 0.005), 33.0),     # hero: inspection station
+    "twin_scene":    ((0.42, -0.52, 0.32), (0.04, 0.0, 0.02), 24.0),     # hero: inspection station
     "twin_overview": ((1.05, -1.05, 0.70), (0.00, 0.00, -0.02), 20.0),   # whole line
 }
 
