@@ -273,8 +273,8 @@ def build_jetson(stage, base, M):
 
 
 def build_edge_appliance(stage, root, M):
-    # kiosk on a VESA stand, clearly beside the belt (front-right of the mesh)
-    bx, by = 0.10, -(HY + 0.17)
+    # kiosk on a VESA stand beside the belt, downstream of the inspection station
+    bx, by = 0.34, -(HY + 0.14)
     cz = BELT_TOP + 0.20                       # device CENTRE height above floor
     _box(stage, f"{root}/stand_base", (0.18, 0.14, 0.012), (bx, by, FLOOR_Z + 0.006), M["frame"])
     post_h = cz - FLOOR_Z
@@ -365,7 +365,7 @@ def setup_lighting(stage):
 
 VIEWS = {
     # name: (camera position, look_at, focal_length)
-    "twin_scene":    ((0.70, -0.92, 0.42), (0.05, -0.15, 0.05), 26.0),   # hero: station + kiosk
+    "twin_scene":    ((0.50, -0.62, 0.34), (0.02, -0.02, 0.02), 30.0),   # hero: inspection station
     "twin_overview": ((1.05, -1.05, 0.70), (0.00, 0.00, -0.02), 20.0),   # whole line
 }
 
