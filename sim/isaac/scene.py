@@ -273,16 +273,17 @@ def build_jetson(stage, base, M):
 
 
 def build_edge_appliance(stage, root, M):
-    # VESA stand: base plate + post, front-right of the belt
-    bx, by = HX - 0.12, -(HY + 0.20)
+    # VESA stand beside the inspection station (front-right of the mesh)
+    bx, by = 0.20, -(HY + 0.11)
     _box(stage, f"{root}/stand_base", (0.16, 0.16, 0.012), (bx, by, FLOOR_Z + 0.006), M["frame"])
-    post_h = (BELT_TOP + 0.06) - FLOOR_Z
+    post_h = (BELT_TOP + 0.10) - FLOOR_Z
     _box(stage, f"{root}/stand_post", (0.04, 0.04, post_h), (bx, by, FLOOR_Z + post_h / 2), M["frame"])
 
     # one parent Xform carries the kiosk tilt + position; children are local.
     # in the .scad model: xy centred, depth runs 0..64mm in +z (back->front).
+    # tilt about X so the screen (local +z) faces -Y / up toward the operator.
     app = UsdGeom.Xform.Define(stage, f"{root}/appliance")
-    _xform(app.GetPrim(), pos=(bx, by, BELT_TOP + 0.10), euler=(72.0, 0.0, 0.0))
+    _xform(app.GetPrim(), pos=(bx, by, BELT_TOP + 0.14), euler=(70.0, 0.0, 0.0))
     base = f"{root}/appliance"
     body_stl, bezel_stl = _ensure_enclosure_stl()
     if body_stl:
@@ -359,24 +360,38 @@ def setup_lighting(stage):
     _xform(rim.GetPrim(), pos=(-0.6, 0.7, 0.6))
 
 
-def render(path=None, cam_pos=(0.95, -0.95, 0.62), look_at=(0.05, -0.05, -0.01), steps=140):
+VIEWS = {
+    # name: (camera position, look_at, focal_length)
+    "twin_scene":    ((0.62, -0.72, 0.34), (0.10, -0.13, 0.02), 30.0),   # hero: station + appliance
+    "twin_overview": ((1.05, -1.05, 0.70), (0.00, 0.00, -0.02), 20.0),   # whole line
+    "twin_top":      ((0.001, 0.0, 0.60), (0.0, 0.0, 0.0), 35.0),        # mesh/pills top-down
+}
+
+
+def render(steps=140):
     from isaacsim.core.api import World
     world = World(stage_units_in_meters=1.0)
     stage = world.stage
     build(stage)
     setup_lighting(stage)
     world.reset()
-    cam = rep.create.camera(position=cam_pos, look_at=look_at, focal_length=24.0)
-    rp = rep.create.render_product(cam, (_W, _H))
-    rgb = rep.AnnotatorRegistry.get_annotator("rgb")
-    rgb.attach(rp)
+
+    products = {}
+    for name, (pos, look, fl) in VIEWS.items():
+        cam = rep.create.camera(position=pos, look_at=look, focal_length=fl)
+        rp = rep.create.render_product(cam, (_W, _H))
+        ann = rep.AnnotatorRegistry.get_annotator("rgb")
+        ann.attach(rp)
+        products[name] = ann
+
     for _ in range(steps):
         world.step(render=True)
-    img = np.asarray(rgb.get_data())[..., :3].astype(np.uint8)
-    path = path or os.path.join(OUT, "twin_scene.png")
-    Image.fromarray(img).save(path)
-    print(f"[scene] rendered -> {path}  shape={img.shape}  mean={img.mean():.1f}")
-    return path
+
+    for name, ann in products.items():
+        img = np.asarray(ann.get_data())[..., :3].astype(np.uint8)
+        path = os.path.join(OUT, f"{name}.png")
+        Image.fromarray(img).save(path)
+        print(f"[scene] rendered -> {path}  shape={img.shape}  mean={img.mean():.1f}")
 
 
 if __name__ == "__main__":
