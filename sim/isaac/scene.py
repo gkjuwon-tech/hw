@@ -169,20 +169,21 @@ def build_conveyor(stage, root, M):
          (0, 0, BELT_CZ), M["belt"])
     _box(stage, f"{root}/belt_bot", (S.BELT_LENGTH, S.BELT_WIDTH, S.BELT_THICK),
          (0, 0, BELT_TOP - S.ROLLER_DIA - S.BELT_THICK / 2), M["belt"])
+    sgn = lambda v: "p" if v > 0 else "n"
     # end rollers (axis Y) with the belt tangent to their tops
     for sx in (-1, 1):
-        _cyl(stage, f"{root}/roller_{sx}", S.ROLLER_DIA / 2, S.BELT_WIDTH + 0.03,
+        _cyl(stage, f"{root}/roller_{sgn(sx)}", S.ROLLER_DIA / 2, S.BELT_WIDTH + 0.03,
              (sx * HX, 0, BELT_TOP - S.ROLLER_DIA / 2), M["metal"], axis="Y")
     # drive motor at the head roller
     _cyl(stage, f"{root}/motor", 0.035, 0.09, (HX + 0.02, HY + 0.06, BELT_TOP - S.ROLLER_DIA / 2),
          M["motor"], axis="Y")
     # extruded-aluminium side frame beams under the belt edges
     for sy in (-1, 1):
-        _box(stage, f"{root}/frame_{sy}", (S.BELT_LENGTH + 0.04, 0.03, 0.05),
+        _box(stage, f"{root}/frame_{sgn(sy)}", (S.BELT_LENGTH + 0.04, 0.03, 0.05),
              (0, sy * (HY + 0.02), BELT_TOP - 0.05), M["frame"])
     # guide rails
     for sy in (-1, 1):
-        _box(stage, f"{root}/rail_{sy}", (S.BELT_LENGTH, 0.008, S.RAIL_H),
+        _box(stage, f"{root}/rail_{sgn(sy)}", (S.BELT_LENGTH, 0.008, S.RAIL_H),
              (0, sy * (HY + 0.004), BELT_TOP + S.RAIL_H / 2), M["frame"])
     # legs + feet
     legh = (BELT_TOP - 0.07) - FLOOR_Z
