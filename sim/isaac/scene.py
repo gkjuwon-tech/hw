@@ -244,6 +244,11 @@ def build_mesh_sensor(stage, root, M):
         x = -BELT_LEN / 2 + i * cell
         _box(stage, f"{root}/mesh_grid/ly_{i}", (0.0010, MESH_BELT_W, 0.0012),
              (x, 0, 0.0005), M["cell"])
+    # the mat wraps the end drums with the belt (so it doesn't end as a flat cut)
+    sgn = lambda v: "p" if v > 0 else "n"
+    for sx in (-1, 1):
+        _cyl(stage, f"{root}/matwrap_{sgn(sx)}", DRUM_R + S.BELT_THICK + 0.0007, MESH_BELT_W,
+             (sx * HX, 0, BELT_TOP - DRUM_R), M["velostat"], axis="Y")
     # FFC ribbon from the mat edge down to the scanner PCB
     ry0 = MESH_BELT_W / 2
     for i in range(3):
@@ -265,9 +270,9 @@ def build_scanner_pcb(stage, root, M):
     _box(stage, f"{root}/conn_usb", (0.009, 0.007, 0.0035), (px - 0.036, py, pz + 0.0017), M["metal"])
 
 
-def build_pills(stage, root, M):
+def build_pills(stage, root, M, seed=3):
     """Tablets/capsules riding the mat along the whole belt (every part inspected)."""
-    rng = np.random.default_rng(3)
+    rng = np.random.default_rng(seed)
     spacing = 0.036
     idx = 0
     # several 3x3 trays spaced along the belt + scattered singles between them
@@ -384,11 +389,20 @@ def build(stage):
     fl.CreateFaceVertexIndicesAttr([0, 1, 2, 3]); fl.CreateFaceVertexCountsAttr([4])
     _bind(fl.GetPrim(), M["floor"])
 
-    build_conveyor(stage, root, M)
-    build_mesh_sensor(stage, root, M)
-    build_scanner_pcb(stage, root, M)
-    build_pills(stage, root, M)
-    build_edge_appliance(stage, root, M)
+    # multiple parallel inspection lines -> reads as a real factory floor.
+    # Each line is a Y-offset Xform holding its own conveyor + mat + pills + Edge box.
+    n_lines = int(os.environ.get("SCENE_LINES", "3"))
+    pitch = 0.95
+    for i in range(n_lines):
+        y = (i - (n_lines - 1) / 2.0) * pitch
+        lp = f"{root}/line_{i}"
+        UsdGeom.Xform.Define(stage, lp)
+        _xform(stage.GetPrimAtPath(lp), pos=(0, y, 0))
+        build_conveyor(stage, lp, M)
+        build_mesh_sensor(stage, lp, M)
+        build_scanner_pcb(stage, lp, M)
+        build_pills(stage, lp, M, seed=3 + i)
+        build_edge_appliance(stage, lp, M)
 
 
 HDRI = os.environ.get("SCENE_HDRI", "/workspace/hdri.hdr")
@@ -425,8 +439,8 @@ def setup_lighting(stage):
 
 VIEWS = {
     # name: (camera position, look_at, focal_length)
-    "twin_overview": ((2.15, -1.95, 1.20), (0.00, -0.04, 0.02), 27.0),   # whole 3.2 m line, 3/4
-    "twin_line":     ((-1.95, -1.05, 0.66), (0.45, 0.0, 0.05), 26.0),    # down the belt
+    "twin_overview": ((3.30, -2.95, 2.05), (0.00, 0.00, 0.0), 26.0),     # the factory: all lines, 3/4
+    "twin_line":     ((-2.75, -1.75, 0.98), (0.35, 0.0, 0.06), 28.0),    # down the lines (pulled back)
 }
 
 
@@ -470,23 +484,25 @@ def render_anim(cam="twin_line", frames=90, fps=30, substeps=6):
     ann = rep.AnnotatorRegistry.get_annotator("rgb"); ann.attach(rp)
 
     cell = S.CELL_PITCH; speed = S.BELT_SPEED
-    grid_op = UsdGeom.Xformable(stage.GetPrimAtPath("/World/mesh_grid")).GetOrderedXformOps()[0]
-    pills = []
+    grid_ops, pills, drums = [], [], []
     for prim in stage.Traverse():
-        if prim.GetName().startswith("pill_"):
+        nm = prim.GetName()
+        if nm == "mesh_grid":
+            grid_ops.append(UsdGeom.Xformable(prim).GetOrderedXformOps()[0])
+        elif nm.startswith("pill_"):
             t = UsdGeom.Xformable(prim).GetOrderedXformOps()[0]
             b = t.Get()
             pills.append((t, float(b[0]), float(b[1]), float(b[2])))
-    drums = []
-    for nm in ("drum_p", "drum_n"):
-        ops = UsdGeom.Xformable(stage.GetPrimAtPath(f"/World/{nm}")).GetOrderedXformOps()
-        drums += [o for o in ops if "rotate" in o.GetOpName().lower()]
+        elif nm.startswith("drum_"):
+            drums += [o for o in UsdGeom.Xformable(prim).GetOrderedXformOps()
+                      if "rotate" in o.GetOpName().lower()]
 
     fdir = os.path.join(OUT, f"anim_{cam}"); os.makedirs(fdir, exist_ok=True)
     dt = 1.0 / fps
     for f in range(frames):
         d = speed * (f * dt)
-        grid_op.Set(Gf.Vec3d(d % cell, 0, 0))
+        for g in grid_ops:
+            g.Set(Gf.Vec3d(d % cell, 0, 0))
         for (op, bx, by, bz) in pills:
             op.Set(Gf.Vec3d(-HX + ((bx + d + HX) % (2 * HX)), by, bz))
         ang = -math.degrees(d / DRUM_R) % 360
