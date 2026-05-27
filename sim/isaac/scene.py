@@ -273,31 +273,34 @@ def build_jetson(stage, base, M):
 
 
 def build_edge_appliance(stage, root, M):
-    # VESA stand beside the inspection station (front-right of the mesh)
-    bx, by = 0.20, -(HY + 0.11)
-    _box(stage, f"{root}/stand_base", (0.16, 0.16, 0.012), (bx, by, FLOOR_Z + 0.006), M["frame"])
-    post_h = (BELT_TOP + 0.10) - FLOOR_Z
-    _box(stage, f"{root}/stand_post", (0.04, 0.04, post_h), (bx, by, FLOOR_Z + post_h / 2), M["frame"])
+    # kiosk on a VESA stand, clearly beside the belt (front-right of the mesh)
+    bx, by = 0.10, -(HY + 0.17)
+    cz = BELT_TOP + 0.20                       # device CENTRE height above floor
+    _box(stage, f"{root}/stand_base", (0.18, 0.14, 0.012), (bx, by, FLOOR_Z + 0.006), M["frame"])
+    post_h = cz - FLOOR_Z
+    _box(stage, f"{root}/stand_post", (0.045, 0.045, post_h), (bx, by + 0.03, FLOOR_Z + post_h / 2),
+         M["frame"])
 
-    # one parent Xform carries the kiosk tilt + position; children are local.
-    # in the .scad model: xy centred, depth runs 0..64mm in +z (back->front).
-    # tilt about X so the screen (local +z) faces -Y / up toward the operator.
+    # parent Xform = kiosk pose. The .scad model is xy-centred with depth 0..64mm
+    # in +z; we centre z too (local -0.032) so the device rotates about its centre.
+    # euler X=78deg stands the screen (+z face) up to face the operator (-Y), tilted back.
     app = UsdGeom.Xform.Define(stage, f"{root}/appliance")
-    _xform(app.GetPrim(), pos=(bx, by, BELT_TOP + 0.14), euler=(70.0, 0.0, 0.0))
+    _xform(app.GetPrim(), pos=(bx, by, cz), euler=(78.0, 0.0, 0.0))
     base = f"{root}/appliance"
+    half_d = 0.032                              # half the 64mm device depth (m)
     body_stl, bezel_stl = _ensure_enclosure_stl()
     if body_stl:
         bp, bi = _read_stl(body_stl)
         zp, zi = _read_stl(bezel_stl)
-        _mesh(stage, f"{base}/body", bp, bi, (0, 0, 0), 0.001, M["graphite"])
-        _mesh(stage, f"{base}/bezel", zp, zi, (0, 0, 0.064), 0.001, M["alu"])
+        _mesh(stage, f"{base}/body", bp, bi, (0, 0, -half_d), 0.001, M["graphite"])
+        _mesh(stage, f"{base}/bezel", zp, zi, (0, 0, half_d - 0.009), 0.001, M["alu"])
         build_jetson(stage, f"{base}/jetson", M)
-        _xform(stage.GetPrimAtPath(f"{base}/jetson"), pos=(0, 0, 0.012))
-        scr_z = 0.0665
+        _xform(stage.GetPrimAtPath(f"{base}/jetson"), pos=(0, 0, -half_d + 0.012))
+        scr_z = half_d + 0.0015
     else:
-        _box(stage, f"{base}/body", (S.ENCL_W, S.ENCL_D, S.ENCL_H), (0, 0, S.ENCL_H / 2), M["graphite"])
-        scr_z = S.ENCL_H + 0.002
-    # emissive kiosk screen (7" active area), just proud of the bezel
+        _box(stage, f"{base}/body", (S.ENCL_W, S.ENCL_D, 2 * half_d), (0, 0, 0), M["graphite"])
+        scr_z = half_d + 0.0015
+    # emissive kiosk screen (7" active area), just proud of the bezel front face
     _box(stage, f"{base}/screen", (S.DISP_ACT_W, S.DISP_ACT_H, 0.002), (0, 0, scr_z), M["screen"])
 
 
@@ -362,9 +365,9 @@ def setup_lighting(stage):
 
 VIEWS = {
     # name: (camera position, look_at, focal_length)
-    "twin_scene":    ((0.62, -0.72, 0.34), (0.10, -0.13, 0.02), 30.0),   # hero: station + appliance
+    "twin_scene":    ((0.55, -0.80, 0.40), (0.05, -0.17, 0.06), 28.0),   # hero: station + kiosk
     "twin_overview": ((1.05, -1.05, 0.70), (0.00, 0.00, -0.02), 20.0),   # whole line
-    "twin_top":      ((0.001, 0.0, 0.60), (0.0, 0.0, 0.0), 35.0),        # mesh/pills top-down
+    "twin_top":      ((0.02, -0.18, 0.42), (0.0, 0.0, 0.0), 40.0),       # angled top of mesh/pills
 }
 
 
