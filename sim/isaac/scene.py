@@ -115,7 +115,7 @@ def _mat(stage, path, diffuse, metallic=0.0, rough=0.5, emissive=None, opacity=1
 
 
 def _omnipbr(stage, path, diffuse, metallic=0.0, rough=0.5, specular=0.5,
-             emissive=None, emit=0.0):
+             emissive=None, emit=0.0, tex=None, tex_scale=None):
     """A real OmniPBR (MDL) material — metals reflect the HDRI, so chamfers and
     brushed surfaces actually read (UsdPreviewSurface metals look flat/black)."""
     mat = UsdShade.Material.Define(stage, path)
@@ -126,12 +126,29 @@ def _omnipbr(stage, path, diffuse, metallic=0.0, rough=0.5, specular=0.5,
     sh.CreateInput("metallic_constant", Sdf.ValueTypeNames.Float).Set(metallic)
     sh.CreateInput("reflection_roughness_constant", Sdf.ValueTypeNames.Float).Set(rough)
     sh.CreateInput("specular_level", Sdf.ValueTypeNames.Float).Set(specular)
+    if tex is not None:
+        sh.CreateInput("diffuse_texture", Sdf.ValueTypeNames.Asset).Set(tex)
+        sh.CreateInput("texture_translate", Sdf.ValueTypeNames.Float2).Set(Gf.Vec2f(0, 0))
+        if tex_scale is not None:
+            sh.CreateInput("texture_scale", Sdf.ValueTypeNames.Float2).Set(Gf.Vec2f(*tex_scale))
     if emissive is not None:
         sh.CreateInput("enable_emission", Sdf.ValueTypeNames.Bool).Set(True)
         sh.CreateInput("emissive_color", Sdf.ValueTypeNames.Color3f).Set(Gf.Vec3f(*emissive))
         sh.CreateInput("emissive_intensity", Sdf.ValueTypeNames.Float).Set(emit)
     mat.CreateSurfaceOutput("mdl").ConnectToSource(sh.ConnectableAPI(), "out")
     return mat
+
+
+def _ensure_grid_texture():
+    """A 1-cell tile (dark Velostat green + brighter top/left borders) that tiles
+    into the 16x16 sensor grid — replaces ~1000 grid-line prims per line."""
+    p = os.path.join(ASSETS, "mesh_grid.png")
+    if not os.path.exists(p):
+        n = 64
+        img = np.full((n, n, 3), (14, 46, 35), np.uint8)     # cell
+        img[0:4, :] = (44, 120, 86); img[:, 0:4] = (44, 120, 86)   # grid lines
+        Image.fromarray(img).save(p)
+    return p
 
 
 def _bind(prim, mat):
@@ -227,23 +244,20 @@ def build_conveyor(stage, root, M):
 
 def build_mesh_sensor(stage, root, M):
     # The Velostat tactile mat is laminated along the WHOLE belt so every part
-    # that rides past is inspected (not one fixed spot). Drawn as a full-length
-    # sheet + a 10 mm cell grid (the real cell pitch), top at z=0.
+    # that rides past is inspected. The 16x16 cell grid is a tiled texture on a
+    # quad (top at z=0) — crisp and cheap (vs thousands of line prims).
     _box(stage, f"{root}/mesh_pad", (BELT_LEN, MESH_BELT_W, S.MESH_THICK),
          (0, 0, -S.MESH_THICK / 2), M["velostat"])
-    cell = S.CELL_PITCH
-    grid = UsdGeom.Xform.Define(stage, f"{root}/mesh_grid")
-    grid.AddTranslateOp().Set(Gf.Vec3d(0, 0, 0))   # animated: scrolls with the belt
-    ny = int(round(MESH_BELT_W / cell))
-    for j in range(ny + 1):                      # longitudinal lines (run the belt)
-        y = -MESH_BELT_W / 2 + j * cell
-        _box(stage, f"{root}/mesh_grid/lx_{j}", (BELT_LEN, 0.0010, 0.0012),
-             (0, y, 0.0005), M["cell"])
-    nx = int(round(BELT_LEN / cell))
-    for i in range(nx + 1):                      # transverse lines (10 mm pitch)
-        x = -BELT_LEN / 2 + i * cell
-        _box(stage, f"{root}/mesh_grid/ly_{i}", (0.0010, MESH_BELT_W, 0.0012),
-             (x, 0, 0.0005), M["cell"])
+    q = UsdGeom.Mesh.Define(stage, f"{root}/mat")
+    hx, hw, z = BELT_LEN / 2, MESH_BELT_W / 2, 0.0003
+    q.CreatePointsAttr([Gf.Vec3f(-hx, -hw, z), Gf.Vec3f(hx, -hw, z),
+                        Gf.Vec3f(hx, hw, z), Gf.Vec3f(-hx, hw, z)])
+    q.CreateFaceVertexCountsAttr([4]); q.CreateFaceVertexIndicesAttr([0, 1, 2, 3])
+    q.CreateNormalsAttr([Gf.Vec3f(0, 0, 1)] * 4); q.SetNormalsInterpolation("vertex")
+    st = UsdGeom.PrimvarsAPI(q).CreatePrimvar("st", Sdf.ValueTypeNames.TexCoord2fArray,
+                                              UsdGeom.Tokens.varying)
+    st.Set([Gf.Vec2f(0, 0), Gf.Vec2f(1, 0), Gf.Vec2f(1, 1), Gf.Vec2f(0, 1)])
+    _bind(q.GetPrim(), M["matgrid"])
     # the mat wraps the end drums with the belt (so it doesn't end as a flat cut)
     sgn = lambda v: "p" if v > 0 else "n"
     for sx in (-1, 1):
@@ -365,6 +379,9 @@ def build(stage):
         frame=P("frame", (0.78, 0.79, 0.81), 1.0, 0.30, specular=0.7),      # anodized aluminium
         motor=P("motor", (0.18, 0.19, 0.22), 0.6, 0.4),
         velostat=P("velostat", (0.05, 0.18, 0.13), 0.0, 0.45, specular=0.5),# Velostat mat
+        matgrid=P("matgrid", (1, 1, 1), 0.0, 0.42, specular=0.5,            # mat w/ tiled cell grid
+                  tex=_ensure_grid_texture(),
+                  tex_scale=(BELT_LEN / S.CELL_PITCH, MESH_BELT_W / S.CELL_PITCH)),
         cell=P("cell", (0.10, 0.45, 0.32), 0.0, 0.40, specular=0.6),
         ffc=P("ffc", (0.62, 0.46, 0.12), 0.4, 0.4),
         pcb=P("pcb", (0.05, 0.30, 0.16), 0.1, 0.5),
