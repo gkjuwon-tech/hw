@@ -30,6 +30,7 @@ export OMNI_KIT_ACCEPT_EULA=YES
 export OMNI_KIT_ALLOW_ROOT=1
 export XDG_RUNTIME_DIR=/tmp/xdg
 mkdir -p /tmp/xdg
-export LD_LIBRARY_PATH="$LD:\${LD_LIBRARY_PATH:-}"
+# set absolutely (NOT appended) so sourcing twice never compounds the env block
+export LD_LIBRARY_PATH="$LD"
 EOF
 echo "== done. before Isaac runs:  source /workspace/isaac_env.sh =="
