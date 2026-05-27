@@ -1,133 +1,89 @@
-# Isaac Sim tactile twin
+# Isaac-Sim digital twin — Conet Tactile inspection line
 
-This directory is the RTX/Isaac continuation of the MuJoCo tactile twin in
-`sim/`.  The CPU twin already proves the core physics: a sealed internal void
-does not change the pill outline, but it reduces pill mass, so the same external
-tablet presses the 16×16 mesh less hard.
+The full-fidelity twin of the real line in **NVIDIA Isaac Sim** (RTX, on a
+RunPod GPU pod), taking over from the CPU MuJoCo prototype in `sim/`. It matches
+the real setup part-for-part — same dimensions, same enclosure CAD, same 16×16
+tactile contract — and from **one GPU pipeline** produces both a labelled
+synthetic dataset and defect-detection metrics, then runs the **real on-device
+product AI** (not the old statistical fallback).
 
-The important rule: **GitHub is the durable handoff. RunPod is disposable.**
-Everything needed to resume the A6000 work should live here instead of only on a
-pod volume.
+> See `docs/HANDOFF_ISAAC_SIM.md` for the mission and acceptance criteria.
 
-## Current verified RunPod target
+## What it builds
 
-- Pod name: `extended_orange_stoat`
+| File | Role |
+|---|---|
+| `smoke.py` | Boot Isaac headless, confirm RTX, save a render PNG (acceptance #1). |
+| `scene.py` | To-scale USD scene: conveyor + rollers + rails, the 16×16 Velostat mesh, pills, and the **real Edge enclosure** (imported from `hardware/edge_enclosure/edge_enclosure.scad` via OpenSCAD) on a VESA stand with a kiosk screen + Jetson. Hero RTX render. |
+| `tactile_sensor.py` | The sensor: a 16×16 **sprung-taxel array** (bed of springs / Winkler foundation) — the 1:1 Isaac analogue of `sim/tactile_twin.py`. Per-cell contact force = pressure. |
+| `generate_dataset.py` | One GPU pipeline → dataset + metrics. Clones the tray across many GPU envs, domain-randomizes mass/position/void-fraction/noise, settles on real PhysX contacts, reads a 16×16 frame per tray. Drop-in `.npz` schema. |
+| `perception.py` | **TacNet** — the product perception model (~23k-param CNN). Per-pill void detection from pressure patches; exports ONNX → TensorRT for the Orin Nano. **This replaces the z-score.** |
+| `detect.py` | Report harness: TacNet (headline) vs z-score (reference) vs the CPU baseline. |
+| `sllm/` | The on-device **QC reporting sLLM** (Qwen2.5-0.5B + LoRA): turns an inspection record into the operator report shown on the kiosk. Quantized INT4 for the edge. |
+
+## The product AI (runs on the Jetson Orin Nano edge box)
+
+Two stages, both edge-sized:
+
+1. **Perception — TacNet (CNN).** Real-time per-pill void detection on every
+   tray. ONNX → TensorRT (FP16). ~23k params.
+2. **Reporting — QC sLLM (Qwen2.5-0.5B, LoRA, INT4).** On a flagged tray it
+   writes the operator QC report (verdict, flagged pills + grid position +
+   pressure deficit, the internal-void physics, recommended action). GGUF
+   Q4_K_M via llama.cpp; fits in <0.6 GB, well inside the per-tray time budget.
+
+```
+sim/isaac/sllm/build_corpus.py   # detection records -> QC report pairs (LoRA data)
+sim/isaac/sllm/train_lora.py     # LoRA fine-tune the sLLM on our domain
+sim/isaac/sllm/infer.py          # generate reports (as the kiosk would)
+sim/isaac/sllm/export_edge.py    # merge + INT4 GGUF + edge manifest
+```
+
+## Reproduce (on the RunPod RTX pod)
+
+```bash
+bash sim/isaac/run.sh 50000          # venv + Isaac Sim + smoke + dataset + metrics
+# then the product AI:
+python sim/isaac/perception.py sim/dataset/tactile_pills.npz       # train TacNet
+python sim/isaac/sllm/build_corpus.py sim/dataset/tactile_pills.npz
+python sim/isaac/sllm/train_lora.py                                # LoRA fine-tune
+python sim/isaac/sllm/infer.py --demo sim/dataset/tactile_pills.npz
+python sim/isaac/sllm/export_edge.py                               # INT4 for Orin
+```
+
+## Environment (pinned)
+
+- Pod: NVIDIA RTX 2000 Ada (16 GB), CUDA 12.4, driver 550.x, Ubuntu 22.04.
+- Isaac Sim **4.5.0.0** (pip) in a Python **3.10** venv at `/workspace/isaacenv`.
+- AI training uses the system PyTorch (2.4.1+cu124, Python 3.11) so Isaac's
+  pinned deps stay isolated from `transformers`/`peft`.
+
+## A6000 RunPod handoff notes from PR #28
+
+This branch was originally started on `extended_orange_stoat`, an RTX A6000 pod:
+
 - GPU: NVIDIA RTX A6000, 49,140 MiB
-- Driver: 570.195.03
-- CUDA reported by driver: 12.8
-- Python: 3.11.10
-- Durable pod workspace: `/workspace`
-- Isaac pip note: Python 3.11 cannot install Isaac Sim 4.5 from NVIDIA's pip
-  index. This pod should use Isaac Sim 5.1.0.0 unless you intentionally rebuild
-  a Python 3.10 environment for Isaac 4.5.
-- Isaac's pip boot asks for the NVIDIA Omniverse EULA. The non-interactive
-  install script sets `OMNI_KIT_ACCEPT_EULA=YES`; only run it if you accept
-  NVIDIA's terms for the pod.
-- Verified blocker after install: the RunPod template exposes CUDA/NVML, but
-  Vulkan only sees `llvmpipe`. Isaac installs and starts, then cannot create an
-  NVIDIA Vulkan GPU device. `apt install libnvidia-gl-570-server` is not safe on
-  this template: it attempts to pull 580 userspace libraries and causes an
-  NVML driver/library mismatch until removed.
-- Direct SSH/SCP:
+- Driver: 570.195.03; CUDA reported by driver: 12.8
+- Python: 3.11.10 in the template image
+- Durable workspace: `/workspace`
 
-```bash
-ssh root@38.147.83.19 -p 21678 -i ~/.ssh/devin_runpod_isaac_sim
-```
+Important compatibility notes:
 
-The public key used for this session is:
-
-```text
-ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFFvlAkUhp9wnaKPMLCjndYQNDOZoyihuujh4ZvAOR/t devin-isaac-sim-2026-05-26
-```
-
-## One-command bootstrap on the pod
-
-From a fresh pod:
-
-```bash
-mkdir -p /workspace && cd /workspace
-git clone https://github.com/gkjuwon-tech/hw.git
-cd hw
-bash sim/isaac/runpod_bootstrap.sh
-```
-
-Then install Isaac Sim with the selected route:
-
-```bash
-bash sim/isaac/install_isaac_pip.sh
-```
-
-If the pip package route fights the pod image/CUDA stack, switch to NVIDIA's
-Isaac Sim container and keep the same files in this directory as the mounted
-workspace.
-
-Before spending time on scene code, verify RTX/Vulkan:
+- Python 3.11 cannot install Isaac Sim 4.5 from NVIDIA's pip index. The existing
+  `run.sh`/`pod_setup.sh` path intentionally uses Python 3.10 for Isaac 4.5.
+- Isaac's pip boot asks for the NVIDIA Omniverse EULA. Run scripts should set
+  `OMNI_KIT_ACCEPT_EULA=YES` only if the pod operator accepts NVIDIA's terms.
+- Before scene work, verify RTX/Vulkan, not just CUDA:
 
 ```bash
 VK_ICD_FILENAMES=/etc/vulkan/icd.d/nvidia_icd.json vulkaninfo --summary
 ```
 
-Expected: NVIDIA RTX A6000. Bad state observed on the first pod: only
-`llvmpipe`/CPU Vulkan was visible, so Isaac could not render with RTX.
+Expected: NVIDIA RTX A6000. Bad state observed on the first pod: CUDA/NVML saw
+the A6000, but Vulkan only exposed `llvmpipe`; Isaac installed, started, and then
+failed to create an NVIDIA Vulkan GPU device. Avoid blindly installing Ubuntu
+`libnvidia-gl-*` packages on this template: one attempt pulled 580 userspace
+libraries over a 570.195 host driver and caused an NVML mismatch until reverted.
 
-## Acceptance target
-
-The Isaac pipeline must produce the same dataset contract as
-`sim/generate_dataset.py`:
-
-```python
-np.savez_compressed(
-    "tactile_pills_isaac.npz",
-    frames=(N, 16, 16) float32,
-    pill_pressure=(N, 16) float32,
-    pill_label=(N, 16) int8,
-    pill_centers=(16, 2) float32,
-)
-```
-
-That lets the existing statistical detector and backend calibration/inspection
-logic run unchanged.
-
-## Physics parity checklist
-
-Use the existing files as source of truth:
-
-- `sim/specs.py`: belt, mesh, Jetson/display/enclosure dimensions.
-- `sim/tactile_twin.py`: taxel stiffness/damping intuition.
-- `sim/generate_dataset.py`: pill geometry, void mass range, dataset layout,
-  metrics baseline.
-
-Isaac implementation order:
-
-1. Build a scaled USD scene: 350 mm belt, 1.2 m section, 16×16 mesh at 10 mm
-   pitch, side rails, Edge enclosure.
-2. Implement the tactile mesh as a 16×16 spring taxel array. Each taxel should
-   provide a normal-force value that becomes one frame cell.
-3. Spawn 4×4 pills over the active mesh. A void pill has the same visible
-   geometry but lower mass and optional off-centre CoM.
-4. Write frames and pill-level labels/pressures on every tray.
-5. Run `sim/isaac/evaluate_dataset.py` on the output and compare against the
-   MuJoCo baseline:
-   - ROC-AUC: 99.5 %
-   - accuracy: 97.0 %
-   - precision: 96.7 %
-   - recall: 95.6 %
-   - F1: 96.2 %
-6. Only after matching the baseline, scale to at least 50k labelled pills with
-   domain randomization.
-
-## Local sanity checks without Isaac
-
-These commands do not require Isaac Sim. They validate that the handoff tools
-still understand the existing dataset contract:
-
-```bash
-python3 sim/isaac/evaluate_dataset.py sim/dataset/tactile_pills.npz
-python3 sim/isaac/check_environment.py
-```
-
-When running repo scripts directly from the repository root, set:
-
-```bash
-export PYTHONPATH="$PWD${PYTHONPATH:+:$PYTHONPATH}"
-```
+Metrics from the latest run are printed by `detect.py`; the CPU MuJoCo baseline
+to beat is ROC-AUC 99.5%.
