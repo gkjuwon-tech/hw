@@ -365,9 +365,8 @@ def setup_lighting(stage):
 
 VIEWS = {
     # name: (camera position, look_at, focal_length)
-    "twin_scene":    ((0.55, -0.80, 0.40), (0.05, -0.17, 0.06), 28.0),   # hero: station + kiosk
+    "twin_scene":    ((0.70, -0.92, 0.42), (0.05, -0.15, 0.05), 26.0),   # hero: station + kiosk
     "twin_overview": ((1.05, -1.05, 0.70), (0.00, 0.00, -0.02), 20.0),   # whole line
-    "twin_top":      ((0.02, -0.18, 0.42), (0.0, 0.0, 0.0), 40.0),       # angled top of mesh/pills
 }
 
 
